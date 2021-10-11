@@ -19,6 +19,9 @@
     "url": "https://github.com/vanilladefi/sdk/issues"
   },
   "homepage": "https://github.com/vanilladefi/sdk#readme",
+  "files": [
+    "lib/**/*"
+  ],
   "devDependencies": {
     "@uniswap/sdk-core": "^3.0.1",
     "@uniswap/v3-sdk": "^3.5.1",
