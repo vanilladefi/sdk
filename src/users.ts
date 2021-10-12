@@ -1,23 +1,27 @@
 import { formatUnits } from '@ethersproject/units'
 import { ADDRESS_ZERO } from '@uniswap/v3-sdk'
-import { ethers } from 'ethers'
-import { getBalance, isAddress } from 'lib/tokens'
-import {
-  getVanillaRouter,
-  getVanillaTokenContract,
-} from 'lib/vanilla/contracts'
+import { ethers, providers } from 'ethers'
 import { PrerenderProps } from 'types/content'
 import { VanillaVersion } from 'types/general'
 import { ERC20 } from 'types/typechain/vanilla_v1.1/ERC20'
 import { ERC20__factory } from 'types/typechain/vanilla_v1.1/factories/ERC20__factory'
-import { defaultProvider } from 'utils/config'
-import { epoch, getVnlTokenAddress, vnlDecimals } from 'utils/config/vanilla'
+import { contractAddresses, epoch, vnlDecimals } from './constants'
+import { getVanillaRouter, getVanillaTokenContract } from './contracts'
+import { getBalance, isAddress } from './tokens'
 
-export const getUsers = async (): Promise<string[]> => {
+export const getUsers = async (
+  provider?: providers.Provider,
+): Promise<string[]> => {
   const users: string[] = []
 
-  const vnlRouter = getVanillaRouter(VanillaVersion.V1_1, defaultProvider)
-  const vnlLegacyRouter = getVanillaRouter(VanillaVersion.V1_0, defaultProvider)
+  const vnlRouter = getVanillaRouter(
+    VanillaVersion.V1_1,
+    provider || providers.getDefaultProvider(),
+  )
+  const vnlLegacyRouter = getVanillaRouter(
+    VanillaVersion.V1_0,
+    provider || providers.getDefaultProvider(),
+  )
 
   // Fetch Vanilla v1.1 users
   const purchaseFilter: ethers.EventFilter = vnlRouter.filters.TokensPurchased()
@@ -52,16 +56,22 @@ export const getUsers = async (): Promise<string[]> => {
 export const getBasicWalletDetails = async (
   vanillaVersion: VanillaVersion,
   walletAddress: string,
+  provider?: providers.Provider,
 ): Promise<PrerenderProps> => {
   let [vnlBalance, ethBalance]: string[] = ['0', '0']
   try {
     if (isAddress(walletAddress)) {
       const vnl: ERC20 = getVanillaTokenContract(
         vanillaVersion,
-        defaultProvider,
+        provider || providers.getDefaultProvider(),
       )
       vnlBalance = formatUnits(await vnl.balanceOf(walletAddress), vnlDecimals)
-      ethBalance = formatUnits(await getBalance(walletAddress, defaultProvider))
+      ethBalance = formatUnits(
+        await getBalance(
+          walletAddress,
+          provider || providers.getDefaultProvider(),
+        ),
+      )
     }
   } catch (e) {
     console.error(
@@ -72,12 +82,17 @@ export const getBasicWalletDetails = async (
   return { vnlBalance, ethBalance }
 }
 
-export const getVnlHolders = async (): Promise<string[]> => {
+export const getVnlHolders = async (
+  provider?: providers.Provider,
+): Promise<string[]> => {
   const vnlToken = ERC20__factory.connect(
-    getVnlTokenAddress(VanillaVersion.V1_1),
-    defaultProvider,
+    contractAddresses.vanilla[VanillaVersion.V1_1].vnl,
+    provider || providers.getDefaultProvider(),
   )
-  const vnlRouter = getVanillaRouter(VanillaVersion.V1_1, defaultProvider)
+  const vnlRouter = getVanillaRouter(
+    VanillaVersion.V1_1,
+    provider || providers.getDefaultProvider(),
+  )
   const epoch = await vnlRouter.epoch()
 
   const transferFilter: ethers.EventFilter = vnlToken.filters.Transfer()

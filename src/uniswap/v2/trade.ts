@@ -9,13 +9,12 @@ import {
 } from '@uniswap/sdk'
 import { providers, Transaction } from 'ethers'
 import { getAddress, parseUnits } from 'ethers/lib/utils'
-import { getContract, tokenListChainId } from 'lib/tokens'
 import vanillaRouter from 'types/abis/vanillaRouter.json'
 import { VanillaVersion } from 'types/general'
 import type { Token as UniswapToken } from 'types/trade'
-import { ethersOverrides } from 'utils/config'
-import { getVanillaRouterAddress } from 'utils/config/vanilla'
 import { TransactionProps } from '..'
+import { chainId, contractAddresses, ethersOverrides } from '../../constants'
+import { getContract } from '../../tokens'
 
 export const buy = async ({
   amountPaid,
@@ -26,7 +25,7 @@ export const buy = async ({
   gasLimit,
 }: TransactionProps): Promise<Transaction> => {
   const router = getContract(
-    getVanillaRouterAddress(VanillaVersion.V1_0),
+    contractAddresses.vanilla[VanillaVersion.V1_0].router,
     JSON.stringify(vanillaRouter.abi),
     signer,
   )
@@ -53,7 +52,7 @@ export const sell = async ({
   gasLimit,
 }: TransactionProps): Promise<Transaction> => {
   const router = getContract(
-    getVanillaRouterAddress(VanillaVersion.V1_0),
+    contractAddresses.vanilla[VanillaVersion.V1_0].router,
     JSON.stringify(vanillaRouter.abi),
     signer,
   )
@@ -74,7 +73,7 @@ export const sell = async ({
 
 // Pricing function for UniSwap v2 trades
 export async function constructTrade(
-  provider: providers.BaseProvider,
+  provider: providers.Provider,
   amountToTrade: string, // Not amountPaid because of tradeType
   tokenReceived: UniswapToken,
   tokenPaid: UniswapToken,
@@ -101,7 +100,7 @@ export async function constructTrade(
     const pair = await Fetcher.fetchPairData(
       convertedTokenReceived,
       convertedTokenPaid,
-      provider,
+      provider as providers.BaseProvider,
     )
 
     const route = new Route([pair], convertedTokenPaid)
@@ -123,7 +122,7 @@ export function tryParseAmount(
   }
   try {
     const convertedToken = new Token(
-      tokenListChainId,
+      chainId,
       getAddress(currency.address),
       Number(currency.decimals),
     )

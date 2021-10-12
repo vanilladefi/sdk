@@ -9,8 +9,8 @@ export type ChainIdToTransactionMapping = {
 }
 
 export enum VanillaVersion {
-  V1_0,
-  V1_1,
+  V1_0 = 'v1_0',
+  V1_1 = 'v1_1',
 }
 
 export enum UniswapVersion {

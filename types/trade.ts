@@ -1,7 +1,5 @@
 import { CurrencyAmount, Percent, Price, TradeType } from '@uniswap/sdk-core'
-import type { BreakPointOptions } from 'components/GlobalStyles/Breakpoints'
 import { BigNumber, ethers } from 'ethers'
-import type { Column } from 'react-table'
 
 export interface PairInfo {
   pairId: string | null
@@ -69,25 +67,6 @@ export interface TokenInfoQueryResponse {
   totalValueLockedETH?: string | null
 }
 
-/**
- * Currently token1 is always ETH(WETH)
- */
-export interface PairByIdQueryResponse {
-  id: string
-  token0: Token
-  token1: Token
-}
-
-export interface MetaQueryResponse {
-  _meta: {
-    block: {
-      hash: string
-      number: number
-    }
-    deployment: string
-  }
-}
-
 export interface Call {
   address: string
   callData: string
@@ -117,24 +96,6 @@ export interface TransactionDetails {
   reward?: string
   pairId?: string
 }
-
-export type HandleBuyClick = (pairInfo: PairInfo) => void
-
-export type HandleSellClick = (pairInfo: PairInfo) => void
-
-export type LeftOrRightAlignable = { align?: 'left' | 'right' }
-
-export type ResponsivelyHidable = {
-  hideBelow?: keyof BreakPointOptions
-  hideAbove?: keyof BreakPointOptions
-}
-
-export type ColorBasedOnValue = { colorBasedOnValue?: boolean }
-
-export type ListColumn<T extends Record<string, unknown>> = Column<T> &
-  LeftOrRightAlignable &
-  ResponsivelyHidable &
-  ColorBasedOnValue
 
 export enum Liquidity {
   LOW = 500,

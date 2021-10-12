@@ -8,21 +8,8 @@ import {
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { BigNumber, ethers, providers, Signer } from 'ethers'
 import { formatUnits, getAddress } from 'ethers/lib/utils'
-import {
-  getAllTokens,
-  getETHPrice,
-  isAddress,
-  tokenListChainId,
-  weth,
-} from 'lib/tokens'
-import {
-  constructTrade as constructV2Trade,
-  tryParseAmount,
-} from 'lib/uniswap/v2/trade'
-import { constructTrade as constructV3Trade } from 'lib/uniswap/v3/trade'
-import { getVanillaRouter } from 'lib/vanilla/contracts'
 import vanillaRouter from 'types/abis/vanillaRouter.json'
-import { UniswapVersion, VanillaVersion } from 'types/general'
+import { VanillaVersion } from 'types/general'
 import {
   Operation,
   RewardEstimate,
@@ -32,13 +19,28 @@ import {
   V3Trade,
 } from 'types/trade'
 import { VanillaV1Router02__factory } from 'types/typechain/vanilla_v1.1'
-import { blockDeadlineThreshold, defaultProvider } from 'utils/config'
 import {
+  blockDeadlineThreshold,
+  chainId,
+  contractAddresses,
   epoch,
-  getVanillaRouterAddress,
-  getVnlTokenAddress,
+  usdcWethPoolAddress,
   vnlDecimals,
-} from 'utils/config/vanilla'
+} from './constants'
+import { getVanillaRouter } from './contracts'
+import {
+  convertVanillaTokenToUniswapToken,
+  getAllTokens,
+  isAddress,
+  usdc,
+  weth,
+} from './tokens'
+import {
+  constructTrade as constructV2Trade,
+  tryParseAmount,
+} from './uniswap/v2/trade'
+import { getSpotPrice } from './uniswap/v3/spotPrice'
+import { constructTrade as constructV3Trade } from './uniswap/v3/trade'
 
 export const estimateReward = async (
   version: VanillaVersion,
@@ -64,12 +66,12 @@ export const estimateReward = async (
     const router =
       version === VanillaVersion.V1_0
         ? new ethers.Contract(
-            getVanillaRouterAddress(VanillaVersion.V1_0),
+            contractAddresses.vanilla[VanillaVersion.V1_0].router,
             JSON.stringify(vanillaRouter.abi),
             signerOrProvider,
           )
         : VanillaV1Router02__factory.connect(
-            getVanillaRouterAddress(VanillaVersion.V1_1),
+            contractAddresses.vanilla[VanillaVersion.V1_1].router,
             signerOrProvider,
           )
 
@@ -97,12 +99,12 @@ export const getPriceData = async (
   const router =
     version === VanillaVersion.V1_0
       ? new ethers.Contract(
-          getVanillaRouterAddress(VanillaVersion.V1_0),
+          contractAddresses.vanilla[VanillaVersion.V1_0].router,
           JSON.stringify(vanillaRouter.abi),
           signerOrProvider,
         )
       : VanillaV1Router02__factory.connect(
-          getVanillaRouterAddress(VanillaVersion.V1_1),
+          contractAddresses.vanilla[VanillaVersion.V1_1].router,
           signerOrProvider,
         )
   let priceData: TokenPriceResponse | null
@@ -125,12 +127,12 @@ export const getEpoch = async (
   const router =
     version === VanillaVersion.V1_0
       ? new ethers.Contract(
-          getVanillaRouterAddress(VanillaVersion.V1_0),
+          contractAddresses.vanilla[VanillaVersion.V1_0].router,
           JSON.stringify(vanillaRouter.abi),
           signerOrProvider,
         )
       : VanillaV1Router02__factory.connect(
-          getVanillaRouterAddress(VanillaVersion.V1_1),
+          contractAddresses.vanilla[VanillaVersion.V1_1].router,
           signerOrProvider,
         )
 
@@ -153,12 +155,12 @@ export const estimateGas = async (
   slippageTolerance: Percent | V2Percent,
 ): Promise<BigNumber> => {
   const routerV1_0 = new ethers.Contract(
-    getVanillaRouterAddress(VanillaVersion.V1_0),
+    contractAddresses.vanilla[VanillaVersion.V1_0].router,
     JSON.stringify(vanillaRouter.abi),
     signer,
   )
   const routerV1_1 = VanillaV1Router02__factory.connect(
-    getVanillaRouterAddress(VanillaVersion.V1_1),
+    contractAddresses.vanilla[VanillaVersion.V1_1].router,
     signer,
   )
 
@@ -253,14 +255,21 @@ export async function getUserPositions(
   version: VanillaVersion,
   address: string,
   tokens?: Token[],
+  provider?: providers.Provider,
 ): Promise<Token[]> {
   const checkSummedAddress = isAddress(address)
-  const vanillaRouter = getVanillaRouter(version, defaultProvider)
+  const vanillaRouter = getVanillaRouter(
+    version,
+    provider || providers.getDefaultProvider(),
+  )
   const million = 1000000
   const allTokens = tokens || getAllTokens(version)
-  const ETHPrice = await getETHPrice(
-    version === VanillaVersion.V1_0 ? UniswapVersion.v2 : UniswapVersion.v3,
+  const [ETHPrice] = await getSpotPrice(
+    usdcWethPoolAddress,
+    convertVanillaTokenToUniswapToken(usdc),
+    convertVanillaTokenToUniswapToken(weth),
   )
+
   let positions: Token[] = []
   if (checkSummedAddress && vanillaRouter) {
     positions = await Promise.all(
@@ -274,8 +283,8 @@ export async function getUserPositions(
         if (!tokenSum.isZero()) {
           // VNL governance token
           const vnlToken = new UniswapToken(
-            tokenListChainId,
-            getAddress(getVnlTokenAddress(version)),
+            chainId,
+            getAddress(contractAddresses.vanilla[version].vnl),
             vnlDecimals,
           )
 
@@ -301,7 +310,9 @@ export async function getUserPositions(
           // Parse value of owned token in USD
           const parsedValue =
             tokenAmount.greaterThan('0') && token.price
-              ? parseFloat(tokenAmount.toSignificant()) * token.price * ETHPrice
+              ? parseFloat(tokenAmount.toSignificant()) *
+                token.price *
+                Number(ETHPrice.toSignificant())
               : 0
 
           // Get current best trade from Uniswap to calculate available rewards
@@ -309,7 +320,7 @@ export async function getUserPositions(
           try {
             if (version === VanillaVersion.V1_0) {
               trade = await constructV2Trade(
-                defaultProvider,
+                provider || providers.getDefaultProvider(),
                 tokenAmount.toSignificant(),
                 weth,
                 token,
@@ -317,7 +328,7 @@ export async function getUserPositions(
               )
             } else if (version === VanillaVersion.V1_1) {
               trade = await constructV3Trade(
-                defaultProvider,
+                provider || providers.getDefaultProvider(),
                 tokenAmount.toSignificant(),
                 weth,
                 token,
@@ -339,7 +350,7 @@ export async function getUserPositions(
             ? await estimateReward(
                 version,
                 address,
-                defaultProvider,
+                provider || providers.getDefaultProvider(),
                 token,
                 weth,
                 tokenAmount.toSignificant(),
@@ -358,10 +369,12 @@ export async function getUserPositions(
           const priceData = await getPriceData(
             version,
             address,
-            defaultProvider,
+            provider || providers.getDefaultProvider(),
             token.address,
           )
-          const blockNumber = await defaultProvider.getBlockNumber()
+          const blockNumber = await (
+            provider || providers.getDefaultProvider()
+          ).getBlockNumber()
           const avgBlock =
             priceData?.weightedBlockSum.div(priceData?.tokenSum) ??
             BigNumber.from('0')

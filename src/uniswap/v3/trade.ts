@@ -10,16 +10,19 @@ import {
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { BigNumber, providers, Signer, Transaction } from 'ethers'
 import { formatUnits, getAddress, parseUnits } from 'ethers/lib/utils'
-import { isAddress, tokenListChainId } from 'lib/tokens'
 import { VanillaVersion } from 'types/general'
 import { Token, UniSwapToken } from 'types/trade'
 import { Quoter, Quoter__factory } from 'types/typechain/uniswap_v3_periphery'
 import { VanillaV1Router02__factory } from 'types/typechain/vanilla_v1.1/factories/VanillaV1Router02__factory'
-import { conservativeGasLimit, ethersOverrides } from 'utils/config'
-import { getUniswapQuoterAddress } from 'utils/config/uniswap'
-import { getVanillaRouterAddress } from 'utils/config/vanilla'
-import { getFeeTier } from 'utils/transactions'
 import { TransactionProps } from '..'
+import {
+  chainId,
+  conservativeGasLimit,
+  contractAddresses,
+  ethersOverrides,
+  getFeeTier,
+} from '../../constants'
+import { isAddress } from '../../tokens'
 
 export const UniswapOracle = (oracle: Quoter) => ({
   swap(tokenIn: string, tokenOut: string) {
@@ -93,7 +96,9 @@ export const buy = async ({
   feeTier,
   gasLimit,
 }: TransactionProps): Promise<Transaction> => {
-  const vnl1_1Addr = isAddress(getVanillaRouterAddress(VanillaVersion.V1_1))
+  const vnl1_1Addr = isAddress(
+    contractAddresses.vanilla[VanillaVersion.V1_1].router,
+  )
   if (vnl1_1Addr && tokenReceived?.address && signer && feeTier) {
     const router = VanillaV1Router02__factory.connect(vnl1_1Addr, signer)
     const usedGasLimit = gasLimit ? gasLimit : ethersOverrides.gasLimit
@@ -124,7 +129,9 @@ export const sell = async ({
   feeTier,
   gasLimit,
 }: TransactionProps): Promise<Transaction> => {
-  const vnl1_1Addr = isAddress(getVanillaRouterAddress(VanillaVersion.V1_1))
+  const vnl1_1Addr = isAddress(
+    contractAddresses.vanilla[VanillaVersion.V1_1].router,
+  )
   if (vnl1_1Addr && tokenPaid?.address && signer && feeTier) {
     const router = VanillaV1Router02__factory.connect(vnl1_1Addr, signer)
     const usedGasLimit = gasLimit ? gasLimit : ethersOverrides.gasLimit
@@ -234,7 +241,7 @@ export async function constructTrade(
       defaultFeeTier
 
     const uniV3Oracle = Quoter__factory.connect(
-      getUniswapQuoterAddress(),
+      contractAddresses.uniswap.v3.quoter,
       signerOrProvider,
     )
 
@@ -289,7 +296,7 @@ export function tryParseAmount(
   }
   try {
     const convertedToken = new UniswapToken(
-      tokenListChainId,
+      chainId,
       getAddress(currency.address),
       Number(currency.decimals),
     )
