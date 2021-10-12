@@ -108,5 +108,12 @@ export const getVnlHolders = async (
     event.args.to !== ADDRESS_ZERO && vnlHolders.add(event.args.to)
   })
 
+  vnlHolders.forEach(async (holder) => {
+    const balance = await vnlToken.balanceOf(holder)
+    if (balance.isZero()) {
+      vnlHolders.delete(holder)
+    }
+  })
+
   return Array.from(vnlHolders)
 }
