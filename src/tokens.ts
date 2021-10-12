@@ -4,35 +4,41 @@ import { BigNumber, constants, Contract, providers, Signer } from 'ethers'
 import { getAddress } from 'ethers/lib/utils'
 import { VanillaVersion } from 'types/general'
 import { Token, UniSwapToken } from 'types/trade'
-import { chainId } from './constants'
+import { chainId, contractAddresses, vnlDecimals } from './constants'
 import { ipfsToHttp } from './ipfs'
 import v1_0Tokens from './tokenLists/tokens_v1_0.json'
 import v1_1Tokens from './tokenLists/tokens_v1_1.json'
 
 // WETH stuff
 const defaultWeth = {
-  chainId: String(1),
+  chainId: String(chainId),
   address: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
   decimals: String(18),
   symbol: 'WETH',
   name: 'Wrapped Ether',
   logoColor: null,
   pairId: null,
-  price: null,
-  priceHistorical: null,
-  liquidity: null,
-  priceChange: null,
 }
 
 export const weth: Token =
-  getAllTokens(VanillaVersion.V1_1)?.find(
+  getAllTokens(VanillaVersion.V1_0)?.find(
     (token) =>
       token.chainId === String(chainId) && token.symbol === defaultWeth.symbol,
   ) || defaultWeth
 
-export const usdc: Token = getAllTokens(VanillaVersion.V1_1)?.find(
+export const usdc: Token = getAllTokens(VanillaVersion.V1_0)?.find(
   (token) => token.chainId === String(chainId) && token.symbol === 'USDC',
 )
+
+export const vnl: Token = {
+  chainId: String(chainId),
+  address: contractAddresses.vanilla.v1_1.vnl,
+  decimals: String(vnlDecimals),
+  symbol: 'VNL',
+  name: 'Vanilla',
+  logoColor: null,
+  pairId: null,
+}
 
 export function getAllTokens(version: VanillaVersion): Token[] {
   // Convert TokenList format to our own format
