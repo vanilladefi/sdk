@@ -9,21 +9,31 @@ import constants from './constants'
 
 export function getVanillaTokenContract(
   version: VanillaVersion,
-  signerOrProvider: Signer | providers.Provider,
+  signerOrProvider?: Signer | providers.Provider,
 ): ERC20 {
   const address = constants.contractAddresses.vanilla[version].vnl
-  return ERC20__factory.connect(address, signerOrProvider)
+  return ERC20__factory.connect(
+    address,
+    signerOrProvider || providers.getDefaultProvider(),
+  )
 }
 
 export function getVanillaRouter(
   version: VanillaVersion,
-  signerOrProvider: Signer | providers.Provider,
+  signerOrProvider?: Signer | providers.Provider,
 ): Contract | VanillaV1Router02 {
   const routerAddress = constants.contractAddresses.vanilla[version].router
   const v1abi = VanillaV1Router01.abi
   return version === VanillaVersion.V1_1
-    ? VanillaV1Router02__factory.connect(routerAddress, signerOrProvider)
-    : new Contract(routerAddress, v1abi, signerOrProvider)
+    ? VanillaV1Router02__factory.connect(
+        routerAddress,
+        signerOrProvider || providers.getDefaultProvider(),
+      )
+    : new Contract(
+        routerAddress,
+        v1abi,
+        signerOrProvider || providers.getDefaultProvider(),
+      )
 }
 
 export const vnlPools = {
