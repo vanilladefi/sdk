@@ -15,6 +15,7 @@ test('Fetch VNL holders', async () => {
   const walletDetails = await getBasicWalletDetails(
     VanillaVersion.V1_1,
     users[randomIndex],
+    global.testProvider,
   )
   expect(
     parseUnits(walletDetails.vnlBalance, vnlDecimals).toBigInt(),

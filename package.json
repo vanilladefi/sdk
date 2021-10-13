@@ -4,7 +4,7 @@
   "description": "A Software Development Kit for the Vanilla DeFi Protocol",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
+    "test": "jest --silent",
     "build": "tsc",
     "lint": "eslint .",
     "format": "prettier --write ."
@@ -28,6 +28,7 @@
     "@uniswap/sdk": "^3.0.3",
     "@uniswap/sdk-core": "^1.0.10",
     "@uniswap/v3-sdk": "^3.5.1",
+    "dotenv": "^10.0.0",
     "ethers": "^5.4.7",
     "jest": "^27.2.5",
     "merkletreejs": "^0.2.24",

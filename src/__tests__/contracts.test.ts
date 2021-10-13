@@ -7,12 +7,14 @@ test('Specified liquidity pool addresses exist', async () => {
     vnlPools.ETH,
     convertVanillaTokenToUniswapToken(vnl),
     convertVanillaTokenToUniswapToken(weth),
+    global.testProvider,
   )
   const [priceUsdc] = await getSpotPrice(
     vnlPools.USDC,
     convertVanillaTokenToUniswapToken(vnl),
     convertVanillaTokenToUniswapToken(usdc),
+    global.testProvider,
   )
   expect(Number(priceWeth.toSignificant())).toBeGreaterThan(0)
   expect(Number(priceUsdc.toSignificant())).toBeGreaterThan(0)
-})
+}, 30000)
