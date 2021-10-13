@@ -12,3 +12,7 @@ test('Token conversion', () => {
   expect(convertVanillaTokenToUniswapToken(weth)).toBeInstanceOf(Token)
   expect(convertVanillaTokenToUniswapToken(vnl)).toBeInstanceOf(Token)
 })
+
+afterAll(() => {
+  delete global.testProvider
+})

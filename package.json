@@ -4,7 +4,7 @@
   "description": "A Software Development Kit for the Vanilla DeFi Protocol",
   "main": "index.js",
   "scripts": {
-    "test": "jest --silent",
+    "test": "jest --ci --silent --forceExit",
     "build": "tsc",
     "lint": "eslint .",
     "format": "prettier --write ."
