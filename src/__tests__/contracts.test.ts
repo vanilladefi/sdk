@@ -1,6 +1,9 @@
-import { vnlPools } from 'src/contracts'
+import { Contract } from '@ethersproject/contracts'
+import { contractAddresses } from 'src/constants'
+import { getVanillaTokenContract, vnlPools } from 'src/contracts'
 import { convertVanillaTokenToUniswapToken, usdc, vnl, weth } from 'src/tokens'
 import { getSpotPrice } from 'src/uniswap/v3/spotPrice'
+import { VanillaVersion } from 'types/general'
 
 test('Specified liquidity pool addresses exist', async () => {
   try {
@@ -23,6 +26,15 @@ test('Specified liquidity pool addresses exist', async () => {
   }
 })
 
-afterAll(() => {
-  delete global.testProvider
+test('Token contract returns normally', async () => {
+  try {
+    const vnlContract1 = getVanillaTokenContract(VanillaVersion.V1_0)
+    expect(vnlContract1).toBeInstanceOf(Contract)
+    expect(vnlContract1.address).toEqual(contractAddresses.vanilla.v1_0.vnl)
+    const vnlContract2 = getVanillaTokenContract(VanillaVersion.V1_1)
+    expect(vnlContract2).toBeInstanceOf(Contract)
+    expect(vnlContract2.address).toEqual(contractAddresses.vanilla.v1_1.vnl)
+  } catch (_e) {
+    return
+  }
 })

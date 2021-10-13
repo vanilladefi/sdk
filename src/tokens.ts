@@ -40,7 +40,7 @@ export const vnl: Token = {
   pairId: null,
 }
 
-export function getAllTokens(version: VanillaVersion): Token[] {
+export function getAllTokens(version?: VanillaVersion): Token[] {
   // Convert TokenList format to our own format
   const defaultTokens: Token[] = uniswapTokens?.tokens
     .map((t) => JSON.parse(JSON.stringify(t))) // Needed for casting to Token[] format

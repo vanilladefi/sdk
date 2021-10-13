@@ -118,33 +118,6 @@ export const getPriceData = async (
   return priceData
 }
 
-export const getEpoch = async (
-  version: VanillaVersion,
-  signerOrProvider: Signer | providers.Provider,
-): Promise<BigNumber | null> => {
-  let epoch: BigNumber | null
-
-  const router =
-    version === VanillaVersion.V1_0
-      ? new ethers.Contract(
-          contractAddresses.vanilla[VanillaVersion.V1_0].router,
-          JSON.stringify(vanillaRouter.abi),
-          signerOrProvider,
-        )
-      : VanillaV1Router02__factory.connect(
-          contractAddresses.vanilla[VanillaVersion.V1_1].router,
-          signerOrProvider,
-        )
-
-  try {
-    epoch = await router.epoch()
-  } catch (e) {
-    epoch = null
-  }
-
-  return epoch
-}
-
 export const estimateGas = async (
   version: VanillaVersion,
   trade: TradeV2 | V3Trade,

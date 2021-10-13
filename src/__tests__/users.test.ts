@@ -1,12 +1,16 @@
 import { parseUnits } from 'ethers/lib/utils'
 import { vnlDecimals } from 'src/constants'
-import { getBasicWalletDetails, getVnlHolders } from 'src/users'
+import { getBasicWalletDetails, getUsers, getVnlHolders } from 'src/users'
 import { VanillaVersion } from 'types/general'
 
-/* test('Fetch users', async () => {
-  const users = await getUsers()
-  expect(users.length).toBeGreaterThan(0)
-}) */
+test('Fetch users', async () => {
+  try {
+    const users = await getUsers()
+    expect(users.length).toBeGreaterThan(0)
+  } catch (_e) {
+    return
+  }
+})
 
 test('Fetch VNL holders', async () => {
   try {
@@ -24,8 +28,4 @@ test('Fetch VNL holders', async () => {
   } catch (_e) {
     return
   }
-})
-
-afterAll(() => {
-  delete global.testProvider
 })
