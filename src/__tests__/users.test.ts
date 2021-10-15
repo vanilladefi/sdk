@@ -1,7 +1,7 @@
+import { vnlDecimals } from 'constants'
 import { parseUnits } from 'ethers/lib/utils'
-import { vnlDecimals } from 'src/constants'
-import { getBasicWalletDetails, getUsers, getVnlHolders } from 'src/users'
 import { VanillaVersion } from 'types/general'
+import { getBasicWalletDetails, getUsers, getVnlHolders } from 'users'
 
 test('Fetch users', async () => {
   try {

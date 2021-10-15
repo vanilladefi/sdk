@@ -1,13 +1,18 @@
 import { formatUnits } from '@ethersproject/units'
 import { ADDRESS_ZERO } from '@uniswap/v3-sdk'
+import {
+  contractAddresses,
+  epoch,
+  getVanillaRouter,
+  getVanillaTokenContract,
+  vnlDecimals,
+} from 'contracts'
 import { ethers, providers } from 'ethers'
+import { getBalance, isAddress } from 'tokens'
 import { PrerenderProps } from 'types/content'
 import { VanillaVersion } from 'types/general'
 import { ERC20 } from 'types/typechain/vanilla_v1.1/ERC20'
 import { ERC20__factory } from 'types/typechain/vanilla_v1.1/factories/ERC20__factory'
-import { contractAddresses, epoch, vnlDecimals } from './constants'
-import { getVanillaRouter, getVanillaTokenContract } from './contracts'
-import { getBalance, isAddress } from './tokens'
 
 export const getUsers = async (
   provider?: providers.Provider,

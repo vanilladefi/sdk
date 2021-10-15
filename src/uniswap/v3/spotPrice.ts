@@ -1,4 +1,4 @@
-import { Token } from '@uniswap/sdk-core'
+import { Fraction, Token } from '@uniswap/sdk-core'
 import { abi as IUniswapV3PoolABI } from '@uniswap/v3-core/artifacts/contracts/interfaces/IUniswapV3Pool.sol/IUniswapV3Pool.json'
 import { Pool } from '@uniswap/v3-sdk'
 import { Contract, ethers, providers } from 'ethers'
@@ -13,6 +13,13 @@ interface State {
   feeProtocol: number
   unlocked: boolean
 }
+
+type PriceGetter = (
+  poolAddress: string,
+  token0: Token,
+  token1: Token,
+  provider?: providers.Provider,
+) => Promise<[Fraction, Fraction]>
 
 const getPoolState = async (poolContract: Contract) => {
   const slot = await poolContract.slot0()
@@ -29,7 +36,7 @@ const getPoolState = async (poolContract: Contract) => {
   return PoolState
 }
 
-export const getSpotPrice = async (
+export const getSpotPrice: PriceGetter = async (
   poolAddress: string,
   token0: Token,
   token1: Token,

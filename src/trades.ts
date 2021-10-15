@@ -6,8 +6,24 @@ import {
   TradeType,
 } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
+import {
+  blockDeadlineThreshold,
+  chainId,
+  contractAddresses,
+  epoch,
+  getVanillaRouter,
+  usdcWethPoolAddress,
+  vnlDecimals,
+} from 'contracts'
 import { BigNumber, ethers, providers, Signer } from 'ethers'
 import { formatUnits, getAddress } from 'ethers/lib/utils'
+import {
+  convertVanillaTokenToUniswapToken,
+  getAllTokens,
+  isAddress,
+  usdc,
+  weth,
+} from 'tokens'
 import vanillaRouter from 'types/abis/vanillaRouter.json'
 import { VanillaVersion } from 'types/general'
 import {
@@ -20,27 +36,11 @@ import {
 } from 'types/trade'
 import { VanillaV1Router02__factory } from 'types/typechain/vanilla_v1.1'
 import {
-  blockDeadlineThreshold,
-  chainId,
-  contractAddresses,
-  epoch,
-  usdcWethPoolAddress,
-  vnlDecimals,
-} from './constants'
-import { getVanillaRouter } from './contracts'
-import {
-  convertVanillaTokenToUniswapToken,
-  getAllTokens,
-  isAddress,
-  usdc,
-  weth,
-} from './tokens'
-import {
   constructTrade as constructV2Trade,
   tryParseAmount,
-} from './uniswap/v2/trade'
-import { getSpotPrice } from './uniswap/v3/spotPrice'
-import { constructTrade as constructV3Trade } from './uniswap/v3/trade'
+} from 'uniswap/v2/trade'
+import { getSpotPrice } from 'uniswap/v3/spotPrice'
+import { constructTrade as constructV3Trade } from 'uniswap/v3/trade'
 
 export const estimateReward = async (
   version: VanillaVersion,
@@ -285,7 +285,7 @@ export async function getUserPositions(
             tokenAmount.greaterThan('0') && token.price
               ? parseFloat(tokenAmount.toSignificant()) *
                 token.price *
-                Number(ETHPrice.toSignificant())
+                Number(ETHPrice.toSignificant(3))
               : 0
 
           // Get current best trade from Uniswap to calculate available rewards

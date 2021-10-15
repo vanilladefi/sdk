@@ -1,5 +1,5 @@
+import { network } from 'constants'
 import { providers } from 'ethers'
-import { network } from 'src/constants'
 
 jest.setTimeout(240000)
 

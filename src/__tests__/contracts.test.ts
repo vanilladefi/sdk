@@ -1,9 +1,9 @@
 import { Contract } from '@ethersproject/contracts'
-import { contractAddresses } from 'src/constants'
-import { getVanillaTokenContract, vnlPools } from 'src/contracts'
-import { convertVanillaTokenToUniswapToken, usdc, vnl, weth } from 'src/tokens'
-import { getSpotPrice } from 'src/uniswap/v3/spotPrice'
+import { contractAddresses } from 'constants'
+import { getVanillaTokenContract, vnlPools } from 'contracts'
+import { convertVanillaTokenToUniswapToken, usdc, vnl, weth } from 'tokens'
 import { VanillaVersion } from 'types/general'
+import { getSpotPrice } from 'uniswap/v3/spotPrice'
 
 test('Specified liquidity pool addresses exist', async () => {
   try {

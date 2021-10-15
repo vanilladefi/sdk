@@ -1,13 +1,13 @@
 import uniswapTokens from '@uniswap/default-token-list'
 import { Token as UniswapToken } from '@uniswap/sdk-core'
+import { chainId, contractAddresses, vnlDecimals } from 'contracts'
 import { BigNumber, constants, Contract, providers, Signer } from 'ethers'
 import { getAddress } from 'ethers/lib/utils'
+import { ipfsToHttp } from 'ipfs'
+import v1_0Tokens from 'tokenLists/tokens_v1_0.json'
+import v1_1Tokens from 'tokenLists/tokens_v1_1.json'
 import { VanillaVersion } from 'types/general'
 import { Token, UniSwapToken } from 'types/trade'
-import { chainId, contractAddresses, vnlDecimals } from './constants'
-import { ipfsToHttp } from './ipfs'
-import v1_0Tokens from './tokenLists/tokens_v1_0.json'
-import v1_1Tokens from './tokenLists/tokens_v1_1.json'
 
 // WETH stuff
 const defaultWeth = {
