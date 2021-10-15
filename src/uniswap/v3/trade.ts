@@ -157,7 +157,6 @@ class V3Trade {
   public inputAmount: TokenAmount
   public outputAmount: TokenAmount
   public tradeType: TradeType
-  public slippageTolerance: Percent
   public price: Price
 
   public route = null
@@ -241,7 +240,7 @@ export async function constructTrade(
       defaultFeeTier
 
     const uniV3Oracle = Quoter__factory.connect(
-      contractAddresses.uniswap.v3.quoter,
+      contractAddresses.uniswap.v3.quoter || '',
       signerOrProvider,
     )
 

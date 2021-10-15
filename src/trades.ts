@@ -319,7 +319,7 @@ export async function getUserPositions(
 
           let reward: RewardResponse | null = null
           // Get reward estimate from Vanilla router
-          reward = amountOut
+          reward = parsedAmountOut
             ? await estimateReward(
                 version,
                 address,
@@ -368,7 +368,7 @@ export async function getUserPositions(
 
           // Parse the minimum profitable price from the reward estimate
           let profitablePrice: string | undefined
-          let usedEstimate: keyof RewardEstimate
+          let usedEstimate: keyof RewardEstimate = 'medium'
           if (version === VanillaVersion.V1_0 && reward?.profitablePrice) {
             profitablePrice = formatUnits(reward.profitablePrice)
           } else if (version === VanillaVersion.V1_1 && reward?.estimate) {
