@@ -20,15 +20,26 @@ const defaultWeth = {
   pairId: null,
 }
 
+const defaultUsdc = {
+  chainId: String(chainId),
+  address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+  decimals: String(6),
+  symbol: 'USDC',
+  name: 'USD Coin',
+  logoColor: null,
+  pairId: null,
+}
+
 export const weth: Token =
   getAllTokens(VanillaVersion.V1_0)?.find(
     (token) =>
       token.chainId === String(chainId) && token.symbol === defaultWeth.symbol,
   ) || defaultWeth
 
-export const usdc: Token = getAllTokens(VanillaVersion.V1_0)?.find(
-  (token) => token.chainId === String(chainId) && token.symbol === 'USDC',
-)
+export const usdc: Token =
+  getAllTokens(VanillaVersion.V1_0)?.find(
+    (token) => token.chainId === String(chainId) && token.symbol === 'USDC',
+  ) || defaultUsdc
 
 export const vnl: Token = {
   chainId: String(chainId),

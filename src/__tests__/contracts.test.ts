@@ -1,9 +1,9 @@
 import { Contract } from '@ethersproject/contracts'
-import { contractAddresses } from 'constants'
-import { getVanillaTokenContract, vnlPools } from 'contracts'
+import { contractAddresses, getVanillaTokenContract, vnlPools } from 'contracts'
 import { convertVanillaTokenToUniswapToken, usdc, vnl, weth } from 'tokens'
 import { VanillaVersion } from 'types/general'
 import { getSpotPrice } from 'uniswap/v3/spotPrice'
+import { testProvider } from '../__utils__/utils'
 
 test('Specified liquidity pool addresses exist', async () => {
   try {
@@ -11,16 +11,16 @@ test('Specified liquidity pool addresses exist', async () => {
       vnlPools.ETH,
       convertVanillaTokenToUniswapToken(vnl),
       convertVanillaTokenToUniswapToken(weth),
-      global.testProvider,
+      testProvider,
     )
     const [priceUsdc] = await getSpotPrice(
       vnlPools.USDC,
       convertVanillaTokenToUniswapToken(vnl),
       convertVanillaTokenToUniswapToken(usdc),
-      global.testProvider,
+      testProvider,
     )
-    expect(Number(priceWeth.toSignificant())).toBeGreaterThan(0)
-    expect(Number(priceUsdc.toSignificant())).toBeGreaterThan(0)
+    expect(Number(priceWeth.toSignificant(3))).toBeGreaterThan(0)
+    expect(Number(priceUsdc.toSignificant(3))).toBeGreaterThan(0)
   } catch (_e) {
     return
   }

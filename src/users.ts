@@ -35,7 +35,7 @@ export const getUsers = async (
     epoch,
   )
   events.forEach((event) => {
-    const walletAddress = isAddress(event.args.buyer)
+    const walletAddress = isAddress(event?.args?.buyer)
     if (walletAddress && !users.includes(walletAddress)) {
       users.push(walletAddress)
     }
@@ -49,7 +49,7 @@ export const getUsers = async (
     epoch,
   )
   legacyEvents.forEach((event) => {
-    const walletAddress = isAddress(event.args.buyer)
+    const walletAddress = isAddress(event?.args?.buyer)
     if (walletAddress && !users.includes(walletAddress)) {
       users.push(walletAddress)
     }
@@ -82,7 +82,6 @@ export const getBasicWalletDetails = async (
     console.error(
       `getBasicWalletDetails failed for address ${walletAddress}: ${e}`,
     )
-    throw e
   }
   return { vnlBalance, ethBalance }
 }
@@ -109,8 +108,8 @@ export const getVnlHolders = async (
   const vnlHolders = new Set<string>()
 
   events.forEach((event) => {
-    event.args.from !== ADDRESS_ZERO && vnlHolders.add(event.args.from)
-    event.args.to !== ADDRESS_ZERO && vnlHolders.add(event.args.to)
+    event?.args?.from !== ADDRESS_ZERO && vnlHolders.add(event?.args?.from)
+    event?.args?.to !== ADDRESS_ZERO && vnlHolders.add(event?.args?.to)
   })
 
   vnlHolders.forEach(async (holder) => {
