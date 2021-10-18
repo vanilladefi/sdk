@@ -1,0 +1,10 @@
+import { Percent as V2Percent, Trade as TradeV2 } from '@uniswap/sdk';
+import { Percent } from '@uniswap/sdk-core';
+import { BigNumber, providers, Signer } from 'ethers';
+import { VanillaVersion } from 'types/general';
+import { RewardResponse, Token, TokenPriceResponse, V3Trade } from 'types/trade';
+export declare const estimateReward: (version: any, owner: string, signerOrProvider: Signer | providers.Provider, tokenSold: any, tokenReceived: any, amountSold: string, amountReceived: string) => Promise<RewardResponse | null>;
+export declare const getPriceData: (version: any, owner: string, signerOrProvider: Signer | providers.Provider, tokenAddress: string) => Promise<TokenPriceResponse | null>;
+export declare const estimateGas: (version: any, trade: TradeV2 | V3Trade, signer: Signer, provider: providers.Provider, operation: any, token0: any, slippageTolerance: Percent | V2Percent) => Promise<BigNumber>;
+export declare function calculateGasMargin(value: BigNumber): BigNumber;
+export declare function getUserPositions(version: VanillaVersion, address: string, tokens?: Token[], provider?: providers.Provider): Promise<Token[]>;
