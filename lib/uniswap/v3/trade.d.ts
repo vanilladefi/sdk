@@ -1,8 +1,8 @@
 import { CurrencyAmount, Percent, Price, TokenAmount, TradeType } from '@uniswap/sdk-core';
 import { BigNumber, providers, Signer, Transaction } from 'ethers';
-import { Token, UniSwapToken } from 'types/trade';
-import { Quoter } from 'types/typechain/uniswap_v3_periphery';
-import { TransactionProps } from 'uniswap';
+import { Token, UniSwapToken } from '../../types/trade';
+import { Quoter } from '../../types/typechain/uniswap_v3_periphery';
+import { TransactionProps } from '../../uniswap';
 export declare const UniswapOracle: (oracle: Quoter) => {
     swap(tokenIn: string, tokenOut: string): {
         swapParamsIn(amountIn: TokenAmount, fee: number): {

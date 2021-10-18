@@ -1,9 +1,9 @@
 import { BigNumber, constants, Event, utils } from 'ethers'
 import { keccak256 } from 'ethers/lib/utils'
 import { MerkleTree } from 'merkletreejs'
-import { VanillaV1MigrationState__factory } from 'types/typechain/vanilla_v1.1/factories/VanillaV1MigrationState__factory'
-import { VanillaV1Token01 } from 'types/typechain/vanilla_v1.1/VanillaV1Token01'
-import { VanillaV1Token02 } from 'types/typechain/vanilla_v1.1/VanillaV1Token02'
+import { VanillaV1MigrationState__factory } from './types/typechain/vanilla_v1.1/factories/VanillaV1MigrationState__factory'
+import { VanillaV1Token01 } from './types/typechain/vanilla_v1.1/VanillaV1Token01'
+import { VanillaV1Token02 } from './types/typechain/vanilla_v1.1/VanillaV1Token02'
 
 export type SnapshotState = {
   blockNumber: number

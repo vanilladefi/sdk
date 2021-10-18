@@ -1,7 +1,7 @@
 import { BigNumber } from 'ethers';
 import { MerkleTree } from 'merkletreejs';
-import { VanillaV1Token01 } from 'types/typechain/vanilla_v1.1/VanillaV1Token01';
-import { VanillaV1Token02 } from 'types/typechain/vanilla_v1.1/VanillaV1Token02';
+import { VanillaV1Token01 } from './types/typechain/vanilla_v1.1/VanillaV1Token01';
+import { VanillaV1Token02 } from './types/typechain/vanilla_v1.1/VanillaV1Token02';
 export declare type SnapshotState = {
     blockNumber: number;
     timeStamp: number;

@@ -7,14 +7,14 @@ import {
   Trade,
   TradeType,
 } from '@uniswap/sdk'
-import { chainId, contractAddresses, ethersOverrides } from 'contracts'
 import { providers, Transaction } from 'ethers'
 import { getAddress, parseUnits } from 'ethers/lib/utils'
-import { getContract } from 'tokens'
-import vanillaRouter from 'types/abis/vanillaRouter.json'
-import { VanillaVersion } from 'types/general'
-import type { Token as UniswapToken } from 'types/trade'
-import { TransactionProps } from 'uniswap'
+import { chainId, contractAddresses, ethersOverrides } from '../../contracts'
+import { getContract } from '../../tokens'
+import vanillaRouter from '../../types/abis/vanillaRouter.json'
+import { VanillaVersion } from '../../types/general'
+import type { Token as UniswapToken } from '../../types/trade'
+import { TransactionProps } from '../../uniswap'
 
 export const buy = async ({
   amountPaid,

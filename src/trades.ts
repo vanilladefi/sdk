@@ -6,6 +6,8 @@ import {
   TradeType,
 } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
+import { BigNumber, ethers, providers, Signer } from 'ethers'
+import { formatUnits, getAddress } from 'ethers/lib/utils'
 import {
   blockDeadlineThreshold,
   chainId,
@@ -14,18 +16,16 @@ import {
   getVanillaRouter,
   usdcWethPoolAddress,
   vnlDecimals,
-} from 'contracts'
-import { BigNumber, ethers, providers, Signer } from 'ethers'
-import { formatUnits, getAddress } from 'ethers/lib/utils'
+} from './contracts'
 import {
   convertVanillaTokenToUniswapToken,
   getAllTokens,
   isAddress,
   usdc,
   weth,
-} from 'tokens'
-import vanillaRouter from 'types/abis/vanillaRouter.json'
-import { VanillaVersion } from 'types/general'
+} from './tokens'
+import vanillaRouter from './types/abis/vanillaRouter.json'
+import { VanillaVersion } from './types/general'
 import {
   Operation,
   RewardEstimate,
@@ -33,14 +33,14 @@ import {
   Token,
   TokenPriceResponse,
   V3Trade,
-} from 'types/trade'
-import { VanillaV1Router02__factory } from 'types/typechain/vanilla_v1.1'
+} from './types/trade'
+import { VanillaV1Router02__factory } from './types/typechain/vanilla_v1.1'
 import {
   constructTrade as constructV2Trade,
   tryParseAmount,
-} from 'uniswap/v2/trade'
-import { getSpotPrice } from 'uniswap/v3/spotPrice'
-import { constructTrade as constructV3Trade } from 'uniswap/v3/trade'
+} from './uniswap/v2/trade'
+import { getSpotPrice } from './uniswap/v3/spotPrice'
+import { constructTrade as constructV3Trade } from './uniswap/v3/trade'
 
 export const estimateReward = async (
   version: VanillaVersion,

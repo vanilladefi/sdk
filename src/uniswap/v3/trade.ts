@@ -17,12 +17,15 @@ import {
 } from 'contracts'
 import { BigNumber, providers, Signer, Transaction } from 'ethers'
 import { formatUnits, getAddress, parseUnits } from 'ethers/lib/utils'
-import { isAddress } from 'tokens'
-import { VanillaVersion } from 'types/general'
-import { Token, UniSwapToken } from 'types/trade'
-import { Quoter, Quoter__factory } from 'types/typechain/uniswap_v3_periphery'
-import { VanillaV1Router02__factory } from 'types/typechain/vanilla_v1.1/factories/VanillaV1Router02__factory'
-import { TransactionProps } from 'uniswap'
+import { isAddress } from '../../tokens'
+import { VanillaVersion } from '../../types/general'
+import { Token, UniSwapToken } from '../../types/trade'
+import {
+  Quoter,
+  Quoter__factory,
+} from '../../types/typechain/uniswap_v3_periphery'
+import { VanillaV1Router02__factory } from '../../types/typechain/vanilla_v1.1/factories/VanillaV1Router02__factory'
+import { TransactionProps } from '../../uniswap'
 
 export const UniswapOracle = (oracle: Quoter) => ({
   swap(tokenIn: string, tokenOut: string) {

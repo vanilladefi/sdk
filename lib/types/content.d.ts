@@ -1,5 +1,5 @@
-import { UniswapVersion } from 'types/general';
-import { Token } from 'types/trade';
+import { UniswapVersion } from '../types/general';
+import { Token } from '../types/trade';
 export declare type PrerenderProps = {
     walletAddress?: string | false;
     vnlBalance?: string | null;

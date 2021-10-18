@@ -1,7 +1,7 @@
 import { Token as UniswapToken } from '@uniswap/sdk-core';
 import { BigNumber, Contract, providers, Signer } from 'ethers';
-import { VanillaVersion } from 'types/general';
-import { Token, UniSwapToken } from 'types/trade';
+import { VanillaVersion } from './types/general';
+import { Token, UniSwapToken } from './types/trade';
 export declare const weth: Token;
 export declare const usdc: Token;
 export declare const vnl: Token;

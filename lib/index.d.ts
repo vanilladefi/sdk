@@ -1,4 +1,4 @@
-import * as migration from 'migration';
+import * as migration from './migration';
 declare const _default: {
     getUsers: (provider?: import("@ethersproject/abstract-provider").Provider | undefined) => Promise<string[]>;
     getBasicWalletDetails: (vanillaVersion: import("./types/general").VanillaVersion, walletAddress: string, provider?: import("@ethersproject/abstract-provider").Provider | undefined) => Promise<import("./types/content").PrerenderProps>;
