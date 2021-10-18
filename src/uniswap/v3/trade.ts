@@ -5,24 +5,24 @@ import {
   Price,
   Token as UniswapToken,
   TokenAmount,
-  TradeType,
+  TradeType
 } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
+import { BigNumber, providers, Signer, Transaction } from 'ethers'
+import { formatUnits, getAddress, parseUnits } from 'ethers/lib/utils'
 import {
   chainId,
   conservativeGasLimit,
   contractAddresses,
   ethersOverrides,
-  getFeeTier,
-} from 'contracts'
-import { BigNumber, providers, Signer, Transaction } from 'ethers'
-import { formatUnits, getAddress, parseUnits } from 'ethers/lib/utils'
+  getFeeTier
+} from '../../contracts'
 import { isAddress } from '../../tokens'
 import { VanillaVersion } from '../../types/general'
 import { Token, UniSwapToken } from '../../types/trade'
 import {
   Quoter,
-  Quoter__factory,
+  Quoter__factory
 } from '../../types/typechain/uniswap_v3_periphery'
 import { VanillaV1Router02__factory } from '../../types/typechain/vanilla_v1.1/factories/VanillaV1Router02__factory'
 import { TransactionProps } from '../../uniswap'
