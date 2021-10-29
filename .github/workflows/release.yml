@@ -22,7 +22,6 @@ jobs:
       - name: Build
         run: npm install
       - name: Release
-        uses: actions/npm@master
         env:
           NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        args: publish
+        run: npm publish
