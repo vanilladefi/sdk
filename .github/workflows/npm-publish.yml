@@ -27,7 +27,8 @@ jobs:
         with:
           node-version: 14
           registry-url: https://registry.npmjs.org/
-      - run: npm build && npm publish --access public
+      - run: npm build
+      - run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
 
@@ -43,6 +44,7 @@ jobs:
         with:
           node-version: 14
           registry-url: https://npm.pkg.github.com/
-      - run: npm build && npm publish
+      - run: npm build
+      - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.RELEASE_TOKEN}}
