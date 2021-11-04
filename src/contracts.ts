@@ -7,6 +7,14 @@ import { ERC20__factory } from './types/typechain/vanilla_v1.1/factories/ERC20__
 import { VanillaV1Router02__factory } from './types/typechain/vanilla_v1.1/factories/VanillaV1Router02__factory'
 import { VanillaV1Router02 } from './types/typechain/vanilla_v1.1/VanillaV1Router02'
 
+/**
+ * Returns an instance of a $VNL ERC-20 token contract
+ * based on the Vanilla version.
+ *
+ * @param version Version of Vanilla, so that interfacing with legacy tokens is possible.
+ * @param signerOrProvider ethersjs signer(read/write) or provider(readonly).
+ * @returns ERC-20 token contract instance with transactional capability
+ */
 export function getVanillaTokenContract(
   version: VanillaVersion,
   signerOrProvider?: Signer | providers.Provider,
@@ -18,6 +26,14 @@ export function getVanillaTokenContract(
   )
 }
 
+/**
+ * Returns an instance of a Vanilla trade router contract based on the Vanilla
+ * version.
+ *
+ * @param version Version of Vanilla, so that interfacing with legacy tokens is possible.
+ * @param signerOrProvider ethersjs signer(read/write) or provider(readonly).
+ * @returns Vanilla router contract instance with transactional capability
+ */
 export function getVanillaRouter(
   version: VanillaVersion,
   signerOrProvider?: Signer | providers.Provider,
@@ -36,11 +52,17 @@ export function getVanillaRouter(
       )
 }
 
+/**
+ * $VNL pools on Uniswap with the most liquidity
+ */
 export const vnlPools = {
   ETH: '0xff6949065aebb4be59d30c970694a7495da0c0ff',
   USDC: '0x0aa719a08957bdf43d9c9f0b755edd1ca2b386f3',
 }
 
+/**
+ * Addresses of deployed Vanilla contracts
+ */
 export const contractAddresses: {
   vanilla: { [version in VanillaVersion]: { router: string; vnl: string } }
   uniswap: { [version in UniswapVersion]: { router: string; quoter?: string } }
@@ -66,18 +88,42 @@ export const contractAddresses: {
   },
 }
 
+/**
+ * The Uniswap v3 pool address for checking WETH/USDC price
+ */
 export const usdcWethPoolAddress = '0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640'
 
+/**
+ * Decimal points used in $VNL
+ */
 export const vnlDecimals = 12
 
+/**
+ * The block number of the first Vanilla v1.0 deployment. Used for calculating HTRS
+ */
 export const epoch = 12134736
 
+/**
+ * Chain ID where Vanilla resides
+ */
 export const chainId = 1
 
+/**
+ * A network definition used in ethersjs
+ */
 export const network: providers.Networkish = providers.getNetwork(chainId)
 
+/**
+ * Vanilla v1.0 hidden tokens. Currently: Ampleforth
+ */
 export const hiddenTokens = ['0xd46ba6d942050d489dbd938a2c909a5d5039a161']
 
+/**
+ * Matches a given Uniswap v3 pool fee tier with an enum and returns it
+ *
+ * @param input ['500', '3000', '10000'], the default fee tiers of Uniswap v3 pools.
+ * @returns enum FeeAmount.[LOW, MEDIUM, HIGH] | undefined
+ */
 export function getFeeTier(
   input: string | number | null | undefined,
 ): FeeAmount | undefined {
@@ -101,8 +147,22 @@ export function getFeeTier(
   return feeTier
 }
 
+/**
+ * A trade deadline for submitted trades. 10 minutes by default.
+ */
 export const blockDeadlineThreshold = 60000 // 600 seconds added to the latest block timestamp (10 minutes)
 
+/**
+ * Conservative gas limit to use for Uniswap v2/v3 trades.
+ */
 export const conservativeGasLimit = 800_000
+
+/**
+ * Conservative gas limit to use for $VNL token migration
+ */
 export const conservativeMigrationGasLimit = 120_000
+
+/**
+ * Ethersjs overrides if estimates fail
+ */
 export const ethersOverrides = { gasLimit: conservativeGasLimit }

@@ -14,6 +14,12 @@ import { VanillaVersion } from './types/general'
 import { ERC20 } from './types/typechain/vanilla_v1.1/ERC20'
 import { ERC20__factory } from './types/typechain/vanilla_v1.1/factories/ERC20__factory'
 
+/**
+ * Gets all addresses that have purchased tokens via Vanilla
+ *
+ * @param provider - an ethersjs provider (readonly)
+ * @returns list of addresses that have interacted with Vanilla
+ */
 export const getUsers = async (
   provider?: providers.Provider,
 ): Promise<string[]> => {
@@ -58,14 +64,23 @@ export const getUsers = async (
   return users
 }
 
+/**
+ * Fetches the $VNL and $ETH balances for given address
+ *
+ * @param vanillaVersion - Vanilla version
+ * @param address - ethereum address
+ * @param provider - an ethersjs provider (readonly)
+ * @returns addresses $VNL and $ETH balance
+ */
 export const getBasicWalletDetails = async (
   vanillaVersion: VanillaVersion,
-  walletAddress: string,
+  address: string,
   provider?: providers.Provider,
 ): Promise<PrerenderProps> => {
   let [vnlBalance, ethBalance]: string[] = ['0', '0']
+  const walletAddress = isAddress(address)
   try {
-    if (isAddress(walletAddress)) {
+    if (walletAddress) {
       const vnl: ERC20 = getVanillaTokenContract(
         vanillaVersion,
         provider || providers.getDefaultProvider(),
@@ -86,6 +101,12 @@ export const getBasicWalletDetails = async (
   return { vnlBalance, ethBalance }
 }
 
+/**
+ * Gets a list of $VNL holders
+ *
+ * @param provider - an ethersjs provider (readonly)
+ * @returns list of addresses that hold $VNL
+ */
 export const getVnlHolders = async (
   provider?: providers.Provider,
 ): Promise<string[]> => {
