@@ -9,7 +9,9 @@ import v1_1Tokens from './tokenLists/tokens_v1_1.json'
 import { VanillaVersion } from './types/general'
 import { Token, UniSwapToken } from './types/trade'
 
-// WETH stuff
+/**
+ * wETH9 in Vanilla's token format
+ */
 const defaultWeth = {
   chainId: String(chainId),
   address: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
@@ -20,6 +22,9 @@ const defaultWeth = {
   pairId: null,
 }
 
+/**
+ * USDC in Vanilla's token format
+ */
 const defaultUsdc = {
   chainId: String(chainId),
   address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
@@ -30,17 +35,26 @@ const defaultUsdc = {
   pairId: null,
 }
 
+/**
+ * Equals wETH from getAllTokens if found, defaultWeth if not
+ */
 export const weth: Token =
   getAllTokens(VanillaVersion.V1_0)?.find(
     (token) =>
       token.chainId === String(chainId) && token.symbol === defaultWeth.symbol,
   ) || defaultWeth
 
+/**
+ * Equals USDC from getAllTokens if found, defaultUsdc if not
+ */
 export const usdc: Token =
   getAllTokens(VanillaVersion.V1_0)?.find(
     (token) => token.chainId === String(chainId) && token.symbol === 'USDC',
   ) || defaultUsdc
 
+/**
+ * Latest $VNL token in Vanilla's token format
+ */
 export const vnl: Token = {
   chainId: String(chainId),
   address: contractAddresses.vanilla.v1_1.vnl,
@@ -51,6 +65,13 @@ export const vnl: Token = {
   pairId: null,
 }
 
+/**
+ * Returns the list of tokens available in Vanilla's trade UI
+ * based on given Vanilla version.
+ *
+ * @param version - Vanilla version
+ * @returns A list of tokens in Vanilla's token format.
+ */
 export function getAllTokens(version?: VanillaVersion): Token[] {
   // Convert TokenList format to our own format
   const defaultTokens: Token[] = uniswapTokens?.tokens
@@ -112,6 +133,13 @@ export function getAllTokens(version?: VanillaVersion): Token[] {
     }))
 }
 
+/**
+ * Returns the ETH balance of given Ethereum address as a BigNumber (wei)
+ *
+ * @param address - Ethereum address
+ * @param provider - an ethersjs provider with readonly access
+ * @returns the ETH balance of given Ethereum address in wei as BigNumber
+ */
 export async function getBalance(
   address: string,
   provider: providers.Provider,
@@ -120,7 +148,13 @@ export async function getBalance(
   return balance
 }
 
-// returns the checksummed address if the address is valid, otherwise returns false
+/**
+ * Returns a checksummed version of the given address if it exists,
+ * false if the given address is not correct.
+ *
+ * @param value - an Ethereum address
+ * @returns a checksummed address or false
+ */
 export function isAddress(value: string): string | false {
   try {
     return getAddress(value)
@@ -129,7 +163,14 @@ export function isAddress(value: string): string | false {
   }
 }
 
-// account is optional
+/**
+ * Helper function for constructing arbitrary ethersjs contract instances
+ *
+ * @param address - contract address
+ * @param ABI - The application binary interface of the contract
+ * @param signerOrProvider - an ethersjs signer(read/write) or provider(readonly)
+ * @returns a Contract instance with transactional capabilities
+ */
 export function getContract(
   address: string,
   ABI: any,
@@ -142,6 +183,12 @@ export function getContract(
   return new Contract(address, ABI, signerOrProvider)
 }
 
+/**
+ * Pads Uniswap SDK token format into Vanilla token format
+ *
+ * @param input - a UniSwapToken instance with less info than Vanilla's Token format
+ * @returns a padded token with all required fields of Vanilla token format
+ */
 export function padUniswapTokenToToken(input: UniSwapToken): Token {
   const token = {
     pairId: null,
@@ -151,6 +198,12 @@ export function padUniswapTokenToToken(input: UniSwapToken): Token {
   return token
 }
 
+/**
+ * Converts a token from Vanilla token format into Uniswap token format
+ *
+ * @param input - a Vanilla token
+ * @returns a Uniswap SDK compatible token
+ */
 export function convertVanillaTokenToUniswapToken(input: Token): UniswapToken {
   const token = new UniswapToken(
     Number(input.chainId),

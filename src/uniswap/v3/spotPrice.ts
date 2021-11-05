@@ -21,6 +21,12 @@ type PriceGetter = (
   provider?: providers.Provider,
 ) => Promise<[Fraction, Fraction]>
 
+/**
+ * Fetches the Uniswap v3 pool state for given pool contract
+ *
+ * @param poolContract - A Uniswap v3 liquidity pool instance
+ * @returns pool state with lots of info about pricing and the oracle
+ */
 const getPoolState = async (poolContract: Contract) => {
   const slot = await poolContract.slot0()
   const PoolState: State = {
@@ -36,6 +42,16 @@ const getPoolState = async (poolContract: Contract) => {
   return PoolState
 }
 
+/**
+ * Gets the on-chain price for given token pair
+ * from a Uniswap v3 liquidity pool
+ *
+ * @param poolAddress - the Uniswap v3 liquidity pool address
+ * @param token0 - the first token of the token pair in Uniswap's Token format
+ * @param token1 - the second token of the pair in Uniswap's token format
+ * @param provider - an ethersjs provider (readonly)
+ * @returns a list with both prices of the pair (token0/token1 & token1/token0)
+ */
 export const getSpotPrice: PriceGetter = async (
   poolAddress: string,
   token0: Token,

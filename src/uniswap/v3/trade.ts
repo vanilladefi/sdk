@@ -5,7 +5,7 @@ import {
   Price,
   Token as UniswapToken,
   TokenAmount,
-  TradeType
+  TradeType,
 } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { BigNumber, providers, Signer, Transaction } from 'ethers'
@@ -15,18 +15,25 @@ import {
   conservativeGasLimit,
   contractAddresses,
   ethersOverrides,
-  getFeeTier
+  getFeeTier,
 } from '../../contracts'
 import { isAddress } from '../../tokens'
 import { VanillaVersion } from '../../types/general'
 import { Token, UniSwapToken } from '../../types/trade'
 import {
   Quoter,
-  Quoter__factory
+  Quoter__factory,
 } from '../../types/typechain/uniswap_v3_periphery'
 import { VanillaV1Router02__factory } from '../../types/typechain/vanilla_v1.1/factories/VanillaV1Router02__factory'
 import { TransactionProps } from '../../uniswap'
 
+/**
+ * A curried function that returns helpers for
+ * interacting with a Uniswap Quoter
+ *
+ * @param oracle - Uniswap Quoter instance
+ * @returns function swap()
+ */
 export const UniswapOracle = (oracle: Quoter) => ({
   swap(tokenIn: string, tokenOut: string) {
     return {
@@ -90,6 +97,12 @@ export const UniswapOracle = (oracle: Quoter) => ({
   },
 })
 
+/**
+ * Buys tokens on Uniswap v3 using Vanilla v1.1
+ *
+ * @param param0 {@link @vanilladefi/sdk/lib/TransactionProps | TransactionProps object}
+ * @returns an ethersjs Transaction object
+ */
 export const buy = async ({
   amountPaid,
   amountReceived,
@@ -123,6 +136,12 @@ export const buy = async ({
   }
 }
 
+/**
+ * Sells tokens on Uniswap v3 using Vanilla v1.1
+ *
+ * @param param0 {@link @vanilladefi/sdk/lib/TransactionProps | TransactionProps object}
+ * @returns an ethersjs Transaction object
+ */
 export const sell = async ({
   amountPaid,
   amountReceived,
@@ -156,6 +175,10 @@ export const sell = async ({
   }
 }
 
+/**
+ * Vanilla's own Uniswap v3 Trade object that's
+ * compatible with Uniswap v2 Trade objects
+ */
 class V3Trade {
   public inputAmount: TokenAmount
   public outputAmount: TokenAmount
@@ -217,7 +240,17 @@ class V3Trade {
   }
 }
 
-// Pricing function for UniSwap v3 trades
+/**
+ * A pricing function for Uniswap v3 trades
+ *
+ * @param signerOrProvider - an ethersjs provider (readonly) or signer (read/write)
+ * @param amountToTrade - the unparsed token amount to trade
+ * @param tokenReceived - token that is traded against
+ * @param tokenPaid - the bought or sold token
+ * @param tradeType - pricing method, depends if
+ *                    amountToTrade represents tokenReceived or tokenPaid
+ * @returns Uniswap v3 trade
+ */
 export async function constructTrade(
   signerOrProvider: Signer | providers.Provider,
   amountToTrade: string, // Not amountPaid because of tradeType
@@ -289,6 +322,14 @@ export async function constructTrade(
   }
 }
 
+/**
+ * Tries to parse a string value to a TokenAmount.
+ * If it fails, it returns undefined.
+ *
+ * @param value - amount of currency as an unparsed string ("0.05" etc.)
+ * @param currency - the currency, containing the decimal points used
+ * @returns the TokenAmount with methods like .toSignificant() or undefined.
+ */
 export function tryParseAmount(
   value?: string,
   currency?: UniSwapToken,
