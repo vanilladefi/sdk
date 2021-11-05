@@ -16,6 +16,12 @@ import { VanillaVersion } from '../../types/general'
 import type { Token as UniswapToken } from '../../types/trade'
 import { TransactionProps } from '../../uniswap'
 
+/**
+ * Buys tokens on Uniswap v2 using Vanilla v1.0
+ *
+ * @param param0 {@link @vanilladefi/sdk/lib/TransactionProps | TransactionProps object}
+ * @returns an ethersjs Transaction object
+ */
 export const buy = async ({
   amountPaid,
   amountReceived,
@@ -43,6 +49,12 @@ export const buy = async ({
   return receipt
 }
 
+/**
+ * Sells tokens on Uniswap v2 using Vanilla v1.0
+ *
+ * @param param0 {@link @vanilladefi/sdk/lib/TransactionProps | TransactionProps object}
+ * @returns an ethersjs Transaction object
+ */
 export const sell = async ({
   amountPaid,
   amountReceived,
@@ -71,7 +83,17 @@ export const sell = async ({
   return receipt
 }
 
-// Pricing function for UniSwap v2 trades
+/**
+ * A pricing function for Uniswap v2 trades
+ *
+ * @param provider - an ethersjs provider (readonly)
+ * @param amountToTrade - the unparsed token amount to trade
+ * @param tokenReceived - token that is traded against
+ * @param tokenPaid - the bought or sold token
+ * @param tradeType - pricing method, depends if
+ *                    amountToTrade represents tokenReceived or tokenPaid
+ * @returns Uniswap v2 trade
+ */
 export async function constructTrade(
   provider: providers.Provider,
   amountToTrade: string, // Not amountPaid because of tradeType
@@ -113,6 +135,14 @@ export async function constructTrade(
   }
 }
 
+/**
+ * Tries to parse a string value to a TokenAmount.
+ * If it fails, it returns undefined.
+ *
+ * @param value - amount of currency as an unparsed string ("0.05" etc.)
+ * @param currency - the currency, containing the decimal points used
+ * @returns the TokenAmount with methods like .toSignificant() or undefined.
+ */
 export function tryParseAmount(
   value?: string,
   currency?: UniswapToken,
