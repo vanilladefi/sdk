@@ -12,8 +12,8 @@ jobs:
     - uses: actions/setup-node@v2
         with:
           node-version: 14
-      - run: npm install
-      - run: npm run build:docs
+    - run: npm install
+    - run: npm run build:docs
     - uses: maxheld83/ghpages@v0.3.0
       env:
         BUILD_DIR: docs
