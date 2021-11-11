@@ -1,7 +1,7 @@
 import { parseUnits } from 'ethers/lib/utils'
-import { VanillaVersion } from 'types/general'
-import { getBasicWalletDetails, getUsers, getVnlHolders } from 'users'
 import { vnlDecimals } from '../contracts'
+import { VanillaVersion } from '../types/general'
+import { getBasicWalletDetails, getUsers, getVnlHolders } from '../users'
 import { testProvider } from '../__utils__/utils'
 
 test.skip('Fetch users', async () => {
