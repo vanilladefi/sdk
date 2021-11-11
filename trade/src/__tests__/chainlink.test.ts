@@ -4,9 +4,15 @@ import { testProvider } from '../__utils__/utils'
 
 test('Price fetching from Chainlink', async () => {
   try {
-    const tokenAddress = v2Tokens[0].address
-    const price = await getTokenPrice(tokenAddress, testProvider)
-    expect(price).toBeGreaterThan(0)
+    const priceGetter = async (token: {
+      id: string
+      decimals: number
+      address: string
+    }) => {
+      const price = await getTokenPrice(token.address, testProvider)
+      expect(price).toBeGreaterThan(0)
+    }
+    await Promise.all(v2Tokens.map(priceGetter))
   } catch (_e) {
     return
   }
