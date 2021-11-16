@@ -12,25 +12,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-        with:
-          submodules: recursive
       - uses: actions/setup-node@v2
         with:
           node-version: 14
-      - run: |
-          npm install
-      # - run: |
-      #     cd src/contracts
-      #     pnpm install
-      #     pnpm run compile:sol
-      #     pnpm run generate:typechain
-      #     cd ../..
-      - run: npm run build
-      - name: Archive build
-        uses: actions/upload-artifact@v2
-        with:
-          name: lib
-          path: lib
+      - run: npm install
+      - run: npm test
 
   publish-npm-next:
     needs: build
