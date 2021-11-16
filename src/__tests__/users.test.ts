@@ -1,10 +1,10 @@
 import { parseUnits } from 'ethers/lib/utils'
-import { VanillaVersion } from 'types/general'
-import { getBasicWalletDetails, getUsers, getVnlHolders } from 'users'
 import { vnlDecimals } from '../contracts'
+import { VanillaVersion } from '../types/general'
+import { getBasicWalletDetails, getUsers, getVnlHolders } from '../users'
 import { testProvider } from '../__utils__/utils'
 
-test('Fetch users', async () => {
+test.skip('Fetch users', async () => {
   try {
     const users = await getUsers()
     expect(users.length).toBeGreaterThan(0)
@@ -13,7 +13,7 @@ test('Fetch users', async () => {
   }
 })
 
-test('Fetch VNL holders', async () => {
+test.skip('Fetch VNL holders', async () => {
   try {
     const users = await getVnlHolders()
     expect(users.length).toBeGreaterThan(0)

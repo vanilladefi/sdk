@@ -1,5 +1,5 @@
 import { Token } from '@uniswap/sdk-core'
-import { convertVanillaTokenToUniswapToken, usdc, vnl, weth } from 'tokens'
+import { convertVanillaTokenToUniswapToken, usdc, vnl, weth } from '../tokens'
 
 test('Token constants (wETH, USDC, VNL)', () => {
   expect(usdc).toBeDefined()
