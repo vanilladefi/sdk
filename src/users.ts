@@ -1,6 +1,8 @@
 import { formatUnits } from '@ethersproject/units'
 import { ADDRESS_ZERO } from '@uniswap/v3-sdk'
 import { ethers, providers } from 'ethers'
+import { ERC20 } from '../contracts/typechain/vanilla_v1.1/ERC20'
+import { ERC20__factory } from '../contracts/typechain/vanilla_v1.1/factories/ERC20__factory'
 import {
   contractAddresses,
   epoch,
@@ -11,8 +13,6 @@ import {
 import { getBalance, isAddress } from './tokens'
 import { PrerenderProps } from './types/content'
 import { VanillaVersion } from './types/general'
-import { ERC20 } from './types/typechain/vanilla_v1.1/ERC20'
-import { ERC20__factory } from './types/typechain/vanilla_v1.1/factories/ERC20__factory'
 
 /**
  * Gets all addresses that have purchased tokens via Vanilla

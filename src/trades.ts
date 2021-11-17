@@ -8,6 +8,7 @@ import {
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { BigNumber, ethers, providers, Signer } from 'ethers'
 import { formatUnits, getAddress } from 'ethers/lib/utils'
+import VanillaV1Router02__factory from '../contracts/typechain/vanilla_v1.1/VanillaV1Router02__factory'
 import {
   blockDeadlineThreshold,
   chainId,
@@ -33,7 +34,6 @@ import {
   TokenPriceResponse,
   V3Trade,
 } from './types/trade'
-import { VanillaV1Router02__factory } from './types/typechain/vanilla_v1.1'
 import {
   constructTrade as constructV2Trade,
   tryParseAmount,

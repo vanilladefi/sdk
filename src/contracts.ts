@@ -1,11 +1,11 @@
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { Contract, providers, Signer } from 'ethers'
+import { ERC20 } from '../contracts/typechain/vanilla_v1.1'
+import { ERC20__factory } from '../contracts/typechain/vanilla_v1.1/factories/ERC20__factory'
+import { VanillaV1Router02__factory } from '../contracts/typechain/vanilla_v1.1/factories/VanillaV1Router02__factory'
+import { VanillaV1Router02 } from '../contracts/typechain/vanilla_v1.1/VanillaV1Router02'
 import VanillaV1Router01 from './types/abis/VanillaV1Router01.json'
 import { UniswapVersion, VanillaVersion } from './types/general'
-import { ERC20 } from './types/typechain/vanilla_v1.1/ERC20'
-import { ERC20__factory } from './types/typechain/vanilla_v1.1/factories/ERC20__factory'
-import { VanillaV1Router02__factory } from './types/typechain/vanilla_v1.1/factories/VanillaV1Router02__factory'
-import { VanillaV1Router02 } from './types/typechain/vanilla_v1.1/VanillaV1Router02'
 
 /**
  * Returns an instance of a $VNL ERC-20 token contract
