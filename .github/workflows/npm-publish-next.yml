@@ -12,11 +12,26 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        with:
+          submodules: recursive
       - uses: actions/setup-node@v2
         with:
           node-version: 14
-      - run: npm install
-      - run: npm test
+      - run: |
+          npm install -g pnpm
+          npm install
+      - run: |
+          cd contracts
+          pnpm install
+          cd ..
+      - run: |
+          npm test
+          npm run build
+      - name: Archive build
+        uses: actions/upload-artifact@v2
+        with:
+          name: build
+          path: lib
 
   publish-npm-next:
     needs: build
@@ -27,8 +42,10 @@ jobs:
         with:
           node-version: 14
           registry-url: https://registry.npmjs.org/
-      - name: Download build artifact
+      - name: Download build
         uses: actions/download-artifact@v2
+        with:
+          name: build
       - run: npm publish --access public --tag next
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
@@ -45,8 +62,10 @@ jobs:
         with:
           node-version: 14
           registry-url: https://npm.pkg.github.com/
-      - name: Download build artifact
+      - name: Download build
         uses: actions/download-artifact@v2
+        with:
+          name: build
       - run: npm publish --tag next
         env:
           NODE_AUTH_TOKEN: ${{secrets.RELEASE_TOKEN}}
