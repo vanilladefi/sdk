@@ -21,9 +21,11 @@ jobs:
           npm install -g pnpm
           npm install
       - run: |
-          cd contracts
+          cd src/contracts
           pnpm install
-          cd ..
+          pnpm run compile:sol
+          pnpm run generate:typechain
+          cd ../..
       - run: |
           npm test
           npm run build

@@ -22,7 +22,7 @@
   "exclude": [
     "node_modules",
     "lib",
-    "src/contracts",
+    "contracts",
     "**/__tests__/*",
     "**/__utils__/*"
   ]

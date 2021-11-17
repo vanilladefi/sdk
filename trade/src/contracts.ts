@@ -4,6 +4,10 @@ import { ERC20__factory } from '@vanilladefi/trade-contracts/typechain/openzeppe
 import { VanillaV1Router02__factory } from '@vanilladefi/trade-contracts/typechain/vanilla_v1.1/factories/VanillaV1Router02__factory'
 import { VanillaV1Router02 } from '@vanilladefi/trade-contracts/typechain/vanilla_v1.1/VanillaV1Router02'
 import { Contract, providers, Signer } from 'ethers'
+import { ERC20 } from '../contracts/typechain/vanilla_v1.1'
+import { ERC20__factory } from '../contracts/typechain/vanilla_v1.1/factories/ERC20__factory'
+import { VanillaV1Router02__factory } from '../contracts/typechain/vanilla_v1.1/factories/VanillaV1Router02__factory'
+import { VanillaV1Router02 } from '../contracts/typechain/vanilla_v1.1/VanillaV1Router02'
 import VanillaV1Router01 from './types/abis/VanillaV1Router01.json'
 import { UniswapVersion, VanillaVersion } from './types/general'
 
