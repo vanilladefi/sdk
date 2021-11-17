@@ -9,7 +9,6 @@ import { FeeAmount } from '@uniswap/v3-sdk'
 import { VanillaV1Router02__factory } from '@vanilladefi/trade-contracts/typechain/vanilla_v1.1/factories/VanillaV1Router02__factory'
 import { BigNumber, ethers, providers, Signer } from 'ethers'
 import { formatUnits, getAddress } from 'ethers/lib/utils'
-import VanillaV1Router02__factory from '../contracts/typechain/vanilla_v1.1/VanillaV1Router02__factory'
 import {
   blockDeadlineThreshold,
   chainId,
@@ -18,6 +17,7 @@ import {
   usdcWethPoolAddress,
   vnlDecimals,
 } from './contracts'
+import VanillaV1Router02__factory from './contracts/typechain/vanilla_v1.1/VanillaV1Router02__factory'
 import {
   convertVanillaTokenToUniswapToken,
   getAllTokens,
