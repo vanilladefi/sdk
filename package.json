@@ -1,9 +1,19 @@
 {
   "name": "@vanilladefi/sdk",
-  "version": "2.1.0",
-  "description": "Vanilla SDK Monorepo Consisting of Trade & Stake SDKs",
-  "main": "index.ts",
-  "repository": "git@github.com:vanilladefi/sdk.git",
+  "version": "2.0.1",
+  "description": "A Software Development Kit for the Vanilla DeFi Protocol",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "jest --ci --silent --forceExit",
+    "build": "tsc",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "build:docs": "npx typedoc --out docs src/index.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vanilladefi/sdk.git"
+  },
   "author": "Equilibrium",
   "license": "MIT",
   "dependencies": {
