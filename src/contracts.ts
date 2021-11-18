@@ -1,6 +1,6 @@
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { Contract, providers, Signer } from 'ethers'
-import { ERC20 } from './contracts/typechain/vanilla_v1.1'
+import { ERC20 } from './contracts/typechain/vanilla_v1.1/ERC20'
 import { ERC20__factory } from './contracts/typechain/vanilla_v1.1/factories/ERC20__factory'
 import { VanillaV1Router02__factory } from './contracts/typechain/vanilla_v1.1/factories/VanillaV1Router02__factory'
 import { VanillaV1Router02 } from './contracts/typechain/vanilla_v1.1/VanillaV1Router02'
@@ -22,7 +22,7 @@ export function getVanillaTokenContract(
   const address = contractAddresses.vanilla[version].vnl
   return ERC20__factory.connect(
     address,
-    signerOrProvider || providers.getDefaultProvider(),
+    (signerOrProvider || providers.getDefaultProvider()) as any,
   )
 }
 
@@ -43,7 +43,7 @@ export function getVanillaRouter(
   return version === VanillaVersion.V1_1
     ? VanillaV1Router02__factory.connect(
         routerAddress,
-        signerOrProvider || providers.getDefaultProvider(),
+        (signerOrProvider || providers.getDefaultProvider()) as any,
       )
     : new Contract(
         routerAddress,
