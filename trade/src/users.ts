@@ -17,9 +17,7 @@ import { PrerenderProps } from './types/content'
 import { VanillaVersion } from './types/general'
 
 interface VanillaPurchase {
-  args: {
-    buyer: string
-  }
+  args?: Result
 }
 
 /**
