@@ -7,17 +7,24 @@ on:
     branches: [ main, next ]
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Setup Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: 14
-        cache: 'npm'
-    - run: npm install
-    - run: npm run build
-    - run: npm test
-      env:
-        RPC_URL: ${{ secrets.RPC_URL }}
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 14
+      - run: |
+          npm install -g pnpm
+          npm install
+      - run: |
+          cd src/contracts
+          pnpm install
+          pnpm run compile:sol
+          pnpm run generate:typechain
+          cd ../..
+      - run: npm test
+        env:
+          RPC_URL: ${{ secrets.RPC_URL }}
