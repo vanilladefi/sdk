@@ -26,9 +26,7 @@ jobs:
           pnpm run compile:sol
           pnpm run generate:typechain
           cd ../..
-      - run: |
-          npm test
-          npm run build
+      - run: npm run build
       - name: Archive build
         uses: actions/upload-artifact@v2
         with:
