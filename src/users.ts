@@ -1,3 +1,4 @@
+import { Result } from '@ethersproject/abi'
 import { formatUnits } from '@ethersproject/units'
 import { ADDRESS_ZERO } from '@uniswap/v3-sdk'
 import { TypedEvent } from 'contracts/typechain/vanilla_v1.1/commons'
@@ -16,9 +17,7 @@ import { PrerenderProps } from './types/content'
 import { VanillaVersion } from './types/general'
 
 interface VanillaPurchase {
-  args: {
-    buyer: string
-  }
+  args?: Result
 }
 
 /**
