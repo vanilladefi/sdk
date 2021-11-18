@@ -1,5 +1,7 @@
+import { Result } from '@ethersproject/abi'
 import { formatUnits } from '@ethersproject/units'
 import { ADDRESS_ZERO } from '@uniswap/v3-sdk'
+import { TypedEvent } from 'contracts/typechain/vanilla_v1.1/commons'
 import { ethers, providers } from 'ethers'
 import {
   contractAddresses,
@@ -8,11 +10,15 @@ import {
   getVanillaTokenContract,
   vnlDecimals,
 } from './contracts'
+import { ERC20 } from './contracts/typechain/vanilla_v1.1/ERC20'
+import { ERC20__factory } from './contracts/typechain/vanilla_v1.1/factories/ERC20__factory'
 import { getBalance, isAddress } from './tokens'
 import { PrerenderProps } from './types/content'
 import { VanillaVersion } from './types/general'
-import { ERC20 } from './types/typechain/vanilla_v1.1/ERC20'
-import { ERC20__factory } from './types/typechain/vanilla_v1.1/factories/ERC20__factory'
+
+interface VanillaPurchase {
+  args?: Result
+}
 
 /**
  * Gets all addresses that have purchased tokens via Vanilla
@@ -36,11 +42,9 @@ export const getUsers = async (
 
   // Fetch Vanilla v1.1 users
   const purchaseFilter: ethers.EventFilter = vnlRouter.filters.TokensPurchased()
-  const events: ethers.Event[] = await vnlRouter.queryFilter(
-    purchaseFilter,
-    epoch,
-  )
-  events.forEach((event) => {
+  const events: ethers.Event[] | TypedEvent<any[]>[] =
+    await vnlRouter.queryFilter(purchaseFilter, epoch)
+  events.forEach((event: VanillaPurchase) => {
     const walletAddress = isAddress(event?.args?.buyer)
     if (walletAddress && !users.includes(walletAddress)) {
       users.push(walletAddress)
@@ -50,10 +54,8 @@ export const getUsers = async (
   // Fetch Vanilla v1.0 users
   const legacyFilter: ethers.EventFilter =
     vnlLegacyRouter.filters.TokensPurchased()
-  const legacyEvents: ethers.Event[] = await vnlLegacyRouter.queryFilter(
-    legacyFilter,
-    epoch,
-  )
+  const legacyEvents: ethers.Event[] | TypedEvent<any[]>[] =
+    await vnlLegacyRouter.queryFilter(legacyFilter, epoch)
   legacyEvents.forEach((event) => {
     const walletAddress = isAddress(event?.args?.buyer)
     if (walletAddress && !users.includes(walletAddress)) {

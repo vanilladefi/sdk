@@ -8,7 +8,9 @@ import {
   TradeType,
 } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
-import { BigNumber, providers, Signer, Transaction } from 'ethers'
+import { Quoter__factory } from 'contracts/typechain/uniswap_v3_periphery/factories/Quoter__factory'
+import { Quoter } from 'contracts/typechain/uniswap_v3_periphery/Quoter'
+import { BigNumber, BigNumberish, providers, Signer, Transaction } from 'ethers'
 import { formatUnits, getAddress, parseUnits } from 'ethers/lib/utils'
 import {
   chainId,
@@ -17,15 +19,26 @@ import {
   ethersOverrides,
   getFeeTier,
 } from '../../contracts'
+import { VanillaV1Router02__factory } from '../../contracts/typechain/vanilla_v1.1/factories/VanillaV1Router02__factory'
 import { isAddress } from '../../tokens'
 import { VanillaVersion } from '../../types/general'
 import { Token, UniSwapToken } from '../../types/trade'
-import {
-  Quoter,
-  Quoter__factory,
-} from '../../types/typechain/uniswap_v3_periphery'
-import { VanillaV1Router02__factory } from '../../types/typechain/vanilla_v1.1/factories/VanillaV1Router02__factory'
 import { TransactionProps } from '../../uniswap'
+
+type SwapParams = {
+  tokenIn: string
+  tokenOut: string
+  fee: number
+  sqrtPriceLimitX96: number
+}
+
+type SwapParamsIn = SwapParams & {
+  amountIn: BigNumberish
+}
+
+type SwapParamsOut = SwapParams & {
+  amountOut: BigNumberish
+}
 
 /**
  * A curried function that returns helpers for
@@ -34,7 +47,19 @@ import { TransactionProps } from '../../uniswap'
  * @param oracle - Uniswap Quoter instance
  * @returns function swap()
  */
-export const UniswapOracle = (oracle: Quoter) => ({
+export const UniswapOracle = (
+  oracle: Quoter,
+): {
+  swap: (
+    tokenIn: string,
+    tokenOut: string,
+  ) => {
+    swapParamsIn(amountIn: TokenAmount, fee: number): SwapParamsIn
+    swapParamsOut(amountOut: TokenAmount, fee: number): SwapParamsOut
+    estimateAmountOut(amountIn: TokenAmount, fee: number): Promise<BigNumber>
+    estimateAmountIn(amountOut: TokenAmount, fee: number): Promise<BigNumber>
+  }
+} => ({
   swap(tokenIn: string, tokenOut: string) {
     return {
       swapParamsIn(amountIn: TokenAmount, fee: number) {
@@ -56,10 +81,11 @@ export const UniswapOracle = (oracle: Quoter) => ({
         }
       },
       async estimateAmountOut(amountIn: TokenAmount, fee: number) {
+        let amountOut = BigNumber.from(0)
         try {
           const swapParams = this.swapParamsIn(amountIn, fee)
 
-          return await oracle.callStatic.quoteExactInputSingle(
+          amountOut = await oracle.callStatic.quoteExactInputSingle(
             swapParams.tokenIn,
             swapParams.tokenOut,
             fee,
@@ -71,14 +97,15 @@ export const UniswapOracle = (oracle: Quoter) => ({
           )
         } catch (e) {
           console.error(e)
-          return undefined
         }
+        return amountOut
       },
       async estimateAmountIn(amountOut: TokenAmount, fee: number) {
+        let amountIn = BigNumber.from(0)
         try {
           const swapParams = this.swapParamsOut(amountOut, fee)
 
-          return await oracle.callStatic.quoteExactOutputSingle(
+          amountIn = await oracle.callStatic.quoteExactOutputSingle(
             swapParams.tokenIn,
             swapParams.tokenOut,
             fee,
@@ -90,8 +117,8 @@ export const UniswapOracle = (oracle: Quoter) => ({
           )
         } catch (e) {
           console.error(e)
-          return undefined
         }
+        return amountIn
       },
     }
   },
@@ -116,7 +143,7 @@ export const buy = async ({
     contractAddresses.vanilla[VanillaVersion.V1_1].router,
   )
   if (vnl1_1Addr && tokenReceived?.address && signer && feeTier) {
-    const router = VanillaV1Router02__factory.connect(vnl1_1Addr, signer)
+    const router = VanillaV1Router02__factory.connect(vnl1_1Addr, signer as any)
     const usedGasLimit = gasLimit ? gasLimit : ethersOverrides.gasLimit
     const orderData = {
       token: tokenReceived.address,
@@ -155,7 +182,7 @@ export const sell = async ({
     contractAddresses.vanilla[VanillaVersion.V1_1].router,
   )
   if (vnl1_1Addr && tokenPaid?.address && signer && feeTier) {
-    const router = VanillaV1Router02__factory.connect(vnl1_1Addr, signer)
+    const router = VanillaV1Router02__factory.connect(vnl1_1Addr, signer as any)
     const usedGasLimit = gasLimit ? gasLimit : ethersOverrides.gasLimit
     const orderData = {
       token: tokenPaid.address,
@@ -177,7 +204,7 @@ export const sell = async ({
 
 /**
  * Vanilla's own Uniswap v3 Trade object that's
- * compatible with Uniswap v2 Trade objects
+ * compatible with Uniswap  Trade objects
  */
 class V3Trade {
   public inputAmount: TokenAmount
@@ -277,7 +304,7 @@ export async function constructTrade(
 
     const uniV3Oracle = Quoter__factory.connect(
       contractAddresses.uniswap.v3.quoter || '',
-      signerOrProvider,
+      signerOrProvider as any,
     )
 
     const swapOperation = UniswapOracle(uniV3Oracle).swap(
@@ -287,21 +314,15 @@ export async function constructTrade(
 
     let quote: BigNumber = BigNumber.from(0)
     if (tradeType === TradeType.EXACT_INPUT) {
-      const amountOut = await swapOperation.estimateAmountOut(
+      quote = await swapOperation.estimateAmountOut(
         parsedAmountTraded,
         feeTier.valueOf(),
       )
-      if (amountOut) {
-        quote = amountOut
-      }
     } else {
-      const amountIn = await swapOperation.estimateAmountIn(
+      quote = await swapOperation.estimateAmountIn(
         parsedAmountTraded,
         feeTier.valueOf(),
       )
-      if (amountIn) {
-        quote = amountIn
-      }
     }
 
     const formattedQuote = formatUnits(quote, quotedToken.decimals)
