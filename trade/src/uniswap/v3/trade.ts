@@ -5,12 +5,11 @@ import {
   Price,
   Token as UniswapToken,
   TokenAmount,
-  TradeType
+  TradeType,
 } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
-import { Quoter__factory } from '@vanilladefi/trade-contracts/typechain/uniswap_v3_periphery/factories/Quoter__factory'
-import { Quoter } from '@vanilladefi/trade-contracts/typechain/uniswap_v3_periphery/Quoter'
-import { VanillaV1Router02__factory } from '@vanilladefi/trade-contracts/typechain/vanilla_v1.1/factories/VanillaV1Router02__factory'
+import { Quoter__factory } from 'contracts/typechain/uniswap_v3_periphery/factories/Quoter__factory'
+import { Quoter } from 'contracts/typechain/uniswap_v3_periphery/Quoter'
 import { BigNumber, BigNumberish, providers, Signer, Transaction } from 'ethers'
 import { formatUnits, getAddress, parseUnits } from 'ethers/lib/utils'
 import {
@@ -18,10 +17,8 @@ import {
   conservativeGasLimit,
   contractAddresses,
   ethersOverrides,
-  getFeeTier
+  getFeeTier,
 } from '../../contracts'
-import { QuoterV2__factory } from '../../contracts/typechain/uniswap_v3_periphery/factories/QuoterV2__factory'
-import { QuoterV2 } from '../../contracts/typechain/uniswap_v3_periphery/QuoterV2'
 import { VanillaV1Router02__factory } from '../../contracts/typechain/vanilla_v1.1/factories/VanillaV1Router02__factory'
 import { isAddress } from '../../tokens'
 import { VanillaVersion } from '../../types/general'
@@ -50,7 +47,19 @@ type SwapParamsOut = SwapParams & {
  * @param oracle - Uniswap Quoter instance
  * @returns function swap()
  */
-export const UniswapOracle = (oracle: QuoterV2) => ({
+export const UniswapOracle = (
+  oracle: Quoter,
+): {
+  swap: (
+    tokenIn: string,
+    tokenOut: string,
+  ) => {
+    swapParamsIn(amountIn: TokenAmount, fee: number): SwapParamsIn
+    swapParamsOut(amountOut: TokenAmount, fee: number): SwapParamsOut
+    estimateAmountOut(amountIn: TokenAmount, fee: number): Promise<BigNumber>
+    estimateAmountIn(amountOut: TokenAmount, fee: number): Promise<BigNumber>
+  }
+} => ({
   swap(tokenIn: string, tokenOut: string) {
     return {
       swapParamsIn(amountIn: TokenAmount, fee: number) {
@@ -293,7 +302,7 @@ export async function constructTrade(
       getFeeTier(tokenPaid.fee) ||
       defaultFeeTier
 
-    const uniV3Oracle = QuoterV2__factory.connect(
+    const uniV3Oracle = Quoter__factory.connect(
       contractAddresses.uniswap.v3.quoter || '',
       signerOrProvider as any,
     )
