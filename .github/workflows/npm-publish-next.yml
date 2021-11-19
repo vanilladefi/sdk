@@ -6,8 +6,6 @@ name: Publish Next
 on:
   push:
     branches: [ next ]
-  pull_request:
-    branches: [ main, next ]
 
 jobs:
   build:
@@ -46,8 +44,6 @@ jobs:
           registry-url: https://registry.npmjs.org/
       - name: Download build artifact
         uses: actions/download-artifact@v2
-      - name: Display structure of downloaded files
-        run: ls -R
       - run: npm publish --access public --tag next
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
