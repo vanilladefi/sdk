@@ -1,5 +1,5 @@
 import { BigNumber, providers } from 'ethers'
-import { UniSwapToken } from 'types/trade'
+import { UniSwapToken } from '../types/trade'
 
 export interface TransactionProps {
   amountReceived: string
