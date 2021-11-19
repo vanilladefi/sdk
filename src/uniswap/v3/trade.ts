@@ -8,8 +8,6 @@ import {
   TradeType,
 } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
-import { Quoter__factory } from 'contracts/typechain/uniswap_v3_periphery/factories/Quoter__factory'
-import { Quoter } from 'contracts/typechain/uniswap_v3_periphery/Quoter'
 import { BigNumber, BigNumberish, providers, Signer, Transaction } from 'ethers'
 import { formatUnits, getAddress, parseUnits } from 'ethers/lib/utils'
 import {
@@ -19,6 +17,8 @@ import {
   ethersOverrides,
   getFeeTier,
 } from '../../contracts'
+import { Quoter__factory } from '../../contracts/typechain/uniswap_v3_periphery/factories/Quoter__factory'
+import { Quoter } from '../../contracts/typechain/uniswap_v3_periphery/Quoter'
 import { VanillaV1Router02__factory } from '../../contracts/typechain/vanilla_v1.1/factories/VanillaV1Router02__factory'
 import { isAddress } from '../../tokens'
 import { VanillaVersion } from '../../types/general'
