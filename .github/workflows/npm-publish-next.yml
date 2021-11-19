@@ -30,7 +30,7 @@ jobs:
       - name: Archive build
         uses: actions/upload-artifact@v2
         with:
-          name: build
+          name: lib
           path: lib
 
   publish-npm-next:
@@ -42,10 +42,8 @@ jobs:
         with:
           node-version: 14
           registry-url: https://registry.npmjs.org/
-      - name: Download build
+      - name: Download build artifact
         uses: actions/download-artifact@v2
-        with:
-          name: build
       - run: npm publish --access public --tag next
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
@@ -62,10 +60,8 @@ jobs:
         with:
           node-version: 14
           registry-url: https://npm.pkg.github.com/
-      - name: Download build
+      - name: Download build artifact
         uses: actions/download-artifact@v2
-        with:
-          name: build
       - run: npm publish --tag next
         env:
           NODE_AUTH_TOKEN: ${{secrets.RELEASE_TOKEN}}
