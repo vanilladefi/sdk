@@ -101,6 +101,7 @@ export async function constructTrade(
   tokenPaid: UniswapToken,
   tradeType = TradeType.EXACT_OUTPUT,
 ): Promise<Trade> {
+  /* eslint-disable no-useless-catch */
   try {
     const parsedAmount = tryParseAmount(
       amountToTrade,
@@ -133,6 +134,7 @@ export async function constructTrade(
   } catch (error) {
     throw error
   }
+  /* eslint-enable no-useless-catch */
 }
 
 /**
