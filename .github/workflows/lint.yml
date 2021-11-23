@@ -1,0 +1,27 @@
+name: Linting
+
+on: [push, pull_request]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 14
+      - name: Install pnpm and modules
+        run: |
+          npm install -g pnpm
+          npm install
+      - name: Generate typechain
+        run: |
+          cd src/contracts
+          pnpm install
+          pnpm run compile:sol
+          pnpm run generate:typechain
+          cd ../..
+      - name: Run ESLint
+        run: npm run lint
