@@ -6,7 +6,7 @@
   "scripts": {
     "test": "jest --ci --silent --forceExit",
     "build": "tsc",
-    "lint": "eslint src/**/*",
+    "lint": "eslint .",
     "format": "prettier --write .",
     "build:docs": "npx typedoc --out docs src/index.ts"
   },
