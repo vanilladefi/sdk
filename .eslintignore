@@ -1,4 +1,2 @@
-lib
-docs
 src/contracts/
 jest.config.js
