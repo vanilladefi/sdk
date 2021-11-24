@@ -101,38 +101,34 @@ export async function constructTrade(
   tokenPaid: UniswapToken,
   tradeType = TradeType.EXACT_OUTPUT,
 ): Promise<Trade> {
-  try {
-    const parsedAmount = tryParseAmount(
-      amountToTrade,
-      tradeType === TradeType.EXACT_OUTPUT ? tokenReceived : tokenPaid,
-    )
-    if (!parsedAmount)
-      return Promise.reject(`Failed to parse input amount: ${amountToTrade}`)
+  const parsedAmount = tryParseAmount(
+    amountToTrade,
+    tradeType === TradeType.EXACT_OUTPUT ? tokenReceived : tokenPaid,
+  )
+  if (!parsedAmount)
+    return Promise.reject(`Failed to parse input amount: ${amountToTrade}`)
 
-    const convertedTokenReceived = new Token(
-      parseInt(tokenReceived.chainId),
-      getAddress(tokenReceived.address),
-      parseInt(tokenReceived.decimals),
-    )
-    const convertedTokenPaid = new Token(
-      parseInt(tokenPaid.chainId),
-      getAddress(tokenPaid.address),
-      parseInt(tokenPaid.decimals),
-    )
-    const pair = await Fetcher.fetchPairData(
-      convertedTokenReceived,
-      convertedTokenPaid,
-      provider as providers.BaseProvider,
-    )
+  const convertedTokenReceived = new Token(
+    parseInt(tokenReceived.chainId),
+    getAddress(tokenReceived.address),
+    parseInt(tokenReceived.decimals),
+  )
+  const convertedTokenPaid = new Token(
+    parseInt(tokenPaid.chainId),
+    getAddress(tokenPaid.address),
+    parseInt(tokenPaid.decimals),
+  )
+  const pair = await Fetcher.fetchPairData(
+    convertedTokenReceived,
+    convertedTokenPaid,
+    provider as providers.BaseProvider,
+  )
 
-    const route = new Route([pair], convertedTokenPaid)
+  const route = new Route([pair], convertedTokenPaid)
 
-    const trade = new Trade(route, parsedAmount, tradeType)
+  const trade = new Trade(route, parsedAmount, tradeType)
 
-    return trade
-  } catch (error) {
-    throw error
-  }
+  return trade
 }
 
 /**
