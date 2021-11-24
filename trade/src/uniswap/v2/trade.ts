@@ -101,14 +101,12 @@ export async function constructTrade(
   tokenPaid: UniswapToken,
   tradeType = TradeType.EXACT_OUTPUT,
 ): Promise<Trade> {
-  /* eslint-disable no-useless-catch */
-  try {
-    const parsedAmount = tryParseAmount(
-      amountToTrade,
-      tradeType === TradeType.EXACT_OUTPUT ? tokenReceived : tokenPaid,
-    )
-    if (!parsedAmount)
-      return Promise.reject(`Failed to parse input amount: ${amountToTrade}`)
+  const parsedAmount = tryParseAmount(
+    amountToTrade,
+    tradeType === TradeType.EXACT_OUTPUT ? tokenReceived : tokenPaid,
+  )
+  if (!parsedAmount)
+    return Promise.reject(`Failed to parse input amount: ${amountToTrade}`)
 
   const convertedTokenReceived = new Token(
     parseInt(tokenReceived.chainId),
@@ -130,11 +128,7 @@ export async function constructTrade(
 
   const trade = new Trade(route, parsedAmount, tradeType)
 
-    return trade
-  } catch (error) {
-    throw error
-  }
-  /* eslint-enable no-useless-catch */
+  return trade
 }
 
 /**
