@@ -14,14 +14,6 @@ jobs:
           node-version: 14
       - name: Install pnpm and modules
         run: |
-          npm install -g pnpm
           npm install
-      - name: Generate typechain
-        run: |
-          cd src/contracts
-          pnpm install
-          pnpm run compile:sol
-          pnpm run generate:typechain
-          cd ../..
       - name: Run ESLint
         run: npm run lint

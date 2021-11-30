@@ -17,9 +17,9 @@ import {
   ethersOverrides,
   getFeeTier,
 } from '../../contracts'
-import { Quoter__factory } from '../../contracts/typechain/uniswap_v3_periphery/factories/Quoter__factory'
-import { Quoter } from '../../contracts/typechain/uniswap_v3_periphery/Quoter'
-import { VanillaV1Router02__factory } from '../../contracts/typechain/vanilla_v1.1/factories/VanillaV1Router02__factory'
+import { Quoter__factory } from 'vanilla-contracts/typechain/uniswap_v3_periphery/factories/Quoter__factory'
+import { Quoter } from 'vanilla-contracts/typechain/uniswap_v3_periphery/Quoter'
+import { VanillaV1Router02__factory } from 'vanilla-contracts/typechain/vanilla_v1.1/factories/VanillaV1Router02__factory'
 import { isAddress } from '../../tokens'
 import { VanillaVersion } from '../../types/general'
 import { Token, UniSwapToken } from '../../types/trade'

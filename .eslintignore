@@ -1,2 +1,4 @@
 src/contracts/
 jest.config.js
+babel.config.js
+lib/
