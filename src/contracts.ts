@@ -6,7 +6,7 @@ import { VanillaV1Router02__factory } from './contracts/typechain/vanilla_v1.1/f
 import { VanillaV1Router02 } from './contracts/typechain/vanilla_v1.1/VanillaV1Router02'
 import VanillaV1Router01 from './types/abis/VanillaV1Router01.json'
 import { UniswapVersion, VanillaVersion } from './types/general'
-import { JuiceStaking, JuiceStaking__factory } from './juicenet-contracts/typechain/juicenet'
+import { JuiceStaking, JuiceStaking__factory } from 'vanilla-juicenet/typechain/juicenet'
 
 /**
  * Returns an instance of a $VNL ERC-20 token contract

@@ -29,12 +29,13 @@
     "@uniswap/sdk-core": "^1.0.10",
     "@uniswap/v3-sdk": "^3.5.1",
     "ethers": "^5.4.7",
-    "merkletreejs": "^0.2.24"
+    "merkletreejs": "^0.2.24",
+    "vanilla-juicenet": "file:vanilla-juicenet-2.0.0.tgz"
   },
   "devDependencies": {
     "@types/jest": "^27.0.2",
-    "@typescript-eslint/parser": "^5.4.0",
     "@typescript-eslint/eslint-plugin": "^5.4.0",
+    "@typescript-eslint/parser": "^5.4.0",
     "dotenv": "^10.0.0",
     "eslint": "^8.3.0",
     "eslint-config-prettier": "^8.3.0",
