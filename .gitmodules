@@ -1,3 +1,6 @@
 [submodule "src/contracts"]
 	path = src/contracts
 	url = https://github.com/vanilladefi/contracts.git
+[submodule "src/juicenet-contracts"]
+	path = src/juicenet-contracts
+	url = https://github.com/eqlabs/juicenet-contracts

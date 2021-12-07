@@ -6,6 +6,7 @@ import { VanillaV1Router02__factory } from './contracts/typechain/vanilla_v1.1/f
 import { VanillaV1Router02 } from './contracts/typechain/vanilla_v1.1/VanillaV1Router02'
 import VanillaV1Router01 from './types/abis/VanillaV1Router01.json'
 import { UniswapVersion, VanillaVersion } from './types/general'
+import { JuiceStaking, JuiceStaking__factory } from './juicenet-contracts/typechain/juicenet'
 
 /**
  * Returns an instance of a $VNL ERC-20 token contract
@@ -50,6 +51,17 @@ export function getVanillaRouter(
         v1abi,
         signerOrProvider || providers.getDefaultProvider(),
       )
+}
+
+// Example function for now to demonstrate usage of v2 contracts
+export function getJuiceSkating(
+  address: string,
+  signerOrProvider?: Signer | providers.Provider
+): JuiceStaking {
+  return JuiceStaking__factory.connect(
+    address,
+    signerOrProvider || providers.getDefaultProvider(),
+  )
 }
 
 /**
