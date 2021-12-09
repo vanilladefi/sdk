@@ -19,88 +19,43 @@ import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 import { TypedEventFilter, TypedEvent, TypedListener } from "./commons";
 
-interface IJuiceStakingInterface extends ethers.utils.Interface {
+interface IJUICEStakingInterface extends ethers.utils.Interface {
   functions: {
-    "aggregateSignal(address[])": FunctionFragment;
-    "authorizeSignalAggregator(address)": FunctionFragment;
     "currentStake(address,address)": FunctionFragment;
-    "delegateDeposit(uint256,tuple)": FunctionFragment;
-    "delegateModifyStakes(tuple[],tuple)": FunctionFragment;
-    "delegateWithdraw(uint256,tuple)": FunctionFragment;
-    "deposit(uint256)": FunctionFragment;
-    "emergencyPause(bool)": FunctionFragment;
-    "mintJuice(address[],uint256[])": FunctionFragment;
+    "deposit(uint256,tuple)": FunctionFragment;
     "modifyStakes(tuple[])": FunctionFragment;
     "unstakedBalanceOf(address)": FunctionFragment;
-    "updatePriceOracles(address[],address[])": FunctionFragment;
     "withdraw(uint256)": FunctionFragment;
   };
 
-  encodeFunctionData(
-    functionFragment: "aggregateSignal",
-    values: [string[]]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "authorizeSignalAggregator",
-    values: [string]
-  ): string;
   encodeFunctionData(
     functionFragment: "currentStake",
     values: [string, string]
   ): string;
   encodeFunctionData(
-    functionFragment: "delegateDeposit",
-    values: [
-      BigNumberish,
-      {
-        data: { sender: string; deadline: BigNumberish; nonce: BigNumberish };
-        signature: BytesLike;
-      }
-    ]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "delegateModifyStakes",
-    values: [
-      { token: string; amount: BigNumberish; sentiment: boolean }[],
-      {
-        data: { sender: string; deadline: BigNumberish; nonce: BigNumberish };
-        signature: BytesLike;
-      }
-    ]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "delegateWithdraw",
-    values: [
-      BigNumberish,
-      {
-        data: { sender: string; deadline: BigNumberish; nonce: BigNumberish };
-        signature: BytesLike;
-      }
-    ]
-  ): string;
-  encodeFunctionData(
     functionFragment: "deposit",
-    values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "emergencyPause",
-    values: [boolean]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "mintJuice",
-    values: [string[], BigNumberish[]]
+    values: [
+      BigNumberish,
+      {
+        owner: string;
+        spender: string;
+        value: BigNumberish;
+        deadline: BigNumberish;
+        v: BigNumberish;
+        r: BytesLike;
+        s: BytesLike;
+      }
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: "modifyStakes",
-    values: [{ token: string; amount: BigNumberish; sentiment: boolean }[]]
+    values: [
+      { token: string; stake: { amount: BigNumberish; isShort: boolean } }[]
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: "unstakedBalanceOf",
     values: [string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "updatePriceOracles",
-    values: [string[], string[]]
   ): string;
   encodeFunctionData(
     functionFragment: "withdraw",
@@ -108,45 +63,16 @@ interface IJuiceStakingInterface extends ethers.utils.Interface {
   ): string;
 
   decodeFunctionResult(
-    functionFragment: "aggregateSignal",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "authorizeSignalAggregator",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "currentStake",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "delegateDeposit",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "delegateModifyStakes",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "delegateWithdraw",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "deposit", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "emergencyPause",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "mintJuice", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "modifyStakes",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
     functionFragment: "unstakedBalanceOf",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "updatePriceOracles",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "withdraw", data: BytesLike): Result;
@@ -164,7 +90,7 @@ interface IJuiceStakingInterface extends ethers.utils.Interface {
   getEvent(nameOrSignatureOrTopic: "StakeRemoved"): EventFragment;
 }
 
-export class IJuiceStaking extends BaseContract {
+export class IJUICEStaking extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
@@ -205,72 +131,38 @@ export class IJuiceStaking extends BaseContract {
     toBlock?: string | number | undefined
   ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
 
-  interface: IJuiceStakingInterface;
+  interface: IJUICEStakingInterface;
 
   functions: {
-    aggregateSignal(
-      tokens: string[],
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    authorizeSignalAggregator(
-      aggregator: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
     currentStake(
       user: string,
       token: string,
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, boolean] & { amount: BigNumber; sentiment: boolean }
+      [[BigNumber, boolean] & { amount: BigNumber; isShort: boolean }] & {
+        stake: [BigNumber, boolean] & { amount: BigNumber; isShort: boolean };
+      }
     >;
-
-    delegateDeposit(
-      amount: BigNumberish,
-      permission: {
-        data: { sender: string; deadline: BigNumberish; nonce: BigNumberish };
-        signature: BytesLike;
-      },
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    delegateModifyStakes(
-      stakes: { token: string; amount: BigNumberish; sentiment: boolean }[],
-      permission: {
-        data: { sender: string; deadline: BigNumberish; nonce: BigNumberish };
-        signature: BytesLike;
-      },
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    delegateWithdraw(
-      amount: BigNumberish,
-      permission: {
-        data: { sender: string; deadline: BigNumberish; nonce: BigNumberish };
-        signature: BytesLike;
-      },
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
 
     deposit(
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    emergencyPause(
-      pauseStaking: boolean,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    mintJuice(
-      recipients: string[],
-      amounts: BigNumberish[],
+      permit: {
+        owner: string;
+        spender: string;
+        value: BigNumberish;
+        deadline: BigNumberish;
+        v: BigNumberish;
+        r: BytesLike;
+        s: BytesLike;
+      },
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     modifyStakes(
-      stakes: { token: string; amount: BigNumberish; sentiment: boolean }[],
+      stakes: {
+        token: string;
+        stake: { amount: BigNumberish; isShort: boolean };
+      }[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -279,79 +171,37 @@ export class IJuiceStaking extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber] & { unstakedJUICE: BigNumber }>;
 
-    updatePriceOracles(
-      tokens: string[],
-      oracles: string[],
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
     withdraw(
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
   };
 
-  aggregateSignal(
-    tokens: string[],
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  authorizeSignalAggregator(
-    aggregator: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
   currentStake(
     user: string,
     token: string,
     overrides?: CallOverrides
-  ): Promise<[BigNumber, boolean] & { amount: BigNumber; sentiment: boolean }>;
-
-  delegateDeposit(
-    amount: BigNumberish,
-    permission: {
-      data: { sender: string; deadline: BigNumberish; nonce: BigNumberish };
-      signature: BytesLike;
-    },
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  delegateModifyStakes(
-    stakes: { token: string; amount: BigNumberish; sentiment: boolean }[],
-    permission: {
-      data: { sender: string; deadline: BigNumberish; nonce: BigNumberish };
-      signature: BytesLike;
-    },
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  delegateWithdraw(
-    amount: BigNumberish,
-    permission: {
-      data: { sender: string; deadline: BigNumberish; nonce: BigNumberish };
-      signature: BytesLike;
-    },
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  ): Promise<[BigNumber, boolean] & { amount: BigNumber; isShort: boolean }>;
 
   deposit(
     amount: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  emergencyPause(
-    pauseStaking: boolean,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  mintJuice(
-    recipients: string[],
-    amounts: BigNumberish[],
+    permit: {
+      owner: string;
+      spender: string;
+      value: BigNumberish;
+      deadline: BigNumberish;
+      v: BigNumberish;
+      r: BytesLike;
+      s: BytesLike;
+    },
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   modifyStakes(
-    stakes: { token: string; amount: BigNumberish; sentiment: boolean }[],
+    stakes: {
+      token: string;
+      stake: { amount: BigNumberish; isShort: boolean };
+    }[],
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -360,75 +210,37 @@ export class IJuiceStaking extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
-  updatePriceOracles(
-    tokens: string[],
-    oracles: string[],
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
   withdraw(
     amount: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   callStatic: {
-    aggregateSignal(tokens: string[], overrides?: CallOverrides): Promise<void>;
-
-    authorizeSignalAggregator(
-      aggregator: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
     currentStake(
       user: string,
       token: string,
       overrides?: CallOverrides
-    ): Promise<
-      [BigNumber, boolean] & { amount: BigNumber; sentiment: boolean }
-    >;
+    ): Promise<[BigNumber, boolean] & { amount: BigNumber; isShort: boolean }>;
 
-    delegateDeposit(
+    deposit(
       amount: BigNumberish,
-      permission: {
-        data: { sender: string; deadline: BigNumberish; nonce: BigNumberish };
-        signature: BytesLike;
+      permit: {
+        owner: string;
+        spender: string;
+        value: BigNumberish;
+        deadline: BigNumberish;
+        v: BigNumberish;
+        r: BytesLike;
+        s: BytesLike;
       },
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    delegateModifyStakes(
-      stakes: { token: string; amount: BigNumberish; sentiment: boolean }[],
-      permission: {
-        data: { sender: string; deadline: BigNumberish; nonce: BigNumberish };
-        signature: BytesLike;
-      },
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    delegateWithdraw(
-      amount: BigNumberish,
-      permission: {
-        data: { sender: string; deadline: BigNumberish; nonce: BigNumberish };
-        signature: BytesLike;
-      },
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    deposit(amount: BigNumberish, overrides?: CallOverrides): Promise<void>;
-
-    emergencyPause(
-      pauseStaking: boolean,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    mintJuice(
-      recipients: string[],
-      amounts: BigNumberish[],
       overrides?: CallOverrides
     ): Promise<void>;
 
     modifyStakes(
-      stakes: { token: string; amount: BigNumberish; sentiment: boolean }[],
+      stakes: {
+        token: string;
+        stake: { amount: BigNumberish; isShort: boolean };
+      }[],
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -436,12 +248,6 @@ export class IJuiceStaking extends BaseContract {
       user: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
-
-    updatePriceOracles(
-      tokens: string[],
-      oracles: string[],
-      overrides?: CallOverrides
-    ): Promise<void>;
 
     withdraw(amount: BigNumberish, overrides?: CallOverrides): Promise<void>;
   };
@@ -466,7 +272,7 @@ export class IJuiceStaking extends BaseContract {
     StakeAdded(
       user?: string | null,
       token?: string | null,
-      sentiment?: null,
+      isShort?: null,
       price?: null,
       unstakedDiff?: null
     ): TypedEventFilter<
@@ -474,7 +280,7 @@ export class IJuiceStaking extends BaseContract {
       {
         user: string;
         token: string;
-        sentiment: boolean;
+        isShort: boolean;
         price: BigNumber;
         unstakedDiff: BigNumber;
       }
@@ -483,7 +289,7 @@ export class IJuiceStaking extends BaseContract {
     StakeRemoved(
       user?: string | null,
       token?: string | null,
-      sentiment?: null,
+      isShort?: null,
       price?: null,
       unstakedDiff?: null
     ): TypedEventFilter<
@@ -491,7 +297,7 @@ export class IJuiceStaking extends BaseContract {
       {
         user: string;
         token: string;
-        sentiment: boolean;
+        isShort: boolean;
         price: BigNumber;
         unstakedDiff: BigNumber;
       }
@@ -499,79 +305,37 @@ export class IJuiceStaking extends BaseContract {
   };
 
   estimateGas: {
-    aggregateSignal(
-      tokens: string[],
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    authorizeSignalAggregator(
-      aggregator: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
     currentStake(
       user: string,
       token: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    delegateDeposit(
-      amount: BigNumberish,
-      permission: {
-        data: { sender: string; deadline: BigNumberish; nonce: BigNumberish };
-        signature: BytesLike;
-      },
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    delegateModifyStakes(
-      stakes: { token: string; amount: BigNumberish; sentiment: boolean }[],
-      permission: {
-        data: { sender: string; deadline: BigNumberish; nonce: BigNumberish };
-        signature: BytesLike;
-      },
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    delegateWithdraw(
-      amount: BigNumberish,
-      permission: {
-        data: { sender: string; deadline: BigNumberish; nonce: BigNumberish };
-        signature: BytesLike;
-      },
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
     deposit(
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    emergencyPause(
-      pauseStaking: boolean,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    mintJuice(
-      recipients: string[],
-      amounts: BigNumberish[],
+      permit: {
+        owner: string;
+        spender: string;
+        value: BigNumberish;
+        deadline: BigNumberish;
+        v: BigNumberish;
+        r: BytesLike;
+        s: BytesLike;
+      },
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     modifyStakes(
-      stakes: { token: string; amount: BigNumberish; sentiment: boolean }[],
+      stakes: {
+        token: string;
+        stake: { amount: BigNumberish; isShort: boolean };
+      }[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     unstakedBalanceOf(
       user: string,
       overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    updatePriceOracles(
-      tokens: string[],
-      oracles: string[],
-      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     withdraw(
@@ -581,79 +345,37 @@ export class IJuiceStaking extends BaseContract {
   };
 
   populateTransaction: {
-    aggregateSignal(
-      tokens: string[],
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    authorizeSignalAggregator(
-      aggregator: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
     currentStake(
       user: string,
       token: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    delegateDeposit(
-      amount: BigNumberish,
-      permission: {
-        data: { sender: string; deadline: BigNumberish; nonce: BigNumberish };
-        signature: BytesLike;
-      },
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    delegateModifyStakes(
-      stakes: { token: string; amount: BigNumberish; sentiment: boolean }[],
-      permission: {
-        data: { sender: string; deadline: BigNumberish; nonce: BigNumberish };
-        signature: BytesLike;
-      },
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    delegateWithdraw(
-      amount: BigNumberish,
-      permission: {
-        data: { sender: string; deadline: BigNumberish; nonce: BigNumberish };
-        signature: BytesLike;
-      },
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
     deposit(
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    emergencyPause(
-      pauseStaking: boolean,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    mintJuice(
-      recipients: string[],
-      amounts: BigNumberish[],
+      permit: {
+        owner: string;
+        spender: string;
+        value: BigNumberish;
+        deadline: BigNumberish;
+        v: BigNumberish;
+        r: BytesLike;
+        s: BytesLike;
+      },
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     modifyStakes(
-      stakes: { token: string; amount: BigNumberish; sentiment: boolean }[],
+      stakes: {
+        token: string;
+        stake: { amount: BigNumberish; isShort: boolean };
+      }[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     unstakedBalanceOf(
       user: string,
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    updatePriceOracles(
-      tokens: string[],
-      oracles: string[],
-      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     withdraw(
