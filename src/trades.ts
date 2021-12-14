@@ -16,7 +16,7 @@ import {
   usdcWethPoolAddress,
   vnlDecimals,
 } from './contracts'
-import { VanillaV1Router02__factory } from 'vanilla-contracts/typechain/vanilla_v1.1/factories/VanillaV1Router02__factory'
+import { VanillaV1Router02__factory } from '@vanilladefi/trade-contracts/typechain/vanilla_v1.1/factories/VanillaV1Router02__factory'
 import {
   convertVanillaTokenToUniswapToken,
   getAllTokens,

@@ -1,9 +1,9 @@
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { Contract, providers, Signer } from 'ethers'
-import { ERC20 } from 'vanilla-contracts/typechain/vanilla_v1.1/ERC20'
-import { ERC20__factory } from 'vanilla-contracts/typechain/vanilla_v1.1/factories/ERC20__factory'
-import { VanillaV1Router02__factory } from 'vanilla-contracts/typechain/vanilla_v1.1/factories/VanillaV1Router02__factory'
-import { VanillaV1Router02 } from 'vanilla-contracts/typechain/vanilla_v1.1/VanillaV1Router02'
+import { MockERC20 as ERC20 } from '@vanilladefi/trade-contracts/typechain/vanilla_v1.1/MockERC20'
+import { MockERC20__factory as ERC20__factory } from '@vanilladefi/trade-contracts/typechain/vanilla_v1.1/factories/MockERC20__factory'
+import { VanillaV1Router02__factory } from '@vanilladefi/trade-contracts/typechain/vanilla_v1.1/factories/VanillaV1Router02__factory'
+import { VanillaV1Router02 } from '@vanilladefi/trade-contracts/typechain/vanilla_v1.1/VanillaV1Router02'
 import VanillaV1Router01 from './types/abis/VanillaV1Router01.json'
 import { UniswapVersion, VanillaVersion } from './types/general'
 

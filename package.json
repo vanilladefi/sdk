@@ -28,9 +28,9 @@
     "@uniswap/sdk": "^3.0.3",
     "@uniswap/sdk-core": "^1.0.10",
     "@uniswap/v3-sdk": "^3.5.1",
+    "@vanilladefi/trade-contracts": "^1.1.5",
     "ethers": "^5.4.7",
-    "merkletreejs": "^0.2.24",
-    "vanilla-contracts": "file:vanilla-contracts-1.1.0.tgz"
+    "merkletreejs": "^0.2.24"
   },
   "devDependencies": {
     "@types/jest": "^27.0.2",

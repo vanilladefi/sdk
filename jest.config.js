@@ -5,7 +5,7 @@ module.exports = {
   setupFiles: ['<rootDir>/src/__utils__/env.ts'],
   setupFilesAfterEnv: ['<rootDir>/src/__utils__/utils.ts'],
   transformIgnorePatterns: [
-    'node_modules/(?!(vanilla-contracts)/)',
+    'node_modules/(?!(@vanilladefi/trade-contracts)/)',
     '\\.pnp\\.[^\\/]+$',
   ],
 }

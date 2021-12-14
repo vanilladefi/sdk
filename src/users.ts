@@ -9,9 +9,9 @@ import {
   getVanillaTokenContract,
   vnlDecimals,
 } from './contracts'
-import { TypedEvent } from 'vanilla-contracts/typechain/vanilla_v1.1/commons'
-import { ERC20 } from 'vanilla-contracts/typechain/vanilla_v1.1/ERC20'
-import { ERC20__factory } from 'vanilla-contracts/typechain/vanilla_v1.1/factories/ERC20__factory'
+import { TypedEvent } from '@vanilladefi/trade-contracts/typechain/vanilla_v1.1/commons'
+import { MockERC20 as ERC20 } from '@vanilladefi/trade-contracts/typechain/vanilla_v1.1/MockERC20'
+import { MockERC20__factory as ERC20__factory } from '@vanilladefi/trade-contracts/typechain/vanilla_v1.1/factories/MockERC20__factory'
 import { getBalance, isAddress } from './tokens'
 import { PrerenderProps } from './types/content'
 import { VanillaVersion } from './types/general'
