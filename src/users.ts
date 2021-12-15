@@ -1,6 +1,9 @@
 import { Result } from '@ethersproject/abi'
 import { formatUnits } from '@ethersproject/units'
 import { ADDRESS_ZERO } from '@uniswap/v3-sdk'
+import { ERC20 } from '@vanilladefi/trade-contracts/typechain/openzeppelin/ERC20'
+import { ERC20__factory } from '@vanilladefi/trade-contracts/typechain/openzeppelin/factories/ERC20__factory'
+import { TypedEvent } from '@vanilladefi/trade-contracts/typechain/vanilla_v1.1/commons'
 import { ethers, providers } from 'ethers'
 import {
   contractAddresses,
@@ -9,9 +12,6 @@ import {
   getVanillaTokenContract,
   vnlDecimals,
 } from './contracts'
-import { TypedEvent } from '@vanilladefi/trade-contracts/typechain/vanilla_v1.1/commons'
-import { ERC20 } from '@vanilladefi/trade-contracts/typechain/vanilla_v1.1/ERC20'
-import { ERC20__factory } from '@vanilladefi/trade-contracts/typechain/vanilla_v1.1/factories/ERC20__factory'
 import { getBalance, isAddress } from './tokens'
 import { PrerenderProps } from './types/content'
 import { VanillaVersion } from './types/general'
