@@ -3,7 +3,7 @@ import { formatUnits } from '@ethersproject/units'
 import { ADDRESS_ZERO } from '@uniswap/v3-sdk'
 import { ERC20 } from '@vanilladefi/trade-contracts/typechain/openzeppelin/ERC20'
 import { ERC20__factory } from '@vanilladefi/trade-contracts/typechain/openzeppelin/factories/ERC20__factory'
-import { TypedEvent } from '@vanilladefi/trade-contracts/typechain/vanilla_v1.1/commons'
+import { TypedEvent } from '@vanilladefi/trade-contracts/typechain/openzeppelin/common'
 import { ethers, providers } from 'ethers'
 import {
   contractAddresses,
