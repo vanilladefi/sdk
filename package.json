@@ -7,9 +7,9 @@
   "author": "Equilibrium",
   "license": "MIT",
   "dependencies": {
-    "@vanilladefi/core-sdk": "./core",
-    "@vanilladefi/stake-sdk": "./stake",
-    "@vanilladefi/trade-sdk": "./trade",
+    "@vanilladefi/core-sdk": "./packages/core",
+    "@vanilladefi/stake-sdk": "./packages/stake",
+    "@vanilladefi/trade-sdk": "./packages/trade",
     "lerna": "^4.0.0"
   },
   "devDependencies": {
