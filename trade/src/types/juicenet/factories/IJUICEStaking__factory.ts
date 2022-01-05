@@ -4,7 +4,7 @@
 
 import { Contract, Signer, utils } from "ethers";
 import { Provider } from "@ethersproject/providers";
-import type { IJUICEStaking, IJUICEStakingInterface } from "../IJUICEStaking";
+import type { IJuiceStaking, IJuiceStakingInterface } from "../IJuiceStaking";
 
 const _abi = [
   {
@@ -24,6 +24,21 @@ const _abi = [
     type: "error",
   },
   {
+    inputs: [],
+    name: "InvalidNonce",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "InvalidSender",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "InvalidSignature",
+    type: "error",
+  },
+  {
     inputs: [
       {
         internalType: "address",
@@ -32,6 +47,59 @@ const _abi = [
       },
     ],
     name: "InvalidToken",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "targetLength",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "amountLength",
+        type: "uint256",
+      },
+    ],
+    name: "MintTargetMismatch",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint8",
+        name: "expected",
+        type: "uint8",
+      },
+      {
+        internalType: "uint8",
+        name: "actual",
+        type: "uint8",
+      },
+    ],
+    name: "OracleDecimalMismatch",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "PermissionExpired",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "tokensLength",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "oraclesLength",
+        type: "uint256",
+      },
+    ],
+    name: "TokenOracleMismatch",
     type: "error",
   },
   {
@@ -90,7 +158,7 @@ const _abi = [
       {
         indexed: false,
         internalType: "bool",
-        name: "isShort",
+        name: "sentiment",
         type: "bool",
       },
       {
@@ -127,7 +195,7 @@ const _abi = [
       {
         indexed: false,
         internalType: "bool",
-        name: "isShort",
+        name: "sentiment",
         type: "bool",
       },
       {
@@ -149,6 +217,32 @@ const _abi = [
   {
     inputs: [
       {
+        internalType: "address[]",
+        name: "tokens",
+        type: "address[]",
+      },
+    ],
+    name: "aggregateSignal",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "contract IJuiceSignalAggregator",
+        name: "aggregator",
+        type: "address",
+      },
+    ],
+    name: "authorizeSignalAggregator",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
         internalType: "address",
         name: "user",
         type: "address",
@@ -162,21 +256,14 @@ const _abi = [
     name: "currentStake",
     outputs: [
       {
-        components: [
-          {
-            internalType: "uint128",
-            name: "amount",
-            type: "uint128",
-          },
-          {
-            internalType: "bool",
-            name: "isShort",
-            type: "bool",
-          },
-        ],
-        internalType: "struct IJUICEStaking.StakePosition",
-        name: "stake",
-        type: "tuple",
+        internalType: "uint128",
+        name: "amount",
+        type: "uint128",
+      },
+      {
+        internalType: "bool",
+        name: "sentiment",
+        type: "bool",
       },
     ],
     stateMutability: "view",
@@ -192,47 +279,39 @@ const _abi = [
       {
         components: [
           {
-            internalType: "address",
-            name: "owner",
-            type: "address",
+            components: [
+              {
+                internalType: "address",
+                name: "sender",
+                type: "address",
+              },
+              {
+                internalType: "uint256",
+                name: "deadline",
+                type: "uint256",
+              },
+              {
+                internalType: "uint256",
+                name: "nonce",
+                type: "uint256",
+              },
+            ],
+            internalType: "struct Permission",
+            name: "data",
+            type: "tuple",
           },
           {
-            internalType: "address",
-            name: "spender",
-            type: "address",
-          },
-          {
-            internalType: "uint256",
-            name: "value",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "deadline",
-            type: "uint256",
-          },
-          {
-            internalType: "uint8",
-            name: "v",
-            type: "uint8",
-          },
-          {
-            internalType: "bytes32",
-            name: "r",
-            type: "bytes32",
-          },
-          {
-            internalType: "bytes32",
-            name: "s",
-            type: "bytes32",
+            internalType: "bytes",
+            name: "signature",
+            type: "bytes",
           },
         ],
-        internalType: "struct IJUICEStaking.JUICEPermit",
-        name: "permit",
+        internalType: "struct SignedPermission",
+        name: "permission",
         type: "tuple",
       },
     ],
-    name: "deposit",
+    name: "delegateDeposit",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -247,24 +326,172 @@ const _abi = [
             type: "address",
           },
           {
-            components: [
-              {
-                internalType: "uint128",
-                name: "amount",
-                type: "uint128",
-              },
-              {
-                internalType: "bool",
-                name: "isShort",
-                type: "bool",
-              },
-            ],
-            internalType: "struct IJUICEStaking.StakePosition",
-            name: "stake",
-            type: "tuple",
+            internalType: "uint128",
+            name: "amount",
+            type: "uint128",
+          },
+          {
+            internalType: "bool",
+            name: "sentiment",
+            type: "bool",
           },
         ],
-        internalType: "struct IJUICEStaking.StakingParam[]",
+        internalType: "struct StakingParam[]",
+        name: "stakes",
+        type: "tuple[]",
+      },
+      {
+        components: [
+          {
+            components: [
+              {
+                internalType: "address",
+                name: "sender",
+                type: "address",
+              },
+              {
+                internalType: "uint256",
+                name: "deadline",
+                type: "uint256",
+              },
+              {
+                internalType: "uint256",
+                name: "nonce",
+                type: "uint256",
+              },
+            ],
+            internalType: "struct Permission",
+            name: "data",
+            type: "tuple",
+          },
+          {
+            internalType: "bytes",
+            name: "signature",
+            type: "bytes",
+          },
+        ],
+        internalType: "struct SignedPermission",
+        name: "permission",
+        type: "tuple",
+      },
+    ],
+    name: "delegateModifyStakes",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "amount",
+        type: "uint256",
+      },
+      {
+        components: [
+          {
+            components: [
+              {
+                internalType: "address",
+                name: "sender",
+                type: "address",
+              },
+              {
+                internalType: "uint256",
+                name: "deadline",
+                type: "uint256",
+              },
+              {
+                internalType: "uint256",
+                name: "nonce",
+                type: "uint256",
+              },
+            ],
+            internalType: "struct Permission",
+            name: "data",
+            type: "tuple",
+          },
+          {
+            internalType: "bytes",
+            name: "signature",
+            type: "bytes",
+          },
+        ],
+        internalType: "struct SignedPermission",
+        name: "permission",
+        type: "tuple",
+      },
+    ],
+    name: "delegateWithdraw",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "amount",
+        type: "uint256",
+      },
+    ],
+    name: "deposit",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "bool",
+        name: "pauseStaking",
+        type: "bool",
+      },
+    ],
+    name: "emergencyPause",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address[]",
+        name: "recipients",
+        type: "address[]",
+      },
+      {
+        internalType: "uint256[]",
+        name: "amounts",
+        type: "uint256[]",
+      },
+    ],
+    name: "mintJuice",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        components: [
+          {
+            internalType: "address",
+            name: "token",
+            type: "address",
+          },
+          {
+            internalType: "uint128",
+            name: "amount",
+            type: "uint128",
+          },
+          {
+            internalType: "bool",
+            name: "sentiment",
+            type: "bool",
+          },
+        ],
+        internalType: "struct StakingParam[]",
         name: "stakes",
         type: "tuple[]",
       },
@@ -296,6 +523,24 @@ const _abi = [
   {
     inputs: [
       {
+        internalType: "address[]",
+        name: "tokens",
+        type: "address[]",
+      },
+      {
+        internalType: "contract IPriceOracle[]",
+        name: "oracles",
+        type: "address[]",
+      },
+    ],
+    name: "updatePriceOracles",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
         internalType: "uint256",
         name: "amount",
         type: "uint256",
@@ -308,15 +553,15 @@ const _abi = [
   },
 ];
 
-export class IJUICEStaking__factory {
+export class IJuiceStaking__factory {
   static readonly abi = _abi;
-  static createInterface(): IJUICEStakingInterface {
-    return new utils.Interface(_abi) as IJUICEStakingInterface;
+  static createInterface(): IJuiceStakingInterface {
+    return new utils.Interface(_abi) as IJuiceStakingInterface;
   }
   static connect(
     address: string,
     signerOrProvider: Signer | Provider
-  ): IJUICEStaking {
-    return new Contract(address, _abi, signerOrProvider) as IJUICEStaking;
+  ): IJuiceStaking {
+    return new Contract(address, _abi, signerOrProvider) as IJuiceStaking;
   }
 }
