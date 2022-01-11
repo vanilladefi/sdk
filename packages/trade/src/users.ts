@@ -3,18 +3,31 @@ import { formatUnits } from '@ethersproject/units'
 import { ADDRESS_ZERO } from '@uniswap/v3-sdk'
 import { ethers, providers } from 'ethers'
 import {
-  contractAddresses,
+  tradeContractAddresses,
   epoch,
-  getVanillaRouter,
+  getVanillaTradeRouter,
   getVanillaTokenContract,
   vnlDecimals,
 } from './contracts'
 import { getBalance, isAddress } from './tokens'
-import { PrerenderProps } from './types/content'
-import { VanillaVersion } from './types/general'
+import { Token, VanillaVersion } from '@vanilladefi/core-sdk'
 
 interface VanillaPurchase {
   args?: Result
+}
+
+export type PrerenderProps = {
+  walletAddress?: string | false
+  vnlBalance?: string | null
+  ethBalance?: string | null
+  initialTokens?: {
+    v2?: Token[]
+    v3?: Token[]
+    userPositionsV3: Token[] | null
+    userPositionsV2: Token[] | null
+  }
+  ethPrice?: number
+  currentBlockNumber?: number
 }
 
 /**
@@ -28,11 +41,11 @@ export const getUsers = async (
 ): Promise<string[]> => {
   const users: string[] = []
 
-  const vnlRouter = getVanillaRouter(
+  const vnlRouter = getVanillaTradeRouter(
     VanillaVersion.V1_1,
     provider || providers.getDefaultProvider(),
   )
-  const vnlLegacyRouter = getVanillaRouter(
+  const vnlLegacyRouter = getVanillaTradeRouter(
     VanillaVersion.V1_0,
     provider || providers.getDefaultProvider(),
   )
@@ -110,10 +123,10 @@ export const getVnlHolders = async (
   provider?: providers.Provider,
 ): Promise<string[]> => {
   const vnlToken = ERC20__factory.connect(
-    contractAddresses.vanilla[VanillaVersion.V1_1].vnl,
+    tradeContractAddresses.vanilla[VanillaVersion.V1_1]?.vnl || '',
     provider || providers.getDefaultProvider(),
   )
-  const vnlRouter = getVanillaRouter(
+  const vnlRouter = getVanillaTradeRouter(
     VanillaVersion.V1_1,
     provider || providers.getDefaultProvider(),
   )
