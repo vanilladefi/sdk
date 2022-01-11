@@ -1,21 +1,10 @@
+import { ChainId } from '@vanilladefi/core-sdk'
 import { TransactionDetails } from './trade'
-
-export type ChainId = '1' | '2' | '3' | '4' | '42' | '1337'
 
 export type ChainIdToTransactionMapping = {
   [chainId in ChainId]: {
     [transactionKey: string]: TransactionDetails
   }
-}
-
-export enum VanillaVersion {
-  V1_0 = 'v1_0',
-  V1_1 = 'v1_1',
-}
-
-export enum UniswapVersion {
-  v2 = 'v2',
-  v3 = 'v3',
 }
 
 export type TokenQueryVariables = {

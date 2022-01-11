@@ -5,7 +5,7 @@ import { VanillaV1Router02__factory } from '@vanilladefi/trade-contracts/typecha
 import { VanillaV1Router02 } from '@vanilladefi/trade-contracts/typechain/vanilla_v1.1/VanillaV1Router02'
 import { Contract, providers, Signer } from 'ethers'
 import VanillaV1Router01 from './types/abis/VanillaV1Router01.json'
-import { UniswapVersion, VanillaVersion } from './types/general'
+import { UniswapVersion, VanillaVersion } from '@vanilladefi/core-sdk'
 
 /**
  * Returns an instance of a $VNL ERC-20 token contract
@@ -19,9 +19,9 @@ export function getVanillaTokenContract(
   version: VanillaVersion,
   signerOrProvider?: Signer | providers.Provider,
 ): ERC20 {
-  const address = contractAddresses.vanilla[version].vnl
+  const address = tradeContractAddresses.vanilla[version]?.vnl
   return ERC20__factory.connect(
-    address,
+    address || '',
     (signerOrProvider || providers.getDefaultProvider()) as any,
   )
 }
@@ -34,19 +34,19 @@ export function getVanillaTokenContract(
  * @param signerOrProvider ethersjs signer(read/write) or provider(readonly).
  * @returns Vanilla router contract instance with transactional capability
  */
-export function getVanillaRouter(
+export function getVanillaTradeRouter(
   version: VanillaVersion,
   signerOrProvider?: Signer | providers.Provider,
 ): Contract | VanillaV1Router02 {
-  const routerAddress = contractAddresses.vanilla[version].router
+  const routerAddress = tradeContractAddresses.vanilla[version]?.router
   const v1abi = VanillaV1Router01.abi
-  return version === VanillaVersion.V1_1
+  return version !== VanillaVersion.V1_0
     ? VanillaV1Router02__factory.connect(
-        routerAddress,
+        routerAddress || '',
         (signerOrProvider || providers.getDefaultProvider()) as any,
       )
     : new Contract(
-        routerAddress,
+        tradeContractAddresses.vanilla.v1_0?.router || '',
         v1abi,
         signerOrProvider || providers.getDefaultProvider(),
       )
@@ -63,8 +63,8 @@ export const vnlPools = {
 /**
  * Addresses of deployed Vanilla contracts
  */
-export const contractAddresses: {
-  vanilla: { [version in VanillaVersion]: { router: string; vnl: string } }
+export const tradeContractAddresses: {
+  vanilla: { [version in VanillaVersion]?: { router: string; vnl: string } }
   uniswap: { [version in UniswapVersion]: { router: string; quoter?: string } }
 } = {
   vanilla: {

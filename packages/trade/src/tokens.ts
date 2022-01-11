@@ -2,12 +2,11 @@ import uniswapTokens from '@uniswap/default-token-list'
 import { Token as UniswapToken } from '@uniswap/sdk-core'
 import { BigNumber, constants, Contract, providers, Signer } from 'ethers'
 import { getAddress } from 'ethers/lib/utils'
-import { chainId, contractAddresses, vnlDecimals } from './contracts'
+import { chainId, tradeContractAddresses, vnlDecimals } from './contracts'
 import { ipfsToHttp } from './ipfs'
 import v1_0Tokens from './tokenLists/tokens_v1_0.json'
 import v1_1Tokens from './tokenLists/tokens_v1_1.json'
-import { VanillaVersion } from './types/general'
-import { Token, UniSwapToken } from './types/trade'
+import { Token, UniSwapToken, VanillaVersion } from '@vanilladefi/core-sdk'
 
 /**
  * wETH9 in Vanilla's token format
@@ -57,7 +56,7 @@ export const usdc: Token =
  */
 export const vnl: Token = {
   chainId: String(chainId),
-  address: contractAddresses.vanilla.v1_1.vnl,
+  address: tradeContractAddresses.vanilla.v1_1?.vnl || '',
   decimals: String(vnlDecimals),
   symbol: 'VNL',
   name: 'Vanilla',
