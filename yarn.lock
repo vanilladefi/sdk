@@ -375,7 +375,7 @@
     "@ethersproject/logger" "^5.5.0"
     bn.js "^4.11.9"
 
-"@ethersproject/bytes@5.5.0", "@ethersproject/bytes@^5.5.0":
+"@ethersproject/bytes@5.5.0", "@ethersproject/bytes@^5.4.0", "@ethersproject/bytes@^5.5.0":
   version "5.5.0"
   resolved "https://registry.npmjs.org/@ethersproject/bytes/-/bytes-5.5.0.tgz"
   integrity sha512-ABvc7BHWhZU9PNM/tANm/Qx4ostPGadAuQzWTr3doklZOhDlmcBqclrQe/ZXUIj3K8wC28oYeuRa+A37tX9kog==
@@ -2069,7 +2069,7 @@
 "@vanilladefi/stake-sdk@file:./packages/stake":
   version "1.0.0"
   dependencies:
-    "@vanilladefi/core-sdk" "file:../../../../Library/Caches/Yarn/v6/npm-@vanilladefi-stake-sdk-1.0.0-79ecfbbc-a3bd-4eea-b614-cd5f3e2fc653-1641910678925/node_modules/@vanilladefi/core"
+    "@vanilladefi/core-sdk" "file:../../../../Library/Caches/Yarn/v6/npm-@vanilladefi-stake-sdk-1.0.0-cb633d90-2b7d-4e90-9eab-67413418d496-1641986916121/node_modules/@vanilladefi/core"
     ethers "^5.5.2"
 
 "@vanilladefi/trade-contracts@^1.1.27":
@@ -2093,7 +2093,7 @@
     "@uniswap/sdk" "^3.0.3"
     "@uniswap/sdk-core" "^1.0.10"
     "@uniswap/v3-sdk" "^3.5.1"
-    "@vanilladefi/core-sdk" "file:../../../../Library/Caches/Yarn/v6/npm-@vanilladefi-trade-sdk-1.1.0-92cfde7a-464e-4f6a-bee0-b36fc4811f81-1641910679307/node_modules/@vanilladefi/core"
+    "@vanilladefi/core-sdk" "file:../../../../Library/Caches/Yarn/v6/npm-@vanilladefi-trade-sdk-1.1.0-f9c1d691-b3b9-4d2c-ae21-7dfd2026b6ba-1641986916144/node_modules/@vanilladefi/core"
     "@vanilladefi/trade-contracts" "^1.1.27"
     ethers "^5.4.7"
     merkletreejs "^0.2.24"
@@ -2842,9 +2842,9 @@ columnify@^1.5.4:
     strip-ansi "^3.0.0"
     wcwidth "^1.0.0"
 
-combined-stream@^1.0.6, combined-stream@~1.0.6:
+combined-stream@^1.0.6, combined-stream@^1.0.8, combined-stream@~1.0.6:
   version "1.0.8"
-  resolved "https://registry.npmjs.org/combined-stream/-/combined-stream-1.0.8.tgz"
+  resolved "https://registry.yarnpkg.com/combined-stream/-/combined-stream-1.0.8.tgz#c3d45a8b34fd730631a110a8a2520682b31d5a7f"
   integrity sha512-FQN4MRfuJeHf7cBbBMJFXhKSDq+2kAArBlmRBvcvFE5BB1HZKXtSFASDhdlz9zOYwxh8lDdnvmMOe/+5cdoEdg==
   dependencies:
     delayed-stream "~1.0.0"
