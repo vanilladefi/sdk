@@ -11,6 +11,9 @@ import {
 } from './contracts'
 import { getBalance, isAddress } from './tokens'
 import { Token, VanillaVersion } from '@vanilladefi/core-sdk'
+import { TypedEvent } from '@vanilladefi/trade-contracts/typechain/openzeppelin/common'
+import { ERC20 } from '@vanilladefi/trade-contracts/typechain/openzeppelin/ERC20'
+import { ERC20__factory } from '@vanilladefi/trade-contracts/typechain/openzeppelin/factories/ERC20__factory'
 
 interface VanillaPurchase {
   args?: Result
