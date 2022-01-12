@@ -1,6 +1,6 @@
 import { parseUnits } from 'ethers/lib/utils'
 import { vnlDecimals } from '../contracts'
-import { VanillaVersion } from '../types/general'
+import { VanillaVersion } from '@vanilladefi/core-sdk'
 import { getBasicWalletDetails, getUsers, getVnlHolders } from '../users'
 import { testProvider } from '../__utils__/utils'
 

@@ -1,5 +1,5 @@
 import { providers } from 'ethers'
-import { network } from '../contracts'
+import { networks } from '../contracts'
 
 jest.setTimeout(240000)
 
@@ -12,9 +12,15 @@ export const testProvider: TestProvider =
   process?.env?.RPC_URL &&
   process?.env?.RPC_URL?.length > 0 &&
   process?.env?.RPC_URL[0] === 'w'
-    ? new providers.WebSocketProvider(process?.env?.RPC_URL || '', network)
+    ? new providers.WebSocketProvider(
+        process?.env?.RPC_URL || '',
+        networks.mainnet,
+      )
     : process?.env?.RPC_URL &&
       process?.env?.RPC_URL?.length > 0 &&
       process?.env?.RPC_URL[0] === 'h'
-    ? new providers.JsonRpcProvider(process?.env?.RPC_URL || '', network)
+    ? new providers.JsonRpcProvider(
+        process?.env?.RPC_URL || '',
+        networks.mainnet,
+      )
     : providers.getDefaultProvider()
