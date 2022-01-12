@@ -1,4 +1,4 @@
-name: Node.js CI
+name: Lerna CI
 
 on:
   push:
@@ -15,16 +15,9 @@ jobs:
           submodules: recursive
       - uses: actions/setup-node@v2
         with:
-          node-version: 14
-      - run: |
-          npm install -g pnpm
-          npm install
-      - run: |
-          cd src/contracts
-          pnpm install
-          pnpm run compile:sol
-          pnpm run generate:typechain
-          cd ../..
-      - run: npm test
+          node-version: 16
+      - run: yarn install
+      - run: ./node_modules/.bin/lerna run lint
+      - run: ./node_modules/.bin/lerna test
         env:
           RPC_URL: ${{ secrets.RPC_URL }}
