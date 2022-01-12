@@ -1,4 +1,5 @@
 # A Software Development Kit for Vanilla DeFi
+
 [![npm version](https://badge.fury.io/js/@vanilladefi%2Fsdk.svg)](https://badge.fury.io/js/@vanilladefi%2Fsdk)
 [![docs](https://img.shields.io/badge/docs-%40vanilladefi%2Fsdk-blue)](https://vanilladefi.github.io/sdk/)
 

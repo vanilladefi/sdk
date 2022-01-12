@@ -4,15 +4,10 @@
     "ecmaVersion": 2020,
     "sourceType": "module"
   },
-  "plugins": [
-    "import"
-  ],
+  "plugins": ["import"],
   "settings": {
     "import/parsers": {
-      "@typescript-eslint/parser": [
-        ".ts",
-        ".tsx"
-      ]
+      "@typescript-eslint/parser": [".ts", ".tsx"]
     },
     "import/resolver": {
       // use <root>/tsconfig.json
@@ -29,10 +24,7 @@
     "prettier"
   ],
   "rules": {
-    "linebreak-style": [
-      "error",
-      "unix"
-    ],
+    "linebreak-style": ["error", "unix"],
     "@typescript-eslint/no-explicit-any": "off"
   }
 }

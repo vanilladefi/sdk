@@ -9,7 +9,11 @@ import {
 } from '@uniswap/sdk'
 import { providers, Transaction } from 'ethers'
 import { getAddress, parseUnits } from 'ethers/lib/utils'
-import { chainId, tradeContractAddresses, ethersOverrides } from '../../contracts'
+import {
+  chainId,
+  tradeContractAddresses,
+  ethersOverrides,
+} from '../../contracts'
 import { getContract } from '../../tokens'
 import vanillaRouter from '../../types/abis/vanillaRouter.json'
 import { VanillaVersion } from '@vanilladefi/core-sdk'
