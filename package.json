@@ -12,21 +12,22 @@
     "@vanilladefi/trade-sdk": "file:./packages/trade"
   },
   "devDependencies": {
-    "@types/node": "^17.0.8",
-    "ts-prune": "^0.10.2",
-    "typescript": "^4.5.4",
     "@types/jest": "^27.4.0",
-    "lerna": "^4.0.0",
+    "@types/node": "^17.0.8",
     "@typescript-eslint/eslint-plugin": "^5.4.0",
     "@typescript-eslint/parser": "^5.4.0",
+    "copyfiles": "^2.4.1",
     "dotenv": "^10.0.0",
     "eslint": "^8.3.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-import-resolver-typescript": "^2.5.0",
     "eslint-plugin-import": "^2.25.3",
     "jest": "^27.2.5",
+    "lerna": "^4.0.0",
     "prettier": "^2.4.1",
     "ts-jest": "^27.0.5",
-    "typedoc": "^0.22.7"
+    "ts-prune": "^0.10.2",
+    "typedoc": "^0.22.7",
+    "typescript": "^4.5.4"
   }
 }
