@@ -2,8 +2,8 @@
  * $VNL pools on Uniswap with the most liquidity
  */
 export const vnlPools = {
-    ETH: '0xff6949065aebb4be59d30c970694a7495da0c0ff',
-    USDC: '0x0aa719a08957bdf43d9c9f0b755edd1ca2b386f3',
+  ETH: '0xff6949065aebb4be59d30c970694a7495da0c0ff',
+  USDC: '0x0aa719a08957bdf43d9c9f0b755edd1ca2b386f3',
 }
 
 /**

@@ -11,18 +11,8 @@
     "outDir": "lib",
     "strict": true,
     "rootDir": "src",
-    "baseUrl": "src",
+    "baseUrl": "src"
   },
-  "include": [
-    "**/*.ts",
-    "**/*.tsx",
-    "**/*.d.ts",
-    "/cjs/**/*.ts"
-  ],
-  "exclude": [
-    "node_modules",
-    "lib",
-    "**/__tests__/*",
-    "**/__utils__/*"
-  ]
+  "include": ["**/*.ts", "**/*.tsx", "**/*.d.ts", "/cjs/**/*.ts"],
+  "exclude": ["node_modules", "lib", "**/__tests__/*", "**/__utils__/*"]
 }

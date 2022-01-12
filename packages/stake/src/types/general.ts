@@ -1,4 +1,4 @@
 export enum availableNetworks {
-    "matic",
-    "maticmum"
+  'matic',
+  'maticmum',
 }
