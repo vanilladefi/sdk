@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "test": "jest --ci --silent --forceExit",
-    "build": "tsc --project tsconfig.json",
+    "build": "tsc --project tsconfig.json && copyfiles -u 1 \"src/**/*.d.ts\" lib",
     "lint": "eslint .",
     "format": "prettier --write .",
     "build:docs": "npx typedoc --out docs src/index.ts"
