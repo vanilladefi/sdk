@@ -1,12 +1,14 @@
 {
   "name": "@vanilladefi/stake-sdk",
   "version": "1.0.0",
-  "main": "./lib/index.js",
+  "main": "lib/index.js",
+  "typings": "lib/index.d.ts",
   "license": "MIT",
   "scripts": {
-    "test": "jest --ci --silent --forceExit",
-    "build": "tsc --project tsconfig.json && copyfiles -u 1 \"src/**/*.d.ts\" lib",
+    "test": "jest --ci --forceExit",
+    "build": "tsc && copyfiles -u 1 \"src/**/*.d.ts\" lib",
     "lint": "eslint .",
+    "prepublishOnly": "tsc",
     "format": "prettier --write .",
     "build:docs": "npx typedoc --out docs src/index.ts"
   },
