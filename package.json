@@ -6,6 +6,11 @@
   "repository": "git@github.com:vanilladefi/sdk.git",
   "author": "Equilibrium",
   "license": "MIT",
+  "scripts": {
+    "build": "lerna run --parallel build",
+    "clean": "lerna run --parallel clean",
+    "test": "jest"
+  },
   "dependencies": {
     "@vanilladefi/core-sdk": "file:./packages/core",
     "@vanilladefi/stake-sdk": "file:./packages/stake",
@@ -17,12 +22,15 @@
     "@types/node": "^17.0.8",
     "@typescript-eslint/eslint-plugin": "^5.4.0",
     "@typescript-eslint/parser": "^5.4.0",
+    "@uniswap/default-token-list": "^3.0.0",
     "copyfiles": "^2.4.1",
     "dotenv": "^10.0.0",
+    "elliptic": "^6.5.4",
     "eslint": "^8.3.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-import-resolver-typescript": "^2.5.0",
     "eslint-plugin-import": "^2.25.3",
+    "ethers": "^5.4.7",
     "jest": "^27.4.7",
     "lerna": "^4.0.0",
     "prettier": "^2.4.1",
