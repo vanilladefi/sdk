@@ -35,12 +35,12 @@ test('Token contract returns normally', async () => {
     const vnlContract1 = getVanillaTokenContract(VanillaVersion.V1_0)
     expect(vnlContract1).toBeInstanceOf(Contract)
     expect(vnlContract1.address).toEqual(
-      tradeContractAddresses.vanilla.v1_0.vnl,
+      tradeContractAddresses.vanilla.v1_0?.vnl || '',
     )
     const vnlContract2 = getVanillaTokenContract(VanillaVersion.V1_1)
     expect(vnlContract2).toBeInstanceOf(Contract)
     expect(vnlContract2.address).toEqual(
-      tradeContractAddresses.vanilla.v1_1.vnl,
+      tradeContractAddresses.vanilla.v1_1?.vnl || '',
     )
   } catch (_e) {
     return
