@@ -16,22 +16,10 @@ jobs:
           submodules: recursive
       - uses: actions/setup-node@v2
         with:
-          node-version: 14
-      - run: |
-          npm install -g pnpm
-          npm install
-      - run: |
-          cd src/contracts
-          pnpm install
-          pnpm run compile:sol
-          pnpm run generate:typechain
-          cd ../..
-      - run: npm run build
-      - name: Archive build
-        uses: actions/upload-artifact@v2
-        with:
-          name: build
-          path: lib
+          node-version: 16
+      - run: yarn install
+      - run: yarn run build
+
 
   publish-npm-next:
     needs: build
