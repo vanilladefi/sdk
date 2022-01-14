@@ -4,6 +4,7 @@
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "license": "MIT",
+  "type": "module",
   "scripts": {
     "test": "jest --ci --forceExit",
     "build": "tsc",
