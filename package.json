@@ -18,6 +18,7 @@
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.16.7",
+    "@ethersproject/signing-key": "^5.5.0",
     "@types/jest": "^27.4.0",
     "@types/node": "^17.0.8",
     "@typescript-eslint/eslint-plugin": "^5.4.0",
@@ -25,7 +26,6 @@
     "@uniswap/default-token-list": "^3.0.0",
     "copyfiles": "^2.4.1",
     "dotenv": "^10.0.0",
-    "elliptic": "^6.5.4",
     "eslint": "^8.3.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-import-resolver-typescript": "^2.5.0",
@@ -34,6 +34,7 @@
     "jest": "^27.4.7",
     "lerna": "^4.0.0",
     "prettier": "^2.4.1",
+    "regenerator-runtime": "^0.13.9",
     "ts-jest": "^27.1.2",
     "ts-prune": "^0.10.2",
     "typedoc": "^0.22.7",

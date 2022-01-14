@@ -4,6 +4,7 @@
   "description": "A Software Development Kit for the Vanilla DeFi Protocol",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
+  "type": "module",
   "scripts": {
     "test": "jest --ci --forceExit",
     "build": "tsc",

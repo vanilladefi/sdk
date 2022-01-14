@@ -2,6 +2,10 @@
 module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
-  moduleDirectories: ['.', 'node_modules', 'src'],
+  moduleDirectories: ['<rootDir>', 'node_modules', 'src'],
   moduleFileExtensions: ['js', 'ts'],
+  silent: false,
+  transformIgnorePatterns: [
+    "node_modules/(?!(@vanilladefi/trade-contracts)/)",
+  ],
 };
