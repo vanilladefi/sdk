@@ -1,4 +1,4 @@
-name: Lerna CI
+name: Node.js CI
 
 on:
   push:
