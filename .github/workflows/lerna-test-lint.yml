@@ -21,3 +21,4 @@ jobs:
       - run: yarn test
         env:
           RPC_URL: ${{ secrets.RPC_URL }}
+          POLYGON_RPC_URL: ${{ secrets.POLYGON_RPC_URL }}

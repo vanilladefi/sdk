@@ -16,17 +16,9 @@ jobs:
           submodules: recursive
       - uses: actions/setup-node@v2
         with:
-          node-version: 14
-      - run: |
-          npm install -g pnpm
-          npm install
-      - run: |
-          cd src/contracts
-          pnpm install
-          pnpm run compile:sol
-          pnpm run generate:typechain
-          cd ../..
-      - run: npm run build
+          node-version: 16
+      - run: yarn install
+      - run: ./node_modules/.bin/lerna run build
       - name: Archive build
         uses: actions/upload-artifact@v2
         with:
@@ -40,11 +32,11 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
         with:
-          node-version: 14
+          node-version: 16
           registry-url: https://registry.npmjs.org/
       - name: Download build
         uses: actions/download-artifact@v2
-      - run: npm publish --access public
+      - run: ./node_modules/.bin/lerna publish from-package
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
 
@@ -58,10 +50,10 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
         with:
-          node-version: 14
+          node-version: 16
           registry-url: https://npm.pkg.github.com/
       - name: Download build
         uses: actions/download-artifact@v2
-      - run: npm publish
+      - run: ./node_modules/.bin/lerna publish from-package
         env:
           NODE_AUTH_TOKEN: ${{secrets.RELEASE_TOKEN}}
