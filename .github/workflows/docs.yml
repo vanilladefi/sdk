@@ -10,8 +10,8 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-node@v2
-    - run: npm install
-    - run: npm run build:docs
+    - run: yarn install
+    - run: ./node_modules/.bin/lerna run build:docs
     - uses: maxheld83/ghpages@v0.3.0
       env:
         BUILD_DIR: docs

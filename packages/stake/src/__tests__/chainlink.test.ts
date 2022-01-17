@@ -1,10 +1,10 @@
-console.log('EBounskings')
 import { getTokenPrice } from '../chainlink'
 import v2Tokens from '../tokenLists/tokens_v2_0.json'
 import { testProvider } from '../__utils__/utils'
 
 test('Price fetching from Chainlink', async () => {
   try {
+    console.log('EBounskings')
     const priceGetter = async (token: {
       id: string
       decimals: number
