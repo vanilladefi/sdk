@@ -9,12 +9,12 @@
     "test": "jest --ci --forceExit",
     "build": "tsc && copyfiles -u 1 \"src/**/*.d.ts\" lib",
     "lint": "eslint .",
-    "prepublishOnly": "tsc",
+    "prepublishOnly": "npm run build",
     "format": "prettier --write .",
     "build:docs": "npx typedoc --out docs src/index.ts"
   },
   "dependencies": {
-    "ethers": "^5.5.2",
-    "@vanilladefi/core-sdk": "file:../core"
+    "@vanilladefi/core-sdk": "file:../core",
+    "ethers": "^5.5.2"
   }
 }
