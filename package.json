@@ -1,6 +1,6 @@
 {
   "name": "@vanilladefi/sdk",
-  "version": "2.1.8",
+  "version": "2.1.9",
   "description": "Vanilla SDK Monorepo Consisting of Trade & Stake SDKs",
   "main": "index.ts",
   "repository": "git@github.com:vanilladefi/sdk.git",
@@ -10,6 +10,7 @@
     "bootstrap": "lerna bootstrap",
     "build": "lerna run --parallel build",
     "clean": "lerna run --parallel clean",
+    "prepack": "npm run build",
     "test": "jest"
   },
   "dependencies": {
