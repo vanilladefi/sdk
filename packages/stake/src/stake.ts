@@ -1,5 +1,5 @@
 import { BigNumber, ContractTransaction, providers, Signer } from 'ethers'
-import { Token } from '../../core/src/types'
+import { Token } from "@vanilladefi/core-sdk"
 import { getJuiceStakingContract } from './contracts'
 import { Stake } from './types/general'
 

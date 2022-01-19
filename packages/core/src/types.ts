@@ -1,9 +1,7 @@
-// TODO Dup
 export enum Eligibility {
   NotEligible,
   Eligible,
 }
-
 export interface PairInfo {
   pairId: string | null
   feeTier?: string | number | null
