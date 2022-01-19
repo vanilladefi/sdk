@@ -10,7 +10,6 @@
     "bootstrap": "lerna bootstrap",
     "build": "lerna run --parallel build",
     "clean": "lerna run --parallel clean",
-    "prepack": "npm run build",
     "test": "jest"
   },
   "dependencies": {
