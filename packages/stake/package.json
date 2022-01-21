@@ -1,6 +1,6 @@
 {
   "name": "@vanilladefi/stake-sdk",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "license": "MIT",
@@ -18,5 +18,8 @@
   "dependencies": {
     "@vanilladefi/core-sdk": "file:../core",
     "ethers": "^5.5.2"
+  },
+  "devDependencies": {
+    "copyfiles": "^2.4.1"
   }
 }
