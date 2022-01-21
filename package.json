@@ -1,6 +1,6 @@
 {
   "name": "@vanilladefi/sdk",
-  "version": "2.1.11",
+  "version": "2.1.14",
   "description": "Vanilla SDK Monorepo Consisting of Trade & Stake SDKs",
   "main": "index.ts",
   "repository": "git@github.com:vanilladefi/sdk.git",
