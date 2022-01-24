@@ -10,7 +10,9 @@
     "bootstrap": "lerna bootstrap",
     "build": "lerna run --parallel build",
     "clean": "lerna run --parallel clean",
-    "test": "jest"
+    "test": "jest",
+    "lint": "eslint .",
+    "format": "yarn lint --fix"
   },
   "dependencies": {
     "@vanilladefi/core-sdk": "file:./packages/core",
