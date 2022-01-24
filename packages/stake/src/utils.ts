@@ -1,13 +1,12 @@
-import { preferences } from "./preferences";
+import { preferences } from './preferences'
 
 const setContractAddress = (address: string) => {
-    preferences.contractAddress = address
+  preferences.contractAddress = address
 }
 
-
-let __UNSAFE__setContractAddress: any;
+let __UNSAFE__setContractAddress: any
 if (preferences.exposeUnsafeUtils) {
-    __UNSAFE__setContractAddress = setContractAddress
+  __UNSAFE__setContractAddress = setContractAddress
 }
 
 export { __UNSAFE__setContractAddress }
