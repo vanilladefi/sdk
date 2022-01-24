@@ -4,7 +4,6 @@ import { testProvider } from '../__utils__/utils'
 
 test('Price fetching from Chainlink', async () => {
   try {
-    console.log('EBounskings')
     const priceGetter = async (token: {
       id: string
       decimals: number
