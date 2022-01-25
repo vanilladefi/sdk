@@ -18,7 +18,8 @@ jobs:
         with:
           node-version: 16
       - run: yarn install
-      - run: ./node_modules/.bin/lerna run build
+      - run: yarn bootstrap
+      - run: yarn build
 
 
   publish-npm-next:
