@@ -9,6 +9,7 @@
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "strict": true,
+    "baseUrl": "src"
   },
   "exclude": [
     "jest.config.js"
