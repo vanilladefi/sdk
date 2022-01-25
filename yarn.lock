@@ -2137,7 +2137,7 @@
 "@vanilladefi/stake-sdk@file:./packages/stake":
   version "1.0.10"
   dependencies:
-    "@vanilladefi/core-sdk" "file:../../../../Library/Caches/Yarn/v6/npm-@vanilladefi-stake-sdk-1.0.10-d8a0316a-f900-4da6-a468-cd4656cd5d04-1643117473448/node_modules/@vanilladefi/core"
+    "@vanilladefi/core-sdk" "file:../../../../Library/Caches/Yarn/v6/npm-@vanilladefi-stake-sdk-1.0.10-d39dfe2d-f73b-4668-8420-f338881925c9-1643120081691/node_modules/@vanilladefi/core"
     ethers "^5.5.2"
 
 "@vanilladefi/trade-contracts@^1.1.27":
@@ -2161,7 +2161,7 @@
     "@uniswap/sdk" "^3.0.3"
     "@uniswap/sdk-core" "^1.0.10"
     "@uniswap/v3-sdk" "^3.5.1"
-    "@vanilladefi/core-sdk" "file:../../../../Library/Caches/Yarn/v6/npm-@vanilladefi-trade-sdk-1.1.4-faf13971-67ab-40df-b7e8-32934a46c22f-1643117475232/node_modules/@vanilladefi/core"
+    "@vanilladefi/core-sdk" "file:../../../../Library/Caches/Yarn/v6/npm-@vanilladefi-trade-sdk-1.1.4-ce67ed80-eb01-4d85-bb42-7fcf925a3cf0-1643120086097/node_modules/@vanilladefi/core"
     "@vanilladefi/trade-contracts" "^1.1.27"
     ethers "^5.4.7"
     merkletreejs "^0.2.24"
