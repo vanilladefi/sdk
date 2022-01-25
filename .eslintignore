@@ -1,0 +1,4 @@
+lib
+docs
+jest.config.js
+*.d.ts
