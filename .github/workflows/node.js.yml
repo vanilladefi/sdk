@@ -16,7 +16,7 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: 16
-      - run: yarn install
+      - run: yarn install --immutable --immutable-cache --check-cache
       - run: yarn bootstrap
       - run: yarn lint
       - run: yarn test
