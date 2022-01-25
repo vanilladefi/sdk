@@ -8,4 +8,7 @@ module.exports = {
   transformIgnorePatterns: [
     "node_modules/(?!(@vanilladefi/trade-contracts)/)",
   ],
+  setupFiles: [
+    "<rootDir>/utils.ts"
+  ]
 };

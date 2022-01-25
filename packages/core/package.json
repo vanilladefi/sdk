@@ -11,7 +11,7 @@
     "test": "jest --ci --forceExit",
     "build": "tsc && copyfiles -u 1 \"src/**/*.d.ts\" lib",
     "lint": "eslint .",
-    "prepublishOnly": "npm run build",
+    "prepublishOnly": "yarn run build",
     "format": "prettier --write .",
     "build:docs": "npx typedoc --out docs src/index.ts"
   }
