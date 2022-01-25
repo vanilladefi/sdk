@@ -7,11 +7,11 @@
   "author": "Equilibrium",
   "license": "MIT",
   "scripts": {
-    "bootstrap": "lerna bootstrap",
-    "build": "lerna run --parallel build",
-    "clean": "lerna run --parallel clean",
-    "test": "jest",
-    "lint": "eslint .",
+    "bootstrap": "./node_modules/.bin/lerna bootstrap",
+    "build": "./node_modules/.bin/lerna run --parallel build",
+    "clean": "./node_modules/.bin/lerna run --parallel clean",
+    "test": "./node_modules/.bin/jest",
+    "lint": "./node_modules/.bin/eslint .",
     "format": "yarn lint --fix"
   },
   "dependencies": {
