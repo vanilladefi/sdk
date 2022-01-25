@@ -2131,13 +2131,13 @@
     "@uniswap/v3-core" "1.0.0"
     "@uniswap/v3-periphery" "^1.0.1"
 
-"@vanilladefi/core-sdk@file:./packages/core", "@vanilladefi/core-sdk@file:packages/core":
+"@vanilladefi/core-sdk@./packages/core", "@vanilladefi/core-sdk@file:packages/core":
   version "1.0.5"
 
-"@vanilladefi/stake-sdk@file:./packages/stake":
+"@vanilladefi/stake-sdk@./packages/stake":
   version "1.0.10"
   dependencies:
-    "@vanilladefi/core-sdk" "file:../../../../Library/Caches/Yarn/v6/npm-@vanilladefi-stake-sdk-1.0.10-d39dfe2d-f73b-4668-8420-f338881925c9-1643120081691/node_modules/@vanilladefi/core"
+    "@vanilladefi/core-sdk" "file:../../../../Library/Caches/Yarn/v6/npm-@vanilladefi-stake-sdk-1.0.10-df90fada-baae-40cd-9578-6c6ef60ba9af-1643120600378/node_modules/@vanilladefi/core"
     ethers "^5.5.2"
 
 "@vanilladefi/trade-contracts@^1.1.27":
@@ -2154,14 +2154,14 @@
     keccak256 "^1.0.3"
     merkletreejs "^0.2.24"
 
-"@vanilladefi/trade-sdk@file:./packages/trade":
+"@vanilladefi/trade-sdk@./packages/trade":
   version "1.1.4"
   dependencies:
     "@uniswap/default-token-list" "^2.0.0"
     "@uniswap/sdk" "^3.0.3"
     "@uniswap/sdk-core" "^1.0.10"
     "@uniswap/v3-sdk" "^3.5.1"
-    "@vanilladefi/core-sdk" "file:../../../../Library/Caches/Yarn/v6/npm-@vanilladefi-trade-sdk-1.1.4-ce67ed80-eb01-4d85-bb42-7fcf925a3cf0-1643120086097/node_modules/@vanilladefi/core"
+    "@vanilladefi/core-sdk" "file:../../../../Library/Caches/Yarn/v6/npm-@vanilladefi-trade-sdk-1.1.4-b628d7e4-ce8d-419b-9068-4baba6456b32-1643120609335/node_modules/@vanilladefi/core"
     "@vanilladefi/trade-contracts" "^1.1.27"
     ethers "^5.4.7"
     merkletreejs "^0.2.24"

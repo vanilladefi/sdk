@@ -15,9 +15,9 @@
     "format": "yarn lint --fix"
   },
   "dependencies": {
-    "@vanilladefi/core-sdk": "file:./packages/core",
-    "@vanilladefi/stake-sdk": "file:./packages/stake",
-    "@vanilladefi/trade-sdk": "file:./packages/trade"
+    "@vanilladefi/core-sdk": "./packages/core",
+    "@vanilladefi/stake-sdk": "./packages/stake",
+    "@vanilladefi/trade-sdk": "./packages/trade"
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.16.7",
