@@ -1,4 +1,6 @@
+**/node_modules
+*.log
+**/.DS_Store
+**/lib
+vanilladefi*.tgz
 .env
-node_modules
-lib
-docs

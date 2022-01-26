@@ -5,7 +5,7 @@ on:
     branches: [ main, next ]
   pull_request:
     branches: [ main, next ]
-    
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -15,15 +15,12 @@ jobs:
           submodules: recursive
       - uses: actions/setup-node@v2
         with:
-          node-version: 14
-      - run: |
-          npm install
-      # - run: |
-      #     cd src/contracts
-      #     pnpm install
-      #     pnpm run compile:sol
-      #     pnpm run generate:typechain
-      #     cd ../..
-      - run: npm test
+          node-version: 16
+      - run: yarn install
+      - run: yarn bootstrap
+      - run: yarn build
+      - run: yarn lint
+      - run: yarn test
         env:
           RPC_URL: ${{ secrets.RPC_URL }}
+          POLYGON_RPC_URL: ${{ secrets.POLYGON_RPC_URL }}

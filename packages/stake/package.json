@@ -1,0 +1,25 @@
+{
+  "name": "@vanilladefi/stake-sdk",
+  "version": "1.0.10",
+  "main": "lib/index.js",
+  "typings": "lib/index.d.ts",
+  "license": "MIT",
+  "files": [
+    "lib/**/*"
+  ],
+  "scripts": {
+    "test": "jest --ci --forceExit",
+    "build": "tsc && copyfiles -u 1 \"src/**/*.d.ts\" lib",
+    "lint": "eslint .",
+    "prepublishOnly": "yarn run build",
+    "format": "prettier --write .",
+    "build:docs": "npx typedoc --out docs src/index.ts"
+  },
+  "dependencies": {
+    "@vanilladefi/core-sdk": "^1.0.5",
+    "ethers": "^5.5.2"
+  },
+  "devDependencies": {
+    "copyfiles": "^2.4.1"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "module": "CommonJS",
+    "target": "es5",
+    "declaration": true,
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "allowJs": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "outDir": "lib",
+    "strict": true,
+    "rootDir": "src",
+    "baseUrl": "src"
+  },
+  "include": ["**/*.ts", "**/*.tsx", "**/*.d.ts", "/cjs/**/*.ts"],
+  "exclude": ["node_modules", "lib", "**/__tests__/*", "**/__utils__/*"]
+}
