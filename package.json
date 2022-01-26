@@ -2,7 +2,6 @@
   "name": "@vanilladefi/sdk",
   "version": "2.1.14",
   "description": "Vanilla SDK Monorepo Consisting of Trade & Stake SDKs",
-  "main": "index.ts",
   "repository": "git@github.com:vanilladefi/sdk.git",
   "author": "Equilibrium",
   "license": "MIT",
@@ -13,11 +12,6 @@
     "test": "./node_modules/.bin/jest",
     "lint": "./node_modules/.bin/eslint .",
     "format": "yarn lint --fix"
-  },
-  "dependencies": {
-    "@vanilladefi/core-sdk": "./packages/core",
-    "@vanilladefi/stake-sdk": "./packages/stake",
-    "@vanilladefi/trade-sdk": "./packages/trade"
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.16.7",
