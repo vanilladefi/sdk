@@ -6,8 +6,8 @@
   "author": "Equilibrium",
   "license": "MIT",
   "scripts": {
-    "bootstrap": "./node_modules/.bin/lerna bootstrap --force-local && ./node_modules/.bin/lerna link --force-local",
-    "build": "./node_modules/.bin/lerna run --parallel build",
+    "bootstrap": "./node_modules/.bin/lerna link --force-local && ./node_modules/.bin/lerna bootstrap --force-local",
+    "build": "./node_modules/.bin/lerna run build",
     "clean": "./node_modules/.bin/lerna run --parallel clean",
     "test": "./node_modules/.bin/jest",
     "lint": "./node_modules/.bin/eslint .",
