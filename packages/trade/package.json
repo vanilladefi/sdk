@@ -31,7 +31,7 @@
     "@uniswap/sdk-core": "^1.0.10",
     "@uniswap/v3-sdk": "^3.5.1",
     "@vanilladefi/trade-contracts": "^1.1.27",
-    "@vanilladefi/core-sdk": "file:../core",
+    "@vanilladefi/core-sdk": "1.0.5",
     "ethers": "^5.4.7",
     "merkletreejs": "^0.2.24"
   }

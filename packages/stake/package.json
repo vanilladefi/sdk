@@ -16,7 +16,7 @@
     "build:docs": "npx typedoc --out docs src/index.ts"
   },
   "dependencies": {
-    "@vanilladefi/core-sdk": "file:../core",
+    "@vanilladefi/core-sdk": "1.0.5",
     "ethers": "^5.5.2"
   },
   "devDependencies": {
