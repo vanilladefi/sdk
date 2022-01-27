@@ -15,14 +15,18 @@ jobs:
         with:
           node-version: 16
           registry-url: https://registry.npmjs.org/
-      - uses: actions/cache@v2
+      - name: Check node_modules cache
+        uses: actions/cache@v2
+        id: yarn-cache
         with:
           path: '**/node_modules'
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
-      - run: yarn install
+      - name: Install dependencies
+        if: steps.yarn-cache.outputs.cache-hit != 'true'
+        run: yarn install
       - run: yarn bootstrap
       - run: yarn build
-      - run: ./node_modules/.bin/lerna publish --npm-tag next --canary 
+      - run: ./node_modules/.bin/lerna publish --npm-tag next --canary --yes
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
 
@@ -36,13 +40,17 @@ jobs:
         with:
           node-version: 16
           registry-url: https://npm.pkg.github.com/
-      - uses: actions/cache@v2
+      - name: Check node_modules cache
+        uses: actions/cache@v2
+        id: yarn-cache
         with:
           path: '**/node_modules'
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
-      - run: yarn install
+      - name: Install dependencies
+        if: steps.yarn-cache.outputs.cache-hit != 'true'
+        run: yarn install
       - run: yarn bootstrap
       - run: yarn build
-      - run: ./node_modules/.bin/lerna publish --npm-tag next --canary 
+      - run: ./node_modules/.bin/lerna publish --npm-tag next --canary --yes
         env:
           NODE_AUTH_TOKEN: ${{secrets.RELEASE_TOKEN}}

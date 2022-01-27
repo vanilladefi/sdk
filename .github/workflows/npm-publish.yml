@@ -22,7 +22,7 @@ jobs:
       - run: yarn install
       - run: yarn bootstrap
       - run: yarn build
-      - run: ./node_modules/.bin/lerna publish from-package
+      - run: ./node_modules/.bin/lerna publish from-package --yes
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
 
@@ -43,6 +43,6 @@ jobs:
       - run: yarn install
       - run: yarn bootstrap
       - run: yarn build
-      - run: ./node_modules/.bin/lerna publish from-package
+      - run: ./node_modules/.bin/lerna publish from-package --yes
         env:
           NODE_AUTH_TOKEN: ${{secrets.RELEASE_TOKEN}}
