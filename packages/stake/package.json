@@ -3,10 +3,22 @@
   "version": "1.0.10",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vanilladefi/sdk.git"
+  },
+  "author": "Equilibrium",
   "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/vanilladefi/sdk/issues"
+  },
+  "homepage": "https://github.com/vanilladefi/sdk/packages/stake#readme",
   "files": [
     "lib/**/*"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "test": "jest --ci --forceExit",
     "build": "tsc && copyfiles -u 1 \"src/**/*.d.ts\" lib",
