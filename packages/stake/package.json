@@ -1,6 +1,6 @@
 {
   "name": "@vanilladefi/stake-sdk",
-  "version": "1.0.10",
+  "version": "2.1.15",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "repository": {
@@ -27,7 +27,7 @@
     "build:docs": "npx typedoc --out docs src/index.ts"
   },
   "dependencies": {
-    "@vanilladefi/core-sdk": "^1.0.5",
+    "@vanilladefi/core-sdk": "^2.1.15",
     "ethers": "^5.5.2"
   },
   "devDependencies": {
