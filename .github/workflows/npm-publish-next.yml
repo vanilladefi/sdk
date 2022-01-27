@@ -1,6 +1,3 @@
-# This workflow will run tests using node and then publish a package to GitHub Packages when a release is created
-# For more information see: https://help.github.com/actions/language-and-framework-guides/publishing-nodejs-packages
-
 name: Publish Next
 
 on:
@@ -8,7 +5,7 @@ on:
     branches: [ next ]
 
 jobs:
-  build:
+  publish-npm-next:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -17,40 +14,35 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: 16
+          registry-url: https://registry.npmjs.org/
+      - uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
       - run: yarn install
       - run: yarn bootstrap
       - run: yarn build
-
-
-  publish-npm-next:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: 16
-          registry-url: https://registry.npmjs.org/
-      - name: Download build
-        uses: actions/download-artifact@v2
       - run: ./node_modules/.bin/lerna publish --npm-tag next --canary 
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
 
   publish-gpr-next:
-    needs: build
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
     steps:
       - uses: actions/checkout@v2
+        with:
+          submodules: recursive
       - uses: actions/setup-node@v2
         with:
           node-version: 16
           registry-url: https://npm.pkg.github.com/
-      - name: Download build
-        uses: actions/download-artifact@v2
+      - uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+      - run: yarn install
+      - run: yarn bootstrap
+      - run: yarn build
       - run: ./node_modules/.bin/lerna publish --npm-tag next --canary 
         env:
           NODE_AUTH_TOKEN: ${{secrets.RELEASE_TOKEN}}
