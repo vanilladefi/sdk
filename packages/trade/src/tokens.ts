@@ -1,12 +1,10 @@
 import uniswapTokens from '@uniswap/default-token-list'
 import { Token as UniswapToken } from '@uniswap/sdk-core'
-import { BigNumber, constants, Contract, providers, Signer } from 'ethers'
-import { getAddress } from 'ethers/lib/utils'
-import { chainId, tradeContractAddresses, vnlDecimals } from './contracts'
+import { Token, UniSwapToken, VanillaVersion } from '@vanilladefi/core-sdk'
+import { chainId } from './contracts'
 import { ipfsToHttp } from './ipfs'
 import v1_0Tokens from './tokenLists/tokens_v1_0.json'
 import v1_1Tokens from './tokenLists/tokens_v1_1.json'
-import { Token, UniSwapToken, VanillaVersion } from '@vanilladefi/core-sdk'
 
 /**
  * wETH9 in Vanilla's token format
@@ -50,19 +48,6 @@ export const usdc: Token =
   getAllTokens(VanillaVersion.V1_0)?.find(
     (token) => token.chainId === String(chainId) && token.symbol === 'USDC',
   ) || defaultUsdc
-
-/**
- * Latest $VNL token in Vanilla's token format
- */
-export const vnl: Token = {
-  chainId: String(chainId),
-  address: tradeContractAddresses.vanilla.v1_1?.vnl || '',
-  decimals: String(vnlDecimals),
-  symbol: 'VNL',
-  name: 'Vanilla',
-  logoColor: null,
-  pairId: null,
-}
 
 /**
  * Returns the list of tokens available in Vanilla's trade UI
@@ -130,56 +115,6 @@ export function getAllTokens(version?: VanillaVersion): Token[] {
       liquidity: null,
       priceChange: null,
     }))
-}
-
-/**
- * Returns the ETH balance of given Ethereum address as a BigNumber (wei)
- *
- * @param address - Ethereum address
- * @param provider - an ethersjs provider with readonly access
- * @returns the ETH balance of given Ethereum address in wei as BigNumber
- */
-export async function getBalance(
-  address: string,
-  provider: providers.Provider,
-): Promise<BigNumber> {
-  const balance = await provider.getBalance(address)
-  return balance
-}
-
-/**
- * Returns a checksummed version of the given address if it exists,
- * false if the given address is not correct.
- *
- * @param value - an Ethereum address
- * @returns a checksummed address or false
- */
-export function isAddress(value: string): string | false {
-  try {
-    return getAddress(value)
-  } catch {
-    return false
-  }
-}
-
-/**
- * Helper function for constructing arbitrary ethersjs contract instances
- *
- * @param address - contract address
- * @param ABI - The application binary interface of the contract
- * @param signerOrProvider - an ethersjs signer(read/write) or provider(readonly)
- * @returns a Contract instance with transactional capabilities
- */
-export function getContract(
-  address: string,
-  ABI: any,
-  signerOrProvider?: providers.Provider | Signer | undefined,
-): Contract {
-  if (!isAddress(address) || address === constants.AddressZero) {
-    throw Error(`Invalid 'address' parameter '${address}'.`)
-  }
-
-  return new Contract(address, ABI, signerOrProvider)
 }
 
 /**
