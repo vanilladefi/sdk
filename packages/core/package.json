@@ -18,6 +18,7 @@
     "build:docs": "npx typedoc --out docs src/index.ts"
   },
   "dependencies": {
-    "@vanilladefi/trade-contracts": "^1.1.27"
+    "@vanilladefi/trade-contracts": "^1.1.27",
+    "@vanilladefi/stake-sdk": "^1.0.10"
   }
 }

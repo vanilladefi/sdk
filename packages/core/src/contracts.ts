@@ -9,10 +9,15 @@ import { Token, UniswapVersion, VanillaVersion } from 'types'
 export const vnlDecimals = 12
 
 /**
+ * Decimal points used in $JUICE
+ */
+export const juiceDecimals = 12
+
+/**
  * Addresses of deployed Vanilla contracts
  */
 export const contractAddresses: {
-  vanilla: { [version in VanillaVersion]?: { router: string; vnl: string } }
+  vanilla: { [version in VanillaVersion]: { router: string; vnl?: string } }
   uniswap: { [version in UniswapVersion]: { router: string; quoter?: string } }
 } = {
   vanilla: {
@@ -23,6 +28,9 @@ export const contractAddresses: {
     v1_1: {
       router: '0x72C8B3aA6eD2fF68022691ecD21AEb1517CfAEa6',
       vnl: '0xbf900809f4C73e5a3476eb183d8b06a27e61F8E5',
+    },
+    v2: {
+      router: '0x02121128f1Ed0AdA5Df3a87f42752fcE4Ad63e59',
     },
   },
   uniswap: {
