@@ -1,11 +1,11 @@
-name: Publish Next
+name: Publish
 
 on:
   push:
-    branches: [ next ]
+    branches: [ main ]
 
 jobs:
-  publish-npm-next:
+  publish-npm:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -26,7 +26,7 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
 
-  publish-gpr-next:
+  publish-gpr:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
