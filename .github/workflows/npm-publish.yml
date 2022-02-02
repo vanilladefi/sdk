@@ -2,10 +2,10 @@ name: Publish
 
 on:
   push:
-    branches: [ main ]
+    branches: [ next, main ]
 
 jobs:
-  publish-npm:
+  publish-npm-next:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -15,34 +15,48 @@ jobs:
         with:
           node-version: 16
           registry-url: https://registry.npmjs.org/
-      - uses: actions/cache@v2
+      - name: Check node_modules cache
+        uses: actions/cache@v2
+        id: yarn-cache
         with:
           path: '**/node_modules'
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
-      - run: yarn install
+      - name: Install dependencies
+        if: steps.yarn-cache.outputs.cache-hit != 'true'
+        run: yarn install
       - run: yarn bootstrap
       - run: yarn build
-      - run: ./node_modules/.bin/lerna publish from-package --yes
+      - name: "Version and publish"
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+        run: |
+          ./node_modules/.bin/lerna version --conventional-commits --conventional-prerelease --preid beta --yes
+          ./node_modules/.bin/lerna publish from-git --yes
 
-  publish-gpr:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          submodules: recursive
-      - uses: actions/setup-node@v2
-        with:
-          node-version: 16
-          registry-url: https://npm.pkg.github.com/
-      - uses: actions/cache@v2
-        with:
-          path: '**/node_modules'
-          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
-      - run: yarn install
-      - run: yarn bootstrap
-      - run: yarn build
-      - run: ./node_modules/.bin/lerna publish from-package --yes
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.RELEASE_TOKEN}}
+  # publish-gpr-next:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #       with:
+  #         submodules: recursive
+  #     - uses: actions/setup-node@v2
+  #       with:
+  #         node-version: 16
+  #         registry-url: https://npm.pkg.github.com/
+  #     - name: Check node_modules cache
+  #       uses: actions/cache@v2
+  #       id: yarn-cache
+  #       with:
+  #         path: '**/node_modules'
+  #         key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+  #     - name: Install dependencies
+  #       if: steps.yarn-cache.outputs.cache-hit != 'true'
+  #       run: yarn install
+  #     - run: yarn bootstrap
+  #     - run: yarn build
+  #     - name: "Version and publish"
+  #       env:
+  #         NODE_AUTH_TOKEN: ${{secrets.RELEASE_TOKEN}}
+  #       run: |
+  #         ./node_modules/.bin/lerna version --conventional-commits --conventional-prerelease --preid beta --yes
+  #         ./node_modules/.bin/lerna publish from-git --yes
