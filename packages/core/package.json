@@ -11,10 +11,14 @@
     "access": "public"
   },
   "scripts": {
+    "clean": "rimraf lib",
     "test": "jest --ci --forceExit",
     "build": "tsc && copyfiles -u 1 \"src/**/*.d.ts\" lib",
     "lint": "eslint .",
     "format": "prettier --write .",
     "build:docs": "npx typedoc --out docs src/index.ts"
+  },
+  "dependencies": {
+    "@vanilladefi/trade-contracts": "^1.1.27"
   }
 }

@@ -5,6 +5,7 @@
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "scripts": {
+    "clean": "rimraf lib",
     "test": "jest --ci --forceExit",
     "build": "tsc && copyfiles -u 1 \"src/**/*.d.ts\" lib",
     "lint": "eslint .",
@@ -24,6 +25,9 @@
   "files": [
     "lib/**/*"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "@uniswap/default-token-list": "^2.0.0",
     "@uniswap/sdk": "^3.0.3",

@@ -20,6 +20,7 @@
     "access": "public"
   },
   "scripts": {
+    "clean": "rimraf lib",
     "test": "jest --ci --forceExit",
     "build": "tsc && copyfiles -u 1 \"src/**/*.d.ts\" lib",
     "lint": "eslint .",
@@ -27,6 +28,7 @@
     "build:docs": "npx typedoc --out docs src/index.ts"
   },
   "dependencies": {
+    "@vanilladefi/trade-contracts": "^1.1.27",
     "@vanilladefi/core-sdk": "^1.0.5",
     "ethers": "^5.5.2"
   },

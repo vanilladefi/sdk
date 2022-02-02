@@ -54,3 +54,10 @@ export enum UniswapVersion {
   v2 = 'v2',
   v3 = 'v3',
 }
+
+export type VanillaBalances = {
+  vnlBalance?: string | null
+  juiceBalance?: string | null
+  ethBalance?: string | null
+  maticBalance?: string | null
+}

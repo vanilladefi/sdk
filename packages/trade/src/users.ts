@@ -1,19 +1,21 @@
 import { Result } from '@ethersproject/abi'
-import { formatUnits } from '@ethersproject/units'
 import { ADDRESS_ZERO } from '@uniswap/v3-sdk'
-import { ethers, providers } from 'ethers'
 import {
-  tradeContractAddresses,
+  contractAddresses,
   epoch,
-  getVanillaTradeRouter,
+  getBalance,
   getVanillaTokenContract,
+  isAddress,
+  Token,
+  VanillaVersion,
   vnlDecimals,
-} from './contracts'
-import { getBalance, isAddress } from './tokens'
-import { Token, VanillaVersion } from '@vanilladefi/core-sdk'
+} from '@vanilladefi/core-sdk'
 import { TypedEvent } from '@vanilladefi/trade-contracts/typechain/openzeppelin/common'
 import { ERC20 } from '@vanilladefi/trade-contracts/typechain/openzeppelin/ERC20'
 import { ERC20__factory } from '@vanilladefi/trade-contracts/typechain/openzeppelin/factories/ERC20__factory'
+import { ethers, providers } from 'ethers'
+import { formatUnits } from 'ethers/lib/utils'
+import { getVanillaTradeRouter } from './contracts'
 
 interface VanillaPurchase {
   args?: Result
@@ -23,6 +25,7 @@ export type PrerenderProps = {
   walletAddress?: string | false
   vnlBalance?: string | null
   ethBalance?: string | null
+  juiceBalance?: string | null
   initialTokens?: {
     v2?: Token[]
     v3?: Token[]
@@ -31,6 +34,43 @@ export type PrerenderProps = {
   }
   ethPrice?: number
   currentBlockNumber?: number
+}
+
+/**
+ * Fetches the $VNL and $ETH balances for given address
+ *
+ * @param vanillaVersion - Vanilla version
+ * @param address - ethereum address
+ * @param provider - an ethersjs provider (readonly)
+ * @returns addresses $VNL and $ETH balance
+ */
+export const getBasicWalletDetails = async (
+  vanillaVersion: VanillaVersion,
+  address: string,
+  provider?: providers.Provider,
+): Promise<PrerenderProps> => {
+  let [vnlBalance, ethBalance]: string[] = ['0', '0']
+  const walletAddress = isAddress(address)
+  try {
+    if (walletAddress) {
+      const vnl: ERC20 = getVanillaTokenContract(
+        vanillaVersion,
+        provider || providers.getDefaultProvider(),
+      )
+      vnlBalance = formatUnits(await vnl.balanceOf(walletAddress), vnlDecimals)
+      ethBalance = formatUnits(
+        await getBalance(
+          walletAddress,
+          provider || providers.getDefaultProvider(),
+        ),
+      )
+    }
+  } catch (e) {
+    console.error(
+      `getBasicWalletDetails failed for address ${walletAddress}: ${e}`,
+    )
+  }
+  return { vnlBalance, ethBalance }
 }
 
 /**
@@ -80,43 +120,6 @@ export const getUsers = async (
 }
 
 /**
- * Fetches the $VNL and $ETH balances for given address
- *
- * @param vanillaVersion - Vanilla version
- * @param address - ethereum address
- * @param provider - an ethersjs provider (readonly)
- * @returns addresses $VNL and $ETH balance
- */
-export const getBasicWalletDetails = async (
-  vanillaVersion: VanillaVersion,
-  address: string,
-  provider?: providers.Provider,
-): Promise<PrerenderProps> => {
-  let [vnlBalance, ethBalance]: string[] = ['0', '0']
-  const walletAddress = isAddress(address)
-  try {
-    if (walletAddress) {
-      const vnl: ERC20 = getVanillaTokenContract(
-        vanillaVersion,
-        provider || providers.getDefaultProvider(),
-      )
-      vnlBalance = formatUnits(await vnl.balanceOf(walletAddress), vnlDecimals)
-      ethBalance = formatUnits(
-        await getBalance(
-          walletAddress,
-          provider || providers.getDefaultProvider(),
-        ),
-      )
-    }
-  } catch (e) {
-    console.error(
-      `getBasicWalletDetails failed for address ${walletAddress}: ${e}`,
-    )
-  }
-  return { vnlBalance, ethBalance }
-}
-
-/**
  * Gets a list of $VNL holders
  *
  * @param provider - an ethersjs provider (readonly)
@@ -126,7 +129,7 @@ export const getVnlHolders = async (
   provider?: providers.Provider,
 ): Promise<string[]> => {
   const vnlToken = ERC20__factory.connect(
-    tradeContractAddresses.vanilla[VanillaVersion.V1_1]?.vnl || '',
+    contractAddresses.vanilla[VanillaVersion.V1_1]?.vnl || '',
     provider || providers.getDefaultProvider(),
   )
   const vnlRouter = getVanillaTradeRouter(

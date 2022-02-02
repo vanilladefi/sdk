@@ -6,13 +6,18 @@ import {
   TradeType,
 } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
+import {
+  contractAddresses,
+  isAddress,
+  Token,
+  VanillaVersion,
+} from '@vanilladefi/core-sdk'
 import { VanillaV1Router02__factory } from '@vanilladefi/trade-contracts/typechain/vanilla_v1.1/factories/VanillaV1Router02__factory'
 import { BigNumber, ethers, providers, Signer } from 'ethers'
 import { formatUnits, getAddress } from 'ethers/lib/utils'
 import {
   blockDeadlineThreshold,
   chainId,
-  tradeContractAddresses,
   epoch,
   usdcWethPoolAddress,
   vnlDecimals,
@@ -20,12 +25,10 @@ import {
 import {
   convertVanillaTokenToUniswapToken,
   getAllTokens,
-  isAddress,
   usdc,
   weth,
 } from './tokens'
 import vanillaRouter from './types/abis/vanillaRouter.json'
-import { VanillaVersion, Token } from '@vanilladefi/core-sdk'
 import {
   Operation,
   RewardEstimate,
@@ -77,12 +80,12 @@ export const estimateReward = async (
     const router =
       version === VanillaVersion.V1_0
         ? new ethers.Contract(
-            tradeContractAddresses.vanilla[VanillaVersion.V1_0]?.router || '',
+            contractAddresses.vanilla[VanillaVersion.V1_0]?.router || '',
             JSON.stringify(vanillaRouter.abi),
             signerOrProvider,
           )
         : VanillaV1Router02__factory.connect(
-            tradeContractAddresses.vanilla[VanillaVersion.V1_1]?.router || '',
+            contractAddresses.vanilla[VanillaVersion.V1_1]?.router || '',
             signerOrProvider,
           )
 
@@ -120,12 +123,12 @@ export const getPriceData = async (
   const router =
     version === VanillaVersion.V1_0
       ? new ethers.Contract(
-          tradeContractAddresses.vanilla[VanillaVersion.V1_0]?.router || '',
+          contractAddresses.vanilla[VanillaVersion.V1_0]?.router || '',
           JSON.stringify(vanillaRouter.abi),
           signerOrProvider,
         )
       : VanillaV1Router02__factory.connect(
-          tradeContractAddresses.vanilla[VanillaVersion.V1_1]?.router || '',
+          contractAddresses.vanilla[VanillaVersion.V1_1]?.router || '',
           signerOrProvider,
         )
   let priceData: TokenPriceResponse | null
@@ -159,12 +162,12 @@ export const estimateGas = async (
   slippageTolerance: Percent | V2Percent,
 ): Promise<BigNumber> => {
   const routerV1_0 = new ethers.Contract(
-    tradeContractAddresses.vanilla[VanillaVersion.V1_0]?.router || '',
+    contractAddresses.vanilla[VanillaVersion.V1_0]?.router || '',
     JSON.stringify(vanillaRouter.abi),
     signerOrProvider,
   )
   const routerV1_1 = VanillaV1Router02__factory.connect(
-    tradeContractAddresses.vanilla[VanillaVersion.V1_1]?.router || '',
+    contractAddresses.vanilla[VanillaVersion.V1_1]?.router || '',
     signerOrProvider,
   )
 
@@ -314,7 +317,7 @@ export async function getUserPositions(
             // VNL governance token
             const vnlToken = new UniswapToken(
               chainId,
-              getAddress(tradeContractAddresses.vanilla[version]?.vnl || ''),
+              getAddress(contractAddresses.vanilla[version]?.vnl || ''),
               vnlDecimals,
             )
 

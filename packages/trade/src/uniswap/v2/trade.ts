@@ -7,17 +7,16 @@ import {
   Trade,
   TradeType,
 } from '@uniswap/sdk'
+import type { Token as UniswapToken } from '@vanilladefi/core-sdk'
+import {
+  contractAddresses,
+  getContract,
+  VanillaVersion,
+} from '@vanilladefi/core-sdk'
 import { providers, Transaction } from 'ethers'
 import { getAddress, parseUnits } from 'ethers/lib/utils'
-import {
-  chainId,
-  tradeContractAddresses,
-  ethersOverrides,
-} from '../../contracts'
-import { getContract } from '../../tokens'
+import { chainId, ethersOverrides } from '../../contracts'
 import vanillaRouter from '../../types/abis/vanillaRouter.json'
-import { VanillaVersion } from '@vanilladefi/core-sdk'
-import type { Token as UniswapToken } from '@vanilladefi/core-sdk'
 import { TransactionProps } from '../../uniswap'
 
 /**
@@ -35,7 +34,7 @@ export const buy = async ({
   gasLimit,
 }: TransactionProps): Promise<Transaction> => {
   const router = getContract(
-    tradeContractAddresses.vanilla[VanillaVersion.V1_0]?.router || '',
+    contractAddresses.vanilla[VanillaVersion.V1_0]?.router || '',
     JSON.stringify(vanillaRouter.abi),
     signer,
   )
@@ -68,7 +67,7 @@ export const sell = async ({
   gasLimit,
 }: TransactionProps): Promise<Transaction> => {
   const router = getContract(
-    tradeContractAddresses.vanilla[VanillaVersion.V1_0]?.router || '',
+    contractAddresses.vanilla[VanillaVersion.V1_0]?.router || '',
     JSON.stringify(vanillaRouter.abi),
     signer,
   )
