@@ -3,13 +3,18 @@ import { ADDRESS_ZERO } from '@uniswap/v3-sdk'
 import {
   contractAddresses,
   epoch,
+  getBalance,
+  getVanillaTokenContract,
   isAddress,
   Token,
   VanillaVersion,
+  vnlDecimals,
 } from '@vanilladefi/core-sdk'
 import { TypedEvent } from '@vanilladefi/trade-contracts/typechain/openzeppelin/common'
+import { ERC20 } from '@vanilladefi/trade-contracts/typechain/openzeppelin/ERC20'
 import { ERC20__factory } from '@vanilladefi/trade-contracts/typechain/openzeppelin/factories/ERC20__factory'
 import { ethers, providers } from 'ethers'
+import { formatUnits } from 'ethers/lib/utils'
 import { getVanillaTradeRouter } from './contracts'
 
 interface VanillaPurchase {
@@ -29,6 +34,43 @@ export type PrerenderProps = {
   }
   ethPrice?: number
   currentBlockNumber?: number
+}
+
+/**
+ * Fetches the $VNL and $ETH balances for given address
+ *
+ * @param vanillaVersion - Vanilla version
+ * @param address - ethereum address
+ * @param provider - an ethersjs provider (readonly)
+ * @returns addresses $VNL and $ETH balance
+ */
+export const getBasicWalletDetails = async (
+  vanillaVersion: VanillaVersion,
+  address: string,
+  provider?: providers.Provider,
+): Promise<PrerenderProps> => {
+  let [vnlBalance, ethBalance]: string[] = ['0', '0']
+  const walletAddress = isAddress(address)
+  try {
+    if (walletAddress) {
+      const vnl: ERC20 = getVanillaTokenContract(
+        vanillaVersion,
+        provider || providers.getDefaultProvider(),
+      )
+      vnlBalance = formatUnits(await vnl.balanceOf(walletAddress), vnlDecimals)
+      ethBalance = formatUnits(
+        await getBalance(
+          walletAddress,
+          provider || providers.getDefaultProvider(),
+        ),
+      )
+    }
+  } catch (e) {
+    console.error(
+      `getBasicWalletDetails failed for address ${walletAddress}: ${e}`,
+    )
+  }
+  return { vnlBalance, ethBalance }
 }
 
 /**

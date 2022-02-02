@@ -8,20 +8,24 @@ import {
   TradeType,
 } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
+import {
+  contractAddresses,
+  isAddress,
+  Token,
+  UniSwapToken,
+  VanillaVersion,
+} from '@vanilladefi/core-sdk'
+import { Quoter__factory } from '@vanilladefi/trade-contracts/typechain/uniswap_v3_periphery/factories/Quoter__factory'
+import { Quoter } from '@vanilladefi/trade-contracts/typechain/uniswap_v3_periphery/Quoter'
+import { VanillaV1Router02__factory } from '@vanilladefi/trade-contracts/typechain/vanilla_v1.1/factories/VanillaV1Router02__factory'
 import { BigNumber, BigNumberish, providers, Signer, Transaction } from 'ethers'
 import { formatUnits, getAddress, parseUnits } from 'ethers/lib/utils'
 import {
   chainId,
   conservativeGasLimit,
-  tradeContractAddresses,
   ethersOverrides,
   getFeeTier,
 } from '../../contracts'
-import { Quoter__factory } from '@vanilladefi/trade-contracts/typechain/uniswap_v3_periphery/factories/Quoter__factory'
-import { Quoter } from '@vanilladefi/trade-contracts/typechain/uniswap_v3_periphery/Quoter'
-import { VanillaV1Router02__factory } from '@vanilladefi/trade-contracts/typechain/vanilla_v1.1/factories/VanillaV1Router02__factory'
-import { isAddress } from '../../tokens'
-import { VanillaVersion, Token, UniSwapToken } from '@vanilladefi/core-sdk'
 import { TransactionProps } from '../../uniswap'
 
 type SwapParams = {
@@ -139,7 +143,7 @@ export const buy = async ({
   gasLimit,
 }: TransactionProps): Promise<Transaction> => {
   const vnl1_1Addr = isAddress(
-    tradeContractAddresses.vanilla[VanillaVersion.V1_1]?.router || '',
+    contractAddresses.vanilla[VanillaVersion.V1_1]?.router || '',
   )
   if (vnl1_1Addr && tokenReceived?.address && signer && feeTier) {
     const router = VanillaV1Router02__factory.connect(vnl1_1Addr, signer as any)
@@ -178,7 +182,7 @@ export const sell = async ({
   gasLimit,
 }: TransactionProps): Promise<Transaction> => {
   const vnl1_1Addr = isAddress(
-    tradeContractAddresses.vanilla[VanillaVersion.V1_1]?.router || '',
+    contractAddresses.vanilla[VanillaVersion.V1_1]?.router || '',
   )
   if (vnl1_1Addr && tokenPaid?.address && signer && feeTier) {
     const router = VanillaV1Router02__factory.connect(vnl1_1Addr, signer as any)
@@ -302,7 +306,7 @@ export async function constructTrade(
       defaultFeeTier
 
     const uniV3Oracle = Quoter__factory.connect(
-      tradeContractAddresses.uniswap.v3.quoter || '',
+      contractAddresses.uniswap.v3.quoter || '',
       signerOrProvider as any,
     )
 

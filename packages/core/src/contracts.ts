@@ -1,7 +1,7 @@
 import { ERC20 } from '@vanilladefi/trade-contracts/typechain/openzeppelin/ERC20'
 import { ERC20__factory } from '@vanilladefi/trade-contracts/typechain/openzeppelin/factories/ERC20__factory'
 import { providers, Signer } from 'ethers'
-import { Token, UniswapVersion, VanillaVersion } from 'types'
+import { Token, UniswapVersion, VanillaVersion } from './types'
 
 /**
  * Decimal points used in $VNL
@@ -11,7 +11,7 @@ export const vnlDecimals = 12
 /**
  * Decimal points used in $JUICE
  */
-export const juiceDecimals = 12
+export const juiceDecimals = 8
 
 /**
  * Addresses of deployed Vanilla contracts
