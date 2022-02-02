@@ -24,6 +24,9 @@
   "files": [
     "lib/**/*"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "@uniswap/default-token-list": "^2.0.0",
     "@uniswap/sdk": "^3.0.3",
