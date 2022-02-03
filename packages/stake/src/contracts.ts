@@ -35,7 +35,7 @@ export const getJuiceStakingContract = (
  *
  * @param vanillaVersion - Vanilla version
  * @param address - ethereum address
- * @param provider - an ethersjs provider (readonly)
+ * @param provider - an ethersjs provider (readonly). Recommended to be set at all times so that the application is in control of the used network.
  * @returns addresses $VNL and $ETH balance
  */
 export const getBasicWalletDetails = async (

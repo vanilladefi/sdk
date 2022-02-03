@@ -31,7 +31,7 @@ export const contractAddresses: {
     },
     v2: {
       router:
-        process.env.VANILLA_ROUTER_ADDRESS ||
+        process.env.VANILLA_ROUTER_ADDRESS || // TODO: Remove on mainnet release
         '0x02121128f1Ed0AdA5Df3a87f42752fcE4Ad63e59',
     },
   },
