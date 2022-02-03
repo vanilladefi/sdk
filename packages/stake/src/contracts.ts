@@ -53,10 +53,9 @@ export const getBasicWalletDetails = async (
 
   try {
     if (walletAddress) {
-      const ethereumProvider = providers.getDefaultProvider('homestead')
-      let polygonProvider: providers.Provider =
-        providers.getDefaultProvider('matic')
-
+      const ethereumProvider = providers.getDefaultProvider(
+        getNetwork('homestead'),
+      )
       const network: Network | false = provider
         ? await provider.getNetwork()
         : false
@@ -64,7 +63,8 @@ export const getBasicWalletDetails = async (
       if (network && network.chainId !== 137 && network.chainId !== 80001) {
         throw Error('Given provider is not connected to Polygon!')
       }
-      polygonProvider = provider || providers.getDefaultProvider('matic')
+      const polygonProvider =
+        provider || providers.getDefaultProvider(networks.mainnet)
 
       const vnl: ERC20 = getVanillaTokenContract(
         vanillaVersion,
