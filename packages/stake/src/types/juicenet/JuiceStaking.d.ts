@@ -19,30 +19,64 @@ import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
-interface IJuiceStakingInterface extends ethers.utils.Interface {
+interface JuiceStakingInterface extends ethers.utils.Interface {
   functions: {
+    "allowance(address,address)": FunctionFragment;
+    "approve(address,uint256)": FunctionFragment;
     "authorizeSignalAggregator(address)": FunctionFragment;
+    "balanceOf(address)": FunctionFragment;
     "currentStake(address,address)": FunctionFragment;
+    "decimals()": FunctionFragment;
+    "decreaseAllowance(address,uint256)": FunctionFragment;
     "delegateDeposit(uint256,((address,uint256,uint256),bytes))": FunctionFragment;
     "delegateModifyStakes(tuple[],((address,uint256,uint256),bytes))": FunctionFragment;
     "delegateWithdraw(uint256,((address,uint256,uint256),bytes))": FunctionFragment;
     "deposit(uint256)": FunctionFragment;
+    "domainSeparatorV4()": FunctionFragment;
     "emergencyPause(bool)": FunctionFragment;
+    "hashDeposit(uint256,(address,uint256,uint256))": FunctionFragment;
+    "hashModifyStakes(tuple[],(address,uint256,uint256))": FunctionFragment;
+    "hashWithdraw(uint256,(address,uint256,uint256))": FunctionFragment;
+    "increaseAllowance(address,uint256)": FunctionFragment;
     "mintJuice(address[],uint256[])": FunctionFragment;
     "modifyStakes(tuple[])": FunctionFragment;
+    "name()": FunctionFragment;
     "normalizedAggregateSignal()": FunctionFragment;
+    "owner()": FunctionFragment;
+    "paused()": FunctionFragment;
+    "renounceOwnership()": FunctionFragment;
+    "signalAggregator()": FunctionFragment;
+    "symbol()": FunctionFragment;
+    "totalSupply()": FunctionFragment;
+    "transfer(address,uint256)": FunctionFragment;
+    "transferFrom(address,address,uint256)": FunctionFragment;
+    "transferOwnership(address)": FunctionFragment;
     "unstakedBalanceOf(address)": FunctionFragment;
     "updatePriceOracles(address[],address[])": FunctionFragment;
     "withdraw(uint256)": FunctionFragment;
   };
 
   encodeFunctionData(
+    functionFragment: "allowance",
+    values: [string, string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "approve",
+    values: [string, BigNumberish]
+  ): string;
+  encodeFunctionData(
     functionFragment: "authorizeSignalAggregator",
     values: [string]
   ): string;
+  encodeFunctionData(functionFragment: "balanceOf", values: [string]): string;
   encodeFunctionData(
     functionFragment: "currentStake",
     values: [string, string]
+  ): string;
+  encodeFunctionData(functionFragment: "decimals", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "decreaseAllowance",
+    values: [string, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "delegateDeposit",
@@ -79,8 +113,37 @@ interface IJuiceStakingInterface extends ethers.utils.Interface {
     values: [BigNumberish]
   ): string;
   encodeFunctionData(
+    functionFragment: "domainSeparatorV4",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "emergencyPause",
     values: [boolean]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "hashDeposit",
+    values: [
+      BigNumberish,
+      { sender: string; deadline: BigNumberish; nonce: BigNumberish }
+    ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "hashModifyStakes",
+    values: [
+      { token: string; amount: BigNumberish; sentiment: boolean }[],
+      { sender: string; deadline: BigNumberish; nonce: BigNumberish }
+    ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "hashWithdraw",
+    values: [
+      BigNumberish,
+      { sender: string; deadline: BigNumberish; nonce: BigNumberish }
+    ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "increaseAllowance",
+    values: [string, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "mintJuice",
@@ -90,9 +153,37 @@ interface IJuiceStakingInterface extends ethers.utils.Interface {
     functionFragment: "modifyStakes",
     values: [{ token: string; amount: BigNumberish; sentiment: boolean }[]]
   ): string;
+  encodeFunctionData(functionFragment: "name", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "normalizedAggregateSignal",
     values?: undefined
+  ): string;
+  encodeFunctionData(functionFragment: "owner", values?: undefined): string;
+  encodeFunctionData(functionFragment: "paused", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "renounceOwnership",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "signalAggregator",
+    values?: undefined
+  ): string;
+  encodeFunctionData(functionFragment: "symbol", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "totalSupply",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "transfer",
+    values: [string, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "transferFrom",
+    values: [string, string, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "transferOwnership",
+    values: [string]
   ): string;
   encodeFunctionData(
     functionFragment: "unstakedBalanceOf",
@@ -107,12 +198,20 @@ interface IJuiceStakingInterface extends ethers.utils.Interface {
     values: [BigNumberish]
   ): string;
 
+  decodeFunctionResult(functionFragment: "allowance", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "authorizeSignalAggregator",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "currentStake",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "decimals", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "decreaseAllowance",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -129,7 +228,27 @@ interface IJuiceStakingInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "deposit", data: BytesLike): Result;
   decodeFunctionResult(
+    functionFragment: "domainSeparatorV4",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "emergencyPause",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "hashDeposit",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "hashModifyStakes",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "hashWithdraw",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "increaseAllowance",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "mintJuice", data: BytesLike): Result;
@@ -137,8 +256,33 @@ interface IJuiceStakingInterface extends ethers.utils.Interface {
     functionFragment: "modifyStakes",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "normalizedAggregateSignal",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "paused", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "renounceOwnership",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "signalAggregator",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "symbol", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "totalSupply",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "transfer", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "transferFrom",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "transferOwnership",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -152,17 +296,35 @@ interface IJuiceStakingInterface extends ethers.utils.Interface {
   decodeFunctionResult(functionFragment: "withdraw", data: BytesLike): Result;
 
   events: {
+    "Approval(address,address,uint256)": EventFragment;
     "JUICEDeposited(address,uint256)": EventFragment;
     "JUICEWithdrawn(address,uint256)": EventFragment;
+    "OwnershipTransferred(address,address)": EventFragment;
+    "Paused(address)": EventFragment;
     "StakeAdded(address,address,bool,uint256,int256)": EventFragment;
     "StakeRemoved(address,address,bool,uint256,int256)": EventFragment;
+    "Transfer(address,address,uint256)": EventFragment;
+    "Unpaused(address)": EventFragment;
   };
 
+  getEvent(nameOrSignatureOrTopic: "Approval"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "JUICEDeposited"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "JUICEWithdrawn"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Paused"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "StakeAdded"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "StakeRemoved"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Unpaused"): EventFragment;
 }
+
+export type ApprovalEvent = TypedEvent<
+  [string, string, BigNumber] & {
+    owner: string;
+    spender: string;
+    value: BigNumber;
+  }
+>;
 
 export type JUICEDepositedEvent = TypedEvent<
   [string, BigNumber] & { user: string; amount: BigNumber }
@@ -171,6 +333,12 @@ export type JUICEDepositedEvent = TypedEvent<
 export type JUICEWithdrawnEvent = TypedEvent<
   [string, BigNumber] & { user: string; amount: BigNumber }
 >;
+
+export type OwnershipTransferredEvent = TypedEvent<
+  [string, string] & { previousOwner: string; newOwner: string }
+>;
+
+export type PausedEvent = TypedEvent<[string] & { account: string }>;
 
 export type StakeAddedEvent = TypedEvent<
   [string, string, boolean, BigNumber, BigNumber] & {
@@ -192,7 +360,13 @@ export type StakeRemovedEvent = TypedEvent<
   }
 >;
 
-export class IJuiceStaking extends BaseContract {
+export type TransferEvent = TypedEvent<
+  [string, string, BigNumber] & { from: string; to: string; value: BigNumber }
+>;
+
+export type UnpausedEvent = TypedEvent<[string] & { account: string }>;
+
+export class JuiceStaking extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
@@ -233,13 +407,27 @@ export class IJuiceStaking extends BaseContract {
     toBlock?: string | number | undefined
   ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
 
-  interface: IJuiceStakingInterface;
+  interface: JuiceStakingInterface;
 
   functions: {
+    allowance(
+      owner: string,
+      spender: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    approve(
+      spender: string,
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     authorizeSignalAggregator(
       aggregator: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
+
+    balanceOf(account: string, overrides?: CallOverrides): Promise<[BigNumber]>;
 
     currentStake(
       user: string,
@@ -248,6 +436,14 @@ export class IJuiceStaking extends BaseContract {
     ): Promise<
       [BigNumber, boolean] & { amount: BigNumber; sentiment: boolean }
     >;
+
+    decimals(overrides?: CallOverrides): Promise<[number]>;
+
+    decreaseAllowance(
+      spender: string,
+      subtractedValue: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
 
     delegateDeposit(
       amount: BigNumberish,
@@ -281,21 +477,65 @@ export class IJuiceStaking extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    domainSeparatorV4(overrides?: CallOverrides): Promise<[string]>;
+
     emergencyPause(
       pauseStaking: boolean,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    hashDeposit(
+      amount: BigNumberish,
+      permission: {
+        sender: string;
+        deadline: BigNumberish;
+        nonce: BigNumberish;
+      },
+      overrides?: CallOverrides
+    ): Promise<[string]>;
+
+    hashModifyStakes(
+      params: { token: string; amount: BigNumberish; sentiment: boolean }[],
+      permission: {
+        sender: string;
+        deadline: BigNumberish;
+        nonce: BigNumberish;
+      },
+      overrides?: CallOverrides
+    ): Promise<[string]>;
+
+    hashWithdraw(
+      amount: BigNumberish,
+      permission: {
+        sender: string;
+        deadline: BigNumberish;
+        nonce: BigNumberish;
+      },
+      overrides?: CallOverrides
+    ): Promise<[string]>;
+
+    increaseAllowance(
+      spender: string,
+      addedValue: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     mintJuice(
-      recipients: string[],
+      targets: string[],
       amounts: BigNumberish[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     modifyStakes(
-      stakes: { token: string; amount: BigNumberish; sentiment: boolean }[],
+      stakingParams: {
+        token: string;
+        amount: BigNumberish;
+        sentiment: boolean;
+      }[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
+
+    name(overrides?: CallOverrides): Promise<[string]>;
 
     normalizedAggregateSignal(
       overrides?: CallOverrides
@@ -310,10 +550,42 @@ export class IJuiceStaking extends BaseContract {
       ]
     >;
 
+    owner(overrides?: CallOverrides): Promise<[string]>;
+
+    paused(overrides?: CallOverrides): Promise<[boolean]>;
+
+    renounceOwnership(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    signalAggregator(overrides?: CallOverrides): Promise<[string]>;
+
+    symbol(overrides?: CallOverrides): Promise<[string]>;
+
+    totalSupply(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    transfer(
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    transferFrom(
+      sender: string,
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    transferOwnership(
+      newOwner: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     unstakedBalanceOf(
       user: string,
       overrides?: CallOverrides
-    ): Promise<[BigNumber] & { unstakedJUICE: BigNumber }>;
+    ): Promise<[BigNumber]>;
 
     updatePriceOracles(
       tokens: string[],
@@ -327,16 +599,38 @@ export class IJuiceStaking extends BaseContract {
     ): Promise<ContractTransaction>;
   };
 
+  allowance(
+    owner: string,
+    spender: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  approve(
+    spender: string,
+    amount: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   authorizeSignalAggregator(
     aggregator: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
+
+  balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
 
   currentStake(
     user: string,
     token: string,
     overrides?: CallOverrides
   ): Promise<[BigNumber, boolean] & { amount: BigNumber; sentiment: boolean }>;
+
+  decimals(overrides?: CallOverrides): Promise<number>;
+
+  decreaseAllowance(
+    spender: string,
+    subtractedValue: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
 
   delegateDeposit(
     amount: BigNumberish,
@@ -370,21 +664,53 @@ export class IJuiceStaking extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  domainSeparatorV4(overrides?: CallOverrides): Promise<string>;
+
   emergencyPause(
     pauseStaking: boolean,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  hashDeposit(
+    amount: BigNumberish,
+    permission: { sender: string; deadline: BigNumberish; nonce: BigNumberish },
+    overrides?: CallOverrides
+  ): Promise<string>;
+
+  hashModifyStakes(
+    params: { token: string; amount: BigNumberish; sentiment: boolean }[],
+    permission: { sender: string; deadline: BigNumberish; nonce: BigNumberish },
+    overrides?: CallOverrides
+  ): Promise<string>;
+
+  hashWithdraw(
+    amount: BigNumberish,
+    permission: { sender: string; deadline: BigNumberish; nonce: BigNumberish },
+    overrides?: CallOverrides
+  ): Promise<string>;
+
+  increaseAllowance(
+    spender: string,
+    addedValue: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   mintJuice(
-    recipients: string[],
+    targets: string[],
     amounts: BigNumberish[],
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   modifyStakes(
-    stakes: { token: string; amount: BigNumberish; sentiment: boolean }[],
+    stakingParams: {
+      token: string;
+      amount: BigNumberish;
+      sentiment: boolean;
+    }[],
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
+
+  name(overrides?: CallOverrides): Promise<string>;
 
   normalizedAggregateSignal(
     overrides?: CallOverrides
@@ -396,6 +722,38 @@ export class IJuiceStaking extends BaseContract {
       })[];
     }
   >;
+
+  owner(overrides?: CallOverrides): Promise<string>;
+
+  paused(overrides?: CallOverrides): Promise<boolean>;
+
+  renounceOwnership(
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  signalAggregator(overrides?: CallOverrides): Promise<string>;
+
+  symbol(overrides?: CallOverrides): Promise<string>;
+
+  totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
+
+  transfer(
+    recipient: string,
+    amount: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  transferFrom(
+    sender: string,
+    recipient: string,
+    amount: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  transferOwnership(
+    newOwner: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
 
   unstakedBalanceOf(
     user: string,
@@ -414,10 +772,24 @@ export class IJuiceStaking extends BaseContract {
   ): Promise<ContractTransaction>;
 
   callStatic: {
+    allowance(
+      owner: string,
+      spender: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    approve(
+      spender: string,
+      amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
     authorizeSignalAggregator(
       aggregator: string,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     currentStake(
       user: string,
@@ -426,6 +798,14 @@ export class IJuiceStaking extends BaseContract {
     ): Promise<
       [BigNumber, boolean] & { amount: BigNumber; sentiment: boolean }
     >;
+
+    decimals(overrides?: CallOverrides): Promise<number>;
+
+    decreaseAllowance(
+      spender: string,
+      subtractedValue: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
 
     delegateDeposit(
       amount: BigNumberish,
@@ -456,21 +836,65 @@ export class IJuiceStaking extends BaseContract {
 
     deposit(amount: BigNumberish, overrides?: CallOverrides): Promise<void>;
 
+    domainSeparatorV4(overrides?: CallOverrides): Promise<string>;
+
     emergencyPause(
       pauseStaking: boolean,
       overrides?: CallOverrides
     ): Promise<void>;
 
+    hashDeposit(
+      amount: BigNumberish,
+      permission: {
+        sender: string;
+        deadline: BigNumberish;
+        nonce: BigNumberish;
+      },
+      overrides?: CallOverrides
+    ): Promise<string>;
+
+    hashModifyStakes(
+      params: { token: string; amount: BigNumberish; sentiment: boolean }[],
+      permission: {
+        sender: string;
+        deadline: BigNumberish;
+        nonce: BigNumberish;
+      },
+      overrides?: CallOverrides
+    ): Promise<string>;
+
+    hashWithdraw(
+      amount: BigNumberish,
+      permission: {
+        sender: string;
+        deadline: BigNumberish;
+        nonce: BigNumberish;
+      },
+      overrides?: CallOverrides
+    ): Promise<string>;
+
+    increaseAllowance(
+      spender: string,
+      addedValue: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
     mintJuice(
-      recipients: string[],
+      targets: string[],
       amounts: BigNumberish[],
       overrides?: CallOverrides
     ): Promise<void>;
 
     modifyStakes(
-      stakes: { token: string; amount: BigNumberish; sentiment: boolean }[],
+      stakingParams: {
+        token: string;
+        amount: BigNumberish;
+        sentiment: boolean;
+      }[],
       overrides?: CallOverrides
     ): Promise<void>;
+
+    name(overrides?: CallOverrides): Promise<string>;
 
     normalizedAggregateSignal(
       overrides?: CallOverrides
@@ -482,6 +906,36 @@ export class IJuiceStaking extends BaseContract {
         })[];
       }
     >;
+
+    owner(overrides?: CallOverrides): Promise<string>;
+
+    paused(overrides?: CallOverrides): Promise<boolean>;
+
+    renounceOwnership(overrides?: CallOverrides): Promise<void>;
+
+    signalAggregator(overrides?: CallOverrides): Promise<string>;
+
+    symbol(overrides?: CallOverrides): Promise<string>;
+
+    totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
+
+    transfer(
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    transferFrom(
+      sender: string,
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    transferOwnership(
+      newOwner: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     unstakedBalanceOf(
       user: string,
@@ -498,6 +952,24 @@ export class IJuiceStaking extends BaseContract {
   };
 
   filters: {
+    "Approval(address,address,uint256)"(
+      owner?: string | null,
+      spender?: string | null,
+      value?: null
+    ): TypedEventFilter<
+      [string, string, BigNumber],
+      { owner: string; spender: string; value: BigNumber }
+    >;
+
+    Approval(
+      owner?: string | null,
+      spender?: string | null,
+      value?: null
+    ): TypedEventFilter<
+      [string, string, BigNumber],
+      { owner: string; spender: string; value: BigNumber }
+    >;
+
     "JUICEDeposited(address,uint256)"(
       user?: string | null,
       amount?: null
@@ -529,6 +1001,28 @@ export class IJuiceStaking extends BaseContract {
       [string, BigNumber],
       { user: string; amount: BigNumber }
     >;
+
+    "OwnershipTransferred(address,address)"(
+      previousOwner?: string | null,
+      newOwner?: string | null
+    ): TypedEventFilter<
+      [string, string],
+      { previousOwner: string; newOwner: string }
+    >;
+
+    OwnershipTransferred(
+      previousOwner?: string | null,
+      newOwner?: string | null
+    ): TypedEventFilter<
+      [string, string],
+      { previousOwner: string; newOwner: string }
+    >;
+
+    "Paused(address)"(
+      account?: null
+    ): TypedEventFilter<[string], { account: string }>;
+
+    Paused(account?: null): TypedEventFilter<[string], { account: string }>;
 
     "StakeAdded(address,address,bool,uint256,int256)"(
       user?: string | null,
@@ -597,18 +1091,64 @@ export class IJuiceStaking extends BaseContract {
         unstakedDiff: BigNumber;
       }
     >;
+
+    "Transfer(address,address,uint256)"(
+      from?: string | null,
+      to?: string | null,
+      value?: null
+    ): TypedEventFilter<
+      [string, string, BigNumber],
+      { from: string; to: string; value: BigNumber }
+    >;
+
+    Transfer(
+      from?: string | null,
+      to?: string | null,
+      value?: null
+    ): TypedEventFilter<
+      [string, string, BigNumber],
+      { from: string; to: string; value: BigNumber }
+    >;
+
+    "Unpaused(address)"(
+      account?: null
+    ): TypedEventFilter<[string], { account: string }>;
+
+    Unpaused(account?: null): TypedEventFilter<[string], { account: string }>;
   };
 
   estimateGas: {
+    allowance(
+      owner: string,
+      spender: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    approve(
+      spender: string,
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     authorizeSignalAggregator(
       aggregator: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
+
     currentStake(
       user: string,
       token: string,
       overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    decimals(overrides?: CallOverrides): Promise<BigNumber>;
+
+    decreaseAllowance(
+      spender: string,
+      subtractedValue: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     delegateDeposit(
@@ -643,23 +1183,99 @@ export class IJuiceStaking extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    domainSeparatorV4(overrides?: CallOverrides): Promise<BigNumber>;
+
     emergencyPause(
       pauseStaking: boolean,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    hashDeposit(
+      amount: BigNumberish,
+      permission: {
+        sender: string;
+        deadline: BigNumberish;
+        nonce: BigNumberish;
+      },
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    hashModifyStakes(
+      params: { token: string; amount: BigNumberish; sentiment: boolean }[],
+      permission: {
+        sender: string;
+        deadline: BigNumberish;
+        nonce: BigNumberish;
+      },
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    hashWithdraw(
+      amount: BigNumberish,
+      permission: {
+        sender: string;
+        deadline: BigNumberish;
+        nonce: BigNumberish;
+      },
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    increaseAllowance(
+      spender: string,
+      addedValue: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     mintJuice(
-      recipients: string[],
+      targets: string[],
       amounts: BigNumberish[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     modifyStakes(
-      stakes: { token: string; amount: BigNumberish; sentiment: boolean }[],
+      stakingParams: {
+        token: string;
+        amount: BigNumberish;
+        sentiment: boolean;
+      }[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    name(overrides?: CallOverrides): Promise<BigNumber>;
+
     normalizedAggregateSignal(overrides?: CallOverrides): Promise<BigNumber>;
+
+    owner(overrides?: CallOverrides): Promise<BigNumber>;
+
+    paused(overrides?: CallOverrides): Promise<BigNumber>;
+
+    renounceOwnership(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    signalAggregator(overrides?: CallOverrides): Promise<BigNumber>;
+
+    symbol(overrides?: CallOverrides): Promise<BigNumber>;
+
+    totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
+
+    transfer(
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    transferFrom(
+      sender: string,
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    transferOwnership(
+      newOwner: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
 
     unstakedBalanceOf(
       user: string,
@@ -679,15 +1295,40 @@ export class IJuiceStaking extends BaseContract {
   };
 
   populateTransaction: {
+    allowance(
+      owner: string,
+      spender: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    approve(
+      spender: string,
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
     authorizeSignalAggregator(
       aggregator: string,
       overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    balanceOf(
+      account: string,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     currentStake(
       user: string,
       token: string,
       overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    decimals(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    decreaseAllowance(
+      spender: string,
+      subtractedValue: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     delegateDeposit(
@@ -722,24 +1363,100 @@ export class IJuiceStaking extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
+    domainSeparatorV4(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     emergencyPause(
       pauseStaking: boolean,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
+    hashDeposit(
+      amount: BigNumberish,
+      permission: {
+        sender: string;
+        deadline: BigNumberish;
+        nonce: BigNumberish;
+      },
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    hashModifyStakes(
+      params: { token: string; amount: BigNumberish; sentiment: boolean }[],
+      permission: {
+        sender: string;
+        deadline: BigNumberish;
+        nonce: BigNumberish;
+      },
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    hashWithdraw(
+      amount: BigNumberish,
+      permission: {
+        sender: string;
+        deadline: BigNumberish;
+        nonce: BigNumberish;
+      },
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    increaseAllowance(
+      spender: string,
+      addedValue: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
     mintJuice(
-      recipients: string[],
+      targets: string[],
       amounts: BigNumberish[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     modifyStakes(
-      stakes: { token: string; amount: BigNumberish; sentiment: boolean }[],
+      stakingParams: {
+        token: string;
+        amount: BigNumberish;
+        sentiment: boolean;
+      }[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
+    name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     normalizedAggregateSignal(
       overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    paused(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    renounceOwnership(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    signalAggregator(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    symbol(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    totalSupply(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    transfer(
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    transferFrom(
+      sender: string,
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    transferOwnership(
+      newOwner: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     unstakedBalanceOf(

@@ -2,29 +2,46 @@ import { getNetwork, Network } from '@ethersproject/networks'
 import {
   contractAddresses,
   getBalance,
-  getVanillaTokenContract,
   isAddress,
   juiceDecimals,
   VanillaBalances,
   VanillaVersion,
   vnlDecimals,
 } from '@vanilladefi/core-sdk'
-import { ERC20 } from '@vanilladefi/trade-contracts/typechain/openzeppelin/ERC20'
 import { providers, Signer } from 'ethers'
 import { formatUnits } from 'ethers/lib/utils'
+import { ERC20 } from './types/juicenet/ERC20'
+import { ERC20__factory } from './types/juicenet/factories/ERC20__factory'
 import { IJuiceStaking__factory } from './types/juicenet/factories/IJuiceStaking__factory'
 import { IJuiceStaking } from './types/juicenet/IJuiceStaking'
 
 export const networks = {
-  mainnet: getNetwork('matic'),
-  testnet: getNetwork('maticmum'),
+  mainnet: {
+    name: 'matic',
+    chainId: 137,
+    _defaultProvider: (providers: {
+      JsonRpcProvider: new (arg0: string) => any
+    }) =>
+      new providers.JsonRpcProvider('https://matic-mainnet.chainstacklabs.com'),
+  },
+  testnet: {
+    name: 'maticmum',
+    chainId: 80001,
+    _defaultProvider: (providers: {
+      JsonRpcProvider: new (arg0: string) => any
+    }) => new providers.JsonRpcProvider('https://rpc-mumbai.maticvigil.com'),
+  },
 }
 
 export const getJuiceStakingContract = (
   signerOrProvider?: Signer | providers.Provider,
 ): IJuiceStaking => {
-  const contractAddress =
-    contractAddresses.vanilla[VanillaVersion.V2]?.router || ''
+  const contractAddress = isAddress(
+    contractAddresses.vanilla[VanillaVersion.V2]?.router || '',
+  )
+  if (!contractAddress) {
+    throw Error('Incorrect contract address for JUICE!')
+  }
   const usedProvider =
     signerOrProvider || providers.getDefaultProvider(networks.mainnet)
   return IJuiceStaking__factory.connect(contractAddress, usedProvider)
@@ -35,7 +52,7 @@ export const getJuiceStakingContract = (
  *
  * @param vanillaVersion - Vanilla version
  * @param address - ethereum address
- * @param provider - an ethersjs provider (readonly)
+ * @param provider - an ethersjs provider (readonly). Recommended to be set at all times so that the application is in control of the used network.
  * @returns addresses $VNL and $ETH balance
  */
 export const getBasicWalletDetails = async (
@@ -53,10 +70,9 @@ export const getBasicWalletDetails = async (
 
   try {
     if (walletAddress) {
-      const ethereumProvider = providers.getDefaultProvider('homestead')
-      let polygonProvider: providers.Provider =
-        providers.getDefaultProvider('matic')
-
+      const ethereumProvider = providers.getDefaultProvider(
+        getNetwork('homestead'),
+      )
       const network: Network | false = provider
         ? await provider.getNetwork()
         : false
@@ -64,24 +80,29 @@ export const getBasicWalletDetails = async (
       if (network && network.chainId !== 137 && network.chainId !== 80001) {
         throw Error('Given provider is not connected to Polygon!')
       }
-      polygonProvider = provider || providers.getDefaultProvider('matic')
+      const polygonProvider =
+        provider || providers.getDefaultProvider(networks.mainnet)
 
-      const vnl: ERC20 = getVanillaTokenContract(
-        vanillaVersion,
+      const vnl: ERC20 = ERC20__factory.connect(
+        contractAddresses.vanilla[VanillaVersion.V2].vnl || '',
         ethereumProvider,
       )
-      const juice = getJuiceStakingContract(polygonProvider)
+      const juice: ERC20 = ERC20__factory.connect(
+        contractAddresses.vanilla[VanillaVersion.V2].router,
+        polygonProvider,
+      )
 
-      vnlBalance = formatUnits(await vnl.balanceOf(address), vnlDecimals)
-      ethBalance = formatUnits(await getBalance(address, ethereumProvider))
-
-      if (vanillaVersion === VanillaVersion.V2) {
-        juiceBalance = formatUnits(
-          await juice.unstakedBalanceOf(address),
-          juiceDecimals,
-        )
-        maticBalance = formatUnits(await getBalance(address, polygonProvider))
-      }
+      vnlBalance = formatUnits(await vnl.balanceOf(walletAddress), vnlDecimals)
+      ethBalance = formatUnits(
+        await getBalance(walletAddress, ethereumProvider),
+      )
+      juiceBalance = formatUnits(
+        await juice.balanceOf(walletAddress),
+        juiceDecimals,
+      )
+      maticBalance = formatUnits(
+        await getBalance(walletAddress, polygonProvider),
+      )
     }
   } catch (e) {
     console.error(
