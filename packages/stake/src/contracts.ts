@@ -2,16 +2,16 @@ import { getNetwork, Network } from '@ethersproject/networks'
 import {
   contractAddresses,
   getBalance,
-  getVanillaTokenContract,
   isAddress,
   juiceDecimals,
   VanillaBalances,
   VanillaVersion,
   vnlDecimals,
 } from '@vanilladefi/core-sdk'
-import { ERC20 } from '@vanilladefi/trade-contracts/typechain/openzeppelin/ERC20'
 import { providers, Signer } from 'ethers'
 import { formatUnits } from 'ethers/lib/utils'
+import { ERC20 } from './types/juicenet/ERC20'
+import { ERC20__factory } from './types/juicenet/factories/ERC20__factory'
 import { IJuiceStaking__factory } from './types/juicenet/factories/IJuiceStaking__factory'
 import { IJuiceStaking } from './types/juicenet/IJuiceStaking'
 
@@ -83,18 +83,21 @@ export const getBasicWalletDetails = async (
       const polygonProvider =
         provider || providers.getDefaultProvider(networks.mainnet)
 
-      const vnl: ERC20 = getVanillaTokenContract(
-        vanillaVersion,
+      const vnl: ERC20 = ERC20__factory.connect(
+        contractAddresses.vanilla[VanillaVersion.V2].vnl || '',
         ethereumProvider,
       )
-      const juice = getJuiceStakingContract(polygonProvider)
+      const juice: ERC20 = ERC20__factory.connect(
+        contractAddresses.vanilla[VanillaVersion.V2].router,
+        polygonProvider,
+      )
 
       vnlBalance = formatUnits(await vnl.balanceOf(walletAddress), vnlDecimals)
       ethBalance = formatUnits(
         await getBalance(walletAddress, ethereumProvider),
       )
       juiceBalance = formatUnits(
-        await juice.unstakedBalanceOf(walletAddress),
+        await juice.balanceOf(walletAddress),
         juiceDecimals,
       )
       maticBalance = formatUnits(
