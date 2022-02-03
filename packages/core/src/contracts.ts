@@ -30,7 +30,9 @@ export const contractAddresses: {
       vnl: '0xbf900809f4C73e5a3476eb183d8b06a27e61F8E5',
     },
     v2: {
-      router: '0x02121128f1Ed0AdA5Df3a87f42752fcE4Ad63e59',
+      router:
+        process.env.VANILLA_ROUTER_ADDRESS ||
+        '0x02121128f1Ed0AdA5Df3a87f42752fcE4Ad63e59',
     },
   },
   uniswap: {
