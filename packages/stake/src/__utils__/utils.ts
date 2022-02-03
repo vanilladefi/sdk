@@ -8,7 +8,7 @@ type TestProvider =
   | providers.JsonRpcProvider
   | providers.WebSocketProvider
 
-export const testProvider: TestProvider =
+export const testPolygonProvider: TestProvider =
   process?.env?.POLYGON_RPC_URL &&
   process?.env?.POLYGON_RPC_URL?.length > 0 &&
   process?.env?.POLYGON_RPC_URL[0] === 'w'
@@ -23,4 +23,21 @@ export const testProvider: TestProvider =
         process?.env?.POLYGON_RPC_URL || '',
         networks.mainnet,
       )
-    : providers.getDefaultProvider()
+    : providers.getDefaultProvider(networks.mainnet)
+
+export const testEthereumProvider: TestProvider =
+  process?.env?.RPC_URL &&
+  process?.env?.RPC_URL?.length > 0 &&
+  process?.env?.RPC_URL[0] === 'w'
+    ? new providers.WebSocketProvider(
+        process?.env?.RPC_URL || '',
+        networks.mainnet,
+      )
+    : process?.env?.RPC_URL &&
+      process?.env?.RPC_URL?.length > 0 &&
+      process?.env?.RPC_URL[0] === 'h'
+    ? new providers.JsonRpcProvider(
+        process?.env?.RPC_URL || '',
+        networks.mainnet,
+      )
+    : providers.getDefaultProvider('homestead')
