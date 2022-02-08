@@ -57,7 +57,6 @@ export const getJuiceStakingContract = (options?: Options): IJuiceStaking => {
  * @returns addresses $VNL and $ETH balance
  */
 export const getBasicWalletDetails = async (
-  vanillaVersion: VanillaVersion,
   address: string,
   options: Options,
 ): Promise<VanillaBalances> => {
