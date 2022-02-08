@@ -8,8 +8,9 @@ import {
   VanillaVersion,
   vnlDecimals,
 } from '@vanilladefi/core-sdk'
-import { providers, Signer } from 'ethers'
+import { providers } from 'ethers'
 import { formatUnits } from 'ethers/lib/utils'
+import { Options } from './types/general'
 import { ERC20 } from './types/juicenet/ERC20'
 import { ERC20__factory } from './types/juicenet/factories/ERC20__factory'
 import { IJuiceStaking__factory } from './types/juicenet/factories/IJuiceStaking__factory'
@@ -33,17 +34,17 @@ export const networks = {
   },
 }
 
-export const getJuiceStakingContract = (
-  signerOrProvider?: Signer | providers.Provider,
-): IJuiceStaking => {
+export const getJuiceStakingContract = (options?: Options): IJuiceStaking => {
   const contractAddress = isAddress(
-    contractAddresses.vanilla[VanillaVersion.V2]?.router || '',
+    options?.optionalAddress ||
+      contractAddresses.vanilla[VanillaVersion.V2]?.router ||
+      '',
   )
   if (!contractAddress) {
     throw Error('Incorrect contract address for JUICE!')
   }
   const usedProvider =
-    signerOrProvider || providers.getDefaultProvider(networks.mainnet)
+    options?.signerOrProvider || providers.getDefaultProvider(networks.mainnet)
   return IJuiceStaking__factory.connect(contractAddress, usedProvider)
 }
 
@@ -58,7 +59,7 @@ export const getJuiceStakingContract = (
 export const getBasicWalletDetails = async (
   vanillaVersion: VanillaVersion,
   address: string,
-  provider?: providers.Provider,
+  options: Options,
 ): Promise<VanillaBalances> => {
   let [vnlBalance, juiceBalance, ethBalance, maticBalance]: string[] = [
     '0',
@@ -73,22 +74,23 @@ export const getBasicWalletDetails = async (
       const ethereumProvider = providers.getDefaultProvider(
         getNetwork('homestead'),
       )
-      const network: Network | false = provider
-        ? await provider.getNetwork()
+      const network: Network | false = options?.provider
+        ? await options?.provider.getNetwork()
         : false
 
       if (network && network.chainId !== 137 && network.chainId !== 80001) {
         throw Error('Given provider is not connected to Polygon!')
       }
       const polygonProvider =
-        provider || providers.getDefaultProvider(networks.mainnet)
+        options?.provider || providers.getDefaultProvider(networks.mainnet)
 
       const vnl: ERC20 = ERC20__factory.connect(
         contractAddresses.vanilla[VanillaVersion.V2].vnl || '',
         ethereumProvider,
       )
       const juice: ERC20 = ERC20__factory.connect(
-        contractAddresses.vanilla[VanillaVersion.V2].router,
+        options?.optionalAddress ||
+          contractAddresses.vanilla[VanillaVersion.V2].router,
         polygonProvider,
       )
 
