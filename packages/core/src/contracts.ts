@@ -33,7 +33,7 @@ export const contractAddresses: {
     v2: {
       router:
         isAddress(process.env.VANILLA_ROUTER_ADDRESS || '') || // TODO: Remove on mainnet release
-        '0x02121128f1Ed0AdA5Df3a87f42752fcE4Ad63e59',
+        '0xa7480B62a657555f6727bCdb96953bCC211FFbaC',
       vnl: '0xbf900809f4C73e5a3476eb183d8b06a27e61F8E5',
     },
   },

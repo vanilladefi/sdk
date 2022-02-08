@@ -1,14 +1,14 @@
-import { BigNumber, ContractTransaction, providers, Signer } from 'ethers'
 import { Token } from '@vanilladefi/core-sdk'
+import { BigNumber, ContractTransaction, Signer } from 'ethers'
 import { getJuiceStakingContract } from './contracts'
-import { Stake } from './types/general'
+import { Options, Stake } from './types/general'
 
 export const getCurrentStake = async (
   userAddress: string,
   tokenAddress: string,
-  signerOrProvider: Signer | providers.Provider,
+  options: Options,
 ): Promise<{ amount: BigNumber; sentiment: boolean }> => {
-  const contract = getJuiceStakingContract(signerOrProvider)
+  const contract = getJuiceStakingContract(options)
   const currentStake = await contract.currentStake(userAddress, tokenAddress)
   return currentStake
 }
@@ -16,9 +16,9 @@ export const getCurrentStake = async (
 export const getAllStakes = async (
   userAddress: string,
   tokens: Token[],
-  signerOrProvider: Signer | providers.Provider,
+  options: Options,
 ): Promise<{ amount: BigNumber; sentiment: boolean }[]> => {
-  const contract = getJuiceStakingContract(signerOrProvider)
+  const contract = getJuiceStakingContract(options)
   const stakes = Promise.all(
     tokens.map((token) => contract.currentStake(userAddress, token.address)),
   )

@@ -7,7 +7,7 @@ test('Get JUICE, MATIC, ETH and VNL balances', async () => {
   const { maticBalance, juiceBalance } = await getBasicWalletDetails(
     VanillaVersion.V2,
     hardhatTestAccount,
-    testPolygonProvider,
+    { provider: testPolygonProvider },
   )
   expect(Number(maticBalance)).toBeGreaterThan(0)
   expect(Number(juiceBalance)).toBeGreaterThan(0)

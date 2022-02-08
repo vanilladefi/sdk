@@ -1,4 +1,4 @@
-import { BigNumberish } from 'ethers'
+import { BigNumberish, providers, Signer } from 'ethers'
 
 export enum availableNetworks {
   'matic',
@@ -9,4 +9,10 @@ export interface Stake {
   token: string
   amount: BigNumberish
   sentiment: boolean
+}
+
+export interface Options {
+  signerOrProvider?: Signer | providers.Provider
+  provider?: providers.Provider
+  optionalAddress?: string
 }
