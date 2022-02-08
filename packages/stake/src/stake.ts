@@ -29,7 +29,7 @@ export const modifyStakes = async (
   stakes: Stake[],
   signer: Signer,
 ): Promise<ContractTransaction> => {
-  const contract = getJuiceStakingContract(signer)
+  const contract = getJuiceStakingContract({ signerOrProvider: signer })
   return contract.modifyStakes(stakes)
 }
 
