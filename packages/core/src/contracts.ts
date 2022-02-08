@@ -1,7 +1,6 @@
 import { ERC20 } from '@vanilladefi/trade-contracts/typechain/openzeppelin/ERC20'
 import { ERC20__factory } from '@vanilladefi/trade-contracts/typechain/openzeppelin/factories/ERC20__factory'
 import { providers, Signer } from 'ethers'
-import { isAddress } from './'
 import { Token, UniswapVersion, VanillaVersion } from './types'
 
 /**
@@ -31,9 +30,7 @@ export const contractAddresses: {
       vnl: '0xbf900809f4C73e5a3476eb183d8b06a27e61F8E5',
     },
     v2: {
-      router:
-        isAddress(process.env.VANILLA_ROUTER_ADDRESS || '') || // TODO: Remove on mainnet release
-        '0xa7480B62a657555f6727bCdb96953bCC211FFbaC',
+      router: '0xa7480B62a657555f6727bCdb96953bCC211FFbaC',
       vnl: '0xbf900809f4C73e5a3476eb183d8b06a27e61F8E5',
     },
   },

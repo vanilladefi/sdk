@@ -1,3 +1,4 @@
+import { VanillaVersion } from '@vanilladefi/core-sdk'
 import { BigNumberish, providers, Signer } from 'ethers'
 
 export enum availableNetworks {
@@ -15,4 +16,5 @@ export interface Options {
   signerOrProvider?: Signer | providers.Provider
   provider?: providers.Provider
   optionalAddress?: string
+  vanillaVersion?: VanillaVersion
 }
