@@ -1,6 +1,6 @@
 {
   "name": "@vanilladefi/stake-sdk",
-  "version": "2.1.17-beta.4",
+  "version": "2.1.17-beta.5",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "repository": {
@@ -28,7 +28,7 @@
     "build:docs": "npx typedoc --out docs src/index.ts"
   },
   "dependencies": {
-    "@vanilladefi/core-sdk": "^2.1.17-beta.4",
+    "@vanilladefi/core-sdk": "^2.1.17-beta.5",
     "@vanilladefi/trade-contracts": "^1.1.27",
     "ethers": "^5.5.2"
   },
