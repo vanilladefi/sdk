@@ -32,6 +32,13 @@ export const networks = {
       JsonRpcProvider: new (arg0: string) => any
     }) => new providers.JsonRpcProvider('https://rpc-mumbai.maticvigil.com'),
   },
+  local: {
+    name: 'matic',
+    chainId: 137,
+    _defaultProvider: (providers: {
+      JsonRpcProvider: new (arg0: string) => any
+    }) => new providers.JsonRpcProvider('https://localhost:8545'),
+  },
 }
 
 export const getJuiceStakingContract = (options?: Options): IJuiceStaking => {
