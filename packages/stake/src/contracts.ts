@@ -58,9 +58,8 @@ export const getJuiceStakingContract = (options?: Options): IJuiceStaking => {
 /**
  * Fetches the Vanilla-specific balances for given address
  *
- * @param vanillaVersion - Vanilla version
- * @param address - ethereum address
- * @param provider - an ethersjs provider (readonly). Recommended to be set at all times so that the application is in control of the used network.
+ * @param address - An Ethereum address
+ * @param options - A Vanilla Juicenet options object, enables specifying custom RPCs etc.
  * @returns addresses $VNL and $ETH balance
  */
 export const getBasicWalletDetails = async (

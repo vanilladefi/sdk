@@ -246,7 +246,12 @@ export class IJuiceStaking extends BaseContract {
       token: string,
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, boolean] & { amount: BigNumber; sentiment: boolean }
+      [BigNumber, BigNumber, BigNumber, boolean] & {
+        juiceStake: BigNumber;
+        juiceValue: BigNumber;
+        currentPrice: BigNumber;
+        sentiment: boolean;
+      }
     >;
 
     delegateDeposit(
@@ -336,7 +341,14 @@ export class IJuiceStaking extends BaseContract {
     user: string,
     token: string,
     overrides?: CallOverrides
-  ): Promise<[BigNumber, boolean] & { amount: BigNumber; sentiment: boolean }>;
+  ): Promise<
+    [BigNumber, BigNumber, BigNumber, boolean] & {
+      juiceStake: BigNumber;
+      juiceValue: BigNumber;
+      currentPrice: BigNumber;
+      sentiment: boolean;
+    }
+  >;
 
   delegateDeposit(
     amount: BigNumberish,
@@ -424,7 +436,12 @@ export class IJuiceStaking extends BaseContract {
       token: string,
       overrides?: CallOverrides
     ): Promise<
-      [BigNumber, boolean] & { amount: BigNumber; sentiment: boolean }
+      [BigNumber, BigNumber, BigNumber, boolean] & {
+        juiceStake: BigNumber;
+        juiceValue: BigNumber;
+        currentPrice: BigNumber;
+        sentiment: boolean;
+      }
     >;
 
     delegateDeposit(

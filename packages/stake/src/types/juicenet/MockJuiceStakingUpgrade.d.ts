@@ -20,8 +20,9 @@ import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
-interface JuiceStakingInterface extends ethers.utils.Interface {
+interface MockJuiceStakingUpgradeInterface extends ethers.utils.Interface {
   functions: {
+    "addedField()": FunctionFragment;
     "allowance(address,address)": FunctionFragment;
     "approve(address,uint256)": FunctionFragment;
     "authorizeSignalAggregator(address)": FunctionFragment;
@@ -40,6 +41,7 @@ interface JuiceStakingInterface extends ethers.utils.Interface {
     "hashWithdraw(uint256,(address,uint256,uint256))": FunctionFragment;
     "increaseAllowance(address,uint256)": FunctionFragment;
     "initialize()": FunctionFragment;
+    "initializeOnUpgrade(uint256)": FunctionFragment;
     "mintJuice(address[],uint256[])": FunctionFragment;
     "modifyStakes(tuple[])": FunctionFragment;
     "name()": FunctionFragment;
@@ -60,6 +62,10 @@ interface JuiceStakingInterface extends ethers.utils.Interface {
     "withdraw(uint256)": FunctionFragment;
   };
 
+  encodeFunctionData(
+    functionFragment: "addedField",
+    values?: undefined
+  ): string;
   encodeFunctionData(
     functionFragment: "allowance",
     values: [string, string]
@@ -154,6 +160,10 @@ interface JuiceStakingInterface extends ethers.utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
+    functionFragment: "initializeOnUpgrade",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
     functionFragment: "mintJuice",
     values: [string[], BigNumberish[]]
   ): string;
@@ -211,6 +221,7 @@ interface JuiceStakingInterface extends ethers.utils.Interface {
     values: [BigNumberish]
   ): string;
 
+  decodeFunctionResult(functionFragment: "addedField", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "allowance", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(
@@ -265,6 +276,10 @@ interface JuiceStakingInterface extends ethers.utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "initializeOnUpgrade",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "mintJuice", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "modifyStakes",
@@ -399,7 +414,7 @@ export type UnpausedEvent = TypedEvent<[string] & { account: string }>;
 
 export type UpgradedEvent = TypedEvent<[string] & { implementation: string }>;
 
-export class JuiceStaking extends BaseContract {
+export class MockJuiceStakingUpgrade extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
@@ -440,9 +455,11 @@ export class JuiceStaking extends BaseContract {
     toBlock?: string | number | undefined
   ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
 
-  interface: JuiceStakingInterface;
+  interface: MockJuiceStakingUpgradeInterface;
 
   functions: {
+    addedField(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     allowance(
       owner: string,
       spender: string,
@@ -566,6 +583,11 @@ export class JuiceStaking extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    initializeOnUpgrade(
+      fieldValue: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     mintJuice(
       targets: string[],
       amounts: BigNumberish[],
@@ -655,6 +677,8 @@ export class JuiceStaking extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
   };
+
+  addedField(overrides?: CallOverrides): Promise<BigNumber>;
 
   allowance(
     owner: string,
@@ -767,6 +791,11 @@ export class JuiceStaking extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  initializeOnUpgrade(
+    fieldValue: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   mintJuice(
     targets: string[],
     amounts: BigNumberish[],
@@ -855,6 +884,8 @@ export class JuiceStaking extends BaseContract {
   ): Promise<ContractTransaction>;
 
   callStatic: {
+    addedField(overrides?: CallOverrides): Promise<BigNumber>;
+
     allowance(
       owner: string,
       spender: string,
@@ -972,6 +1003,11 @@ export class JuiceStaking extends BaseContract {
     ): Promise<boolean>;
 
     initialize(overrides?: CallOverrides): Promise<void>;
+
+    initializeOnUpgrade(
+      fieldValue: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     mintJuice(
       targets: string[],
@@ -1255,6 +1291,8 @@ export class JuiceStaking extends BaseContract {
   };
 
   estimateGas: {
+    addedField(overrides?: CallOverrides): Promise<BigNumber>;
+
     allowance(
       owner: string,
       spender: string,
@@ -1371,6 +1409,11 @@ export class JuiceStaking extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    initializeOnUpgrade(
+      fieldValue: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     mintJuice(
       targets: string[],
       amounts: BigNumberish[],
@@ -1451,6 +1494,8 @@ export class JuiceStaking extends BaseContract {
   };
 
   populateTransaction: {
+    addedField(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     allowance(
       owner: string,
       spender: string,
@@ -1567,6 +1612,11 @@ export class JuiceStaking extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     initialize(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    initializeOnUpgrade(
+      fieldValue: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

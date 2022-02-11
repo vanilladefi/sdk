@@ -11,7 +11,6 @@ import {
   PopulatedTransaction,
   BaseContract,
   ContractTransaction,
-  Overrides,
   CallOverrides,
 } from "ethers";
 import { BytesLike } from "@ethersproject/bytes";
@@ -19,31 +18,29 @@ import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
-interface MockSignalAggregatorInterface extends ethers.utils.Interface {
+interface PausableUpgradeableInterface extends ethers.utils.Interface {
   functions: {
-    "signalUpdated((tuple[]))": FunctionFragment;
+    "paused()": FunctionFragment;
   };
 
-  encodeFunctionData(
-    functionFragment: "signalUpdated",
-    values: [{ longTokens: { token: string; weight: BigNumberish }[] }]
-  ): string;
+  encodeFunctionData(functionFragment: "paused", values?: undefined): string;
 
-  decodeFunctionResult(
-    functionFragment: "signalUpdated",
-    data: BytesLike
-  ): Result;
+  decodeFunctionResult(functionFragment: "paused", data: BytesLike): Result;
 
   events: {
-    "SignalWasUpdated()": EventFragment;
+    "Paused(address)": EventFragment;
+    "Unpaused(address)": EventFragment;
   };
 
-  getEvent(nameOrSignatureOrTopic: "SignalWasUpdated"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Paused"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Unpaused"): EventFragment;
 }
 
-export type SignalWasUpdatedEvent = TypedEvent<[] & {}>;
+export type PausedEvent = TypedEvent<[string] & { account: string }>;
 
-export class MockSignalAggregator extends BaseContract {
+export type UnpausedEvent = TypedEvent<[string] & { account: string }>;
+
+export class PausableUpgradeable extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
@@ -84,44 +81,37 @@ export class MockSignalAggregator extends BaseContract {
     toBlock?: string | number | undefined
   ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
 
-  interface: MockSignalAggregatorInterface;
+  interface: PausableUpgradeableInterface;
 
   functions: {
-    signalUpdated(
-      arg0: { longTokens: { token: string; weight: BigNumberish }[] },
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
+    paused(overrides?: CallOverrides): Promise<[boolean]>;
   };
 
-  signalUpdated(
-    arg0: { longTokens: { token: string; weight: BigNumberish }[] },
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
+  paused(overrides?: CallOverrides): Promise<boolean>;
 
   callStatic: {
-    signalUpdated(
-      arg0: { longTokens: { token: string; weight: BigNumberish }[] },
-      overrides?: CallOverrides
-    ): Promise<void>;
+    paused(overrides?: CallOverrides): Promise<boolean>;
   };
 
   filters: {
-    "SignalWasUpdated()"(): TypedEventFilter<[], {}>;
+    "Paused(address)"(
+      account?: null
+    ): TypedEventFilter<[string], { account: string }>;
 
-    SignalWasUpdated(): TypedEventFilter<[], {}>;
+    Paused(account?: null): TypedEventFilter<[string], { account: string }>;
+
+    "Unpaused(address)"(
+      account?: null
+    ): TypedEventFilter<[string], { account: string }>;
+
+    Unpaused(account?: null): TypedEventFilter<[string], { account: string }>;
   };
 
   estimateGas: {
-    signalUpdated(
-      arg0: { longTokens: { token: string; weight: BigNumberish }[] },
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
+    paused(overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    signalUpdated(
-      arg0: { longTokens: { token: string; weight: BigNumberish }[] },
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
+    paused(overrides?: CallOverrides): Promise<PopulatedTransaction>;
   };
 }
