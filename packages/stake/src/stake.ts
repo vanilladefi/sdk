@@ -1,5 +1,5 @@
 import { Token } from '@vanilladefi/core-sdk'
-import { ContractTransaction, Signer } from 'ethers'
+import { ContractTransaction } from 'ethers'
 import { getJuiceStakingContract } from './contracts'
 import { Options, Stake, StakeInfo } from './types/general'
 
@@ -27,12 +27,12 @@ export const getAllStakes = async (
 
 export const modifyStakes = async (
   stakes: Stake[],
-  signer: Signer,
+  options: Options,
 ): Promise<ContractTransaction> => {
-  const contract = getJuiceStakingContract({ signerOrProvider: signer })
+  const contract = getJuiceStakingContract(options)
   return contract.modifyStakes(stakes)
 }
 
-export const modifyStake = async (stake: Stake, signer: Signer) => {
-  return modifyStakes([stake], signer)
+export const modifyStake = async (stake: Stake, options: Options) => {
+  return modifyStakes([stake], options)
 }
