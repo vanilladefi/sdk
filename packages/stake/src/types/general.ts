@@ -21,7 +21,8 @@ export interface StakeInfo {
 
 export interface Options {
   signerOrProvider?: Signer | providers.Provider
-  provider?: providers.Provider
+  polygonProvider?: providers.Provider
+  ethereumProvider?: providers.Provider
   optionalAddress?: string
   vanillaVersion?: VanillaVersion
 }

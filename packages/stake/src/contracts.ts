@@ -51,7 +51,9 @@ export const getJuiceStakingContract = (options?: Options): IJuiceStaking => {
     throw Error('Incorrect contract address for JUICE!')
   }
   const usedProvider =
-    options?.signerOrProvider || providers.getDefaultProvider(networks.mainnet)
+    options?.signerOrProvider ||
+    options?.polygonProvider ||
+    providers.getDefaultProvider(networks.mainnet)
   return IJuiceStaking__factory.connect(contractAddress, usedProvider)
 }
 
@@ -76,18 +78,28 @@ export const getBasicWalletDetails = async (
 
   try {
     if (walletAddress) {
-      const ethereumProvider = providers.getDefaultProvider(
-        getNetwork('homestead'),
-      )
-      const network: Network | false = options?.provider
-        ? await options?.provider.getNetwork()
-        : false
+      const ethereumProvider =
+        options?.ethereumProvider ||
+        providers.getDefaultProvider(getNetwork('homestead'))
+      const ethereumNetwork = await ethereumProvider.getNetwork()
+      if (ethereumNetwork.chainId !== 1) {
+        throw Error('Given Ethereum provider is not connected to Ethereum!')
+      }
 
-      if (network && network.chainId !== 137 && network.chainId !== 80001) {
-        throw Error('Given provider is not connected to Polygon!')
+      const polygonNetwork: Network | false = options?.polygonProvider
+        ? await options?.polygonProvider.getNetwork()
+        : networks.mainnet
+
+      if (
+        polygonNetwork &&
+        polygonNetwork.chainId !== 137 &&
+        polygonNetwork.chainId !== 80001
+      ) {
+        throw Error('Given Polygon provider is not connected to Polygon!')
       }
       const polygonProvider =
-        options?.provider || providers.getDefaultProvider(networks.mainnet)
+        options?.polygonProvider ||
+        providers.getDefaultProvider(networks.mainnet)
 
       const vnl: ERC20Upgradeable = ERC20Upgradeable__factory.connect(
         contractAddresses.vanilla[VanillaVersion.V2].vnl || '',
