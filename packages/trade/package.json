@@ -1,6 +1,6 @@
 {
   "name": "@vanilladefi/trade-sdk",
-  "version": "2.2.0",
+  "version": "2.2.1-beta.0",
   "description": "A Software Development Kit for the Vanilla DeFi Protocol",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -33,7 +33,7 @@
     "@uniswap/sdk": "^3.0.3",
     "@uniswap/sdk-core": "^1.0.10",
     "@uniswap/v3-sdk": "^3.5.1",
-    "@vanilladefi/core-sdk": "^2.2.0",
+    "@vanilladefi/core-sdk": "^2.2.1-beta.0",
     "@vanilladefi/trade-contracts": "^1.1.27",
     "ethers": "^5.4.7",
     "merkletreejs": "^0.2.24"
