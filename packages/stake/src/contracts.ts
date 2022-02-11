@@ -81,7 +81,6 @@ export const getBasicWalletDetails = async (
       const ethereumProvider =
         options?.ethereumProvider ||
         providers.getDefaultProvider(getNetwork('homestead'))
-
       const polygonProvider =
         options?.polygonProvider ||
         providers.getDefaultProvider(networks.mainnet)
