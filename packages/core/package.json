@@ -1,6 +1,6 @@
 {
   "name": "@vanilladefi/core-sdk",
-  "version": "2.1.17-beta.5",
+  "version": "2.1.17-beta.6",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "license": "MIT",

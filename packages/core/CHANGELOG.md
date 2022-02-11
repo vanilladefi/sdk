@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## 2.1.17-beta.6 (2022-02-11)
+
+**Note:** Version bump only for package @vanilladefi/core-sdk
+
+
+
+
+
 ## 2.1.17-beta.5 (2022-02-08)
 
 **Note:** Version bump only for package @vanilladefi/core-sdk
