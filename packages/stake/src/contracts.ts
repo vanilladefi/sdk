@@ -11,8 +11,8 @@ import {
 import { providers } from 'ethers'
 import { formatUnits } from 'ethers/lib/utils'
 import { Options } from './types/general'
-import { ERC20 } from './types/juicenet/ERC20'
-import { ERC20__factory } from './types/juicenet/factories/ERC20__factory'
+import { ERC20Upgradeable } from './types/juicenet/ERC20Upgradeable'
+import { ERC20Upgradeable__factory } from './types/juicenet/factories/ERC20Upgradeable__factory'
 import { IJuiceStaking__factory } from './types/juicenet/factories/IJuiceStaking__factory'
 import { IJuiceStaking } from './types/juicenet/IJuiceStaking'
 
@@ -51,16 +51,17 @@ export const getJuiceStakingContract = (options?: Options): IJuiceStaking => {
     throw Error('Incorrect contract address for JUICE!')
   }
   const usedProvider =
-    options?.signerOrProvider || providers.getDefaultProvider(networks.mainnet)
+    options?.signerOrProvider ||
+    options?.polygonProvider ||
+    providers.getDefaultProvider(networks.mainnet)
   return IJuiceStaking__factory.connect(contractAddress, usedProvider)
 }
 
 /**
  * Fetches the Vanilla-specific balances for given address
  *
- * @param vanillaVersion - Vanilla version
- * @param address - ethereum address
- * @param provider - an ethersjs provider (readonly). Recommended to be set at all times so that the application is in control of the used network.
+ * @param address - An Ethereum address
+ * @param options - A Vanilla Juicenet options object, enables specifying custom RPCs etc.
  * @returns addresses $VNL and $ETH balance
  */
 export const getBasicWalletDetails = async (
@@ -77,24 +78,18 @@ export const getBasicWalletDetails = async (
 
   try {
     if (walletAddress) {
-      const ethereumProvider = providers.getDefaultProvider(
-        getNetwork('homestead'),
-      )
-      const network: Network | false = options?.provider
-        ? await options?.provider.getNetwork()
-        : false
-
-      if (network && network.chainId !== 137 && network.chainId !== 80001) {
-        throw Error('Given provider is not connected to Polygon!')
-      }
+      const ethereumProvider =
+        options?.ethereumProvider ||
+        providers.getDefaultProvider(getNetwork('homestead'))
       const polygonProvider =
-        options?.provider || providers.getDefaultProvider(networks.mainnet)
+        options?.polygonProvider ||
+        providers.getDefaultProvider(networks.mainnet)
 
-      const vnl: ERC20 = ERC20__factory.connect(
+      const vnl: ERC20Upgradeable = ERC20Upgradeable__factory.connect(
         contractAddresses.vanilla[VanillaVersion.V2].vnl || '',
         ethereumProvider,
       )
-      const juice: ERC20 = ERC20__factory.connect(
+      const juice: ERC20Upgradeable = ERC20Upgradeable__factory.connect(
         options?.optionalAddress ||
           contractAddresses.vanilla[VanillaVersion.V2].router,
         polygonProvider,

@@ -5,9 +5,9 @@
 import { Contract, Signer, utils } from "ethers";
 import { Provider } from "@ethersproject/providers";
 import type {
-  IERC20Metadata,
-  IERC20MetadataInterface,
-} from "../IERC20Metadata";
+  IERC20Upgradeable,
+  IERC20UpgradeableInterface,
+} from "../IERC20Upgradeable";
 
 const _abi = [
   {
@@ -129,45 +129,6 @@ const _abi = [
   },
   {
     inputs: [],
-    name: "decimals",
-    outputs: [
-      {
-        internalType: "uint8",
-        name: "",
-        type: "uint8",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "name",
-    outputs: [
-      {
-        internalType: "string",
-        name: "",
-        type: "string",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "symbol",
-    outputs: [
-      {
-        internalType: "string",
-        name: "",
-        type: "string",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
     name: "totalSupply",
     outputs: [
       {
@@ -234,15 +195,15 @@ const _abi = [
   },
 ];
 
-export class IERC20Metadata__factory {
+export class IERC20Upgradeable__factory {
   static readonly abi = _abi;
-  static createInterface(): IERC20MetadataInterface {
-    return new utils.Interface(_abi) as IERC20MetadataInterface;
+  static createInterface(): IERC20UpgradeableInterface {
+    return new utils.Interface(_abi) as IERC20UpgradeableInterface;
   }
   static connect(
     address: string,
     signerOrProvider: Signer | Provider
-  ): IERC20Metadata {
-    return new Contract(address, _abi, signerOrProvider) as IERC20Metadata;
+  ): IERC20Upgradeable {
+    return new Contract(address, _abi, signerOrProvider) as IERC20Upgradeable;
   }
 }

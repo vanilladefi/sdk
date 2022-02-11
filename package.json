@@ -1,6 +1,6 @@
 {
   "name": "@vanilladefi/sdk",
-  "version": "2.1.14",
+  "version": "2.2.0",
   "description": "Vanilla SDK Monorepo Consisting of Trade & Stake SDKs",
   "repository": "git@github.com:vanilladefi/sdk.git",
   "author": "Equilibrium",

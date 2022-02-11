@@ -20,7 +20,7 @@ import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
-interface JuiceStakingInterface extends ethers.utils.Interface {
+interface MockJuiceStakingInterface extends ethers.utils.Interface {
   functions: {
     "allowance(address,address)": FunctionFragment;
     "approve(address,uint256)": FunctionFragment;
@@ -35,6 +35,8 @@ interface JuiceStakingInterface extends ethers.utils.Interface {
     "deposit(uint256)": FunctionFragment;
     "domainSeparatorV4()": FunctionFragment;
     "emergencyPause(bool)": FunctionFragment;
+    "getPriceOracle(address)": FunctionFragment;
+    "hasRegisteredToken(address)": FunctionFragment;
     "hashDeposit(uint256,(address,uint256,uint256))": FunctionFragment;
     "hashModifyStakes(tuple[],(address,uint256,uint256))": FunctionFragment;
     "hashWithdraw(uint256,(address,uint256,uint256))": FunctionFragment;
@@ -123,6 +125,14 @@ interface JuiceStakingInterface extends ethers.utils.Interface {
   encodeFunctionData(
     functionFragment: "emergencyPause",
     values: [boolean]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getPriceOracle",
+    values: [string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "hasRegisteredToken",
+    values: [string]
   ): string;
   encodeFunctionData(
     functionFragment: "hashDeposit",
@@ -246,6 +256,14 @@ interface JuiceStakingInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "emergencyPause",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getPriceOracle",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "hasRegisteredToken",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -399,7 +417,7 @@ export type UnpausedEvent = TypedEvent<[string] & { account: string }>;
 
 export type UpgradedEvent = TypedEvent<[string] & { implementation: string }>;
 
-export class JuiceStaking extends BaseContract {
+export class MockJuiceStaking extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
@@ -440,7 +458,7 @@ export class JuiceStaking extends BaseContract {
     toBlock?: string | number | undefined
   ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
 
-  interface: JuiceStakingInterface;
+  interface: MockJuiceStakingInterface;
 
   functions: {
     allowance(
@@ -525,6 +543,13 @@ export class JuiceStaking extends BaseContract {
       pauseStaking: boolean,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
+
+    getPriceOracle(addr: string, overrides?: CallOverrides): Promise<[string]>;
+
+    hasRegisteredToken(
+      addr: string,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
 
     hashDeposit(
       amount: BigNumberish,
@@ -739,6 +764,10 @@ export class JuiceStaking extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  getPriceOracle(addr: string, overrides?: CallOverrides): Promise<string>;
+
+  hasRegisteredToken(addr: string, overrides?: CallOverrides): Promise<boolean>;
+
   hashDeposit(
     amount: BigNumberish,
     permission: { sender: string; deadline: BigNumberish; nonce: BigNumberish },
@@ -934,6 +963,13 @@ export class JuiceStaking extends BaseContract {
       pauseStaking: boolean,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    getPriceOracle(addr: string, overrides?: CallOverrides): Promise<string>;
+
+    hasRegisteredToken(
+      addr: string,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
 
     hashDeposit(
       amount: BigNumberish,
@@ -1331,6 +1367,13 @@ export class JuiceStaking extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    getPriceOracle(addr: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    hasRegisteredToken(
+      addr: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     hashDeposit(
       amount: BigNumberish,
       permission: {
@@ -1528,6 +1571,16 @@ export class JuiceStaking extends BaseContract {
     emergencyPause(
       pauseStaking: boolean,
       overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    getPriceOracle(
+      addr: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    hasRegisteredToken(
+      addr: string,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     hashDeposit(

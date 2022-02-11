@@ -18,7 +18,7 @@ import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
-interface IERC1271Interface extends ethers.utils.Interface {
+interface IERC1271UpgradeableInterface extends ethers.utils.Interface {
   functions: {
     "isValidSignature(bytes32,bytes)": FunctionFragment;
   };
@@ -36,7 +36,7 @@ interface IERC1271Interface extends ethers.utils.Interface {
   events: {};
 }
 
-export class IERC1271 extends BaseContract {
+export class IERC1271Upgradeable extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
@@ -77,7 +77,7 @@ export class IERC1271 extends BaseContract {
     toBlock?: string | number | undefined
   ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
 
-  interface: IERC1271Interface;
+  interface: IERC1271UpgradeableInterface;
 
   functions: {
     isValidSignature(

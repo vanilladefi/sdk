@@ -11,36 +11,35 @@ import {
   PopulatedTransaction,
   BaseContract,
   ContractTransaction,
-  CallOverrides,
 } from "ethers";
 import { BytesLike } from "@ethersproject/bytes";
 import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
-interface PausableInterface extends ethers.utils.Interface {
-  functions: {
-    "paused()": FunctionFragment;
-  };
-
-  encodeFunctionData(functionFragment: "paused", values?: undefined): string;
-
-  decodeFunctionResult(functionFragment: "paused", data: BytesLike): Result;
+interface ERC1967UpgradeUpgradeableInterface extends ethers.utils.Interface {
+  functions: {};
 
   events: {
-    "Paused(address)": EventFragment;
-    "Unpaused(address)": EventFragment;
+    "AdminChanged(address,address)": EventFragment;
+    "BeaconUpgraded(address)": EventFragment;
+    "Upgraded(address)": EventFragment;
   };
 
-  getEvent(nameOrSignatureOrTopic: "Paused"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "Unpaused"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "AdminChanged"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "BeaconUpgraded"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Upgraded"): EventFragment;
 }
 
-export type PausedEvent = TypedEvent<[string] & { account: string }>;
+export type AdminChangedEvent = TypedEvent<
+  [string, string] & { previousAdmin: string; newAdmin: string }
+>;
 
-export type UnpausedEvent = TypedEvent<[string] & { account: string }>;
+export type BeaconUpgradedEvent = TypedEvent<[string] & { beacon: string }>;
 
-export class Pausable extends BaseContract {
+export type UpgradedEvent = TypedEvent<[string] & { implementation: string }>;
+
+export class ERC1967UpgradeUpgradeable extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
@@ -81,37 +80,47 @@ export class Pausable extends BaseContract {
     toBlock?: string | number | undefined
   ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
 
-  interface: PausableInterface;
+  interface: ERC1967UpgradeUpgradeableInterface;
 
-  functions: {
-    paused(overrides?: CallOverrides): Promise<[boolean]>;
-  };
+  functions: {};
 
-  paused(overrides?: CallOverrides): Promise<boolean>;
-
-  callStatic: {
-    paused(overrides?: CallOverrides): Promise<boolean>;
-  };
+  callStatic: {};
 
   filters: {
-    "Paused(address)"(
-      account?: null
-    ): TypedEventFilter<[string], { account: string }>;
+    "AdminChanged(address,address)"(
+      previousAdmin?: null,
+      newAdmin?: null
+    ): TypedEventFilter<
+      [string, string],
+      { previousAdmin: string; newAdmin: string }
+    >;
 
-    Paused(account?: null): TypedEventFilter<[string], { account: string }>;
+    AdminChanged(
+      previousAdmin?: null,
+      newAdmin?: null
+    ): TypedEventFilter<
+      [string, string],
+      { previousAdmin: string; newAdmin: string }
+    >;
 
-    "Unpaused(address)"(
-      account?: null
-    ): TypedEventFilter<[string], { account: string }>;
+    "BeaconUpgraded(address)"(
+      beacon?: string | null
+    ): TypedEventFilter<[string], { beacon: string }>;
 
-    Unpaused(account?: null): TypedEventFilter<[string], { account: string }>;
+    BeaconUpgraded(
+      beacon?: string | null
+    ): TypedEventFilter<[string], { beacon: string }>;
+
+    "Upgraded(address)"(
+      implementation?: string | null
+    ): TypedEventFilter<[string], { implementation: string }>;
+
+    Upgraded(
+      implementation?: string | null
+    ): TypedEventFilter<[string], { implementation: string }>;
   };
 
-  estimateGas: {
-    paused(overrides?: CallOverrides): Promise<BigNumber>;
-  };
+  estimateGas: {};
 
-  populateTransaction: {
-    paused(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-  };
+  populateTransaction: {};
 }

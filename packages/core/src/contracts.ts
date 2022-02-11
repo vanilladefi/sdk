@@ -30,7 +30,7 @@ export const contractAddresses: {
       vnl: '0xbf900809f4C73e5a3476eb183d8b06a27e61F8E5',
     },
     v2: {
-      router: '0xa7480B62a657555f6727bCdb96953bCC211FFbaC',
+      router: '0x87a2688d6E41b23d802F74c6B1F06a8e8d118929',
       vnl: '0xbf900809f4C73e5a3476eb183d8b06a27e61F8E5',
     },
   },

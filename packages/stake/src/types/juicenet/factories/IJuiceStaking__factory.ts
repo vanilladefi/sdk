@@ -243,9 +243,19 @@ const _abi = [
     name: "currentStake",
     outputs: [
       {
-        internalType: "uint128",
-        name: "amount",
-        type: "uint128",
+        internalType: "uint256",
+        name: "juiceStake",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "juiceValue",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "currentPrice",
+        type: "uint256",
       },
       {
         internalType: "bool",
