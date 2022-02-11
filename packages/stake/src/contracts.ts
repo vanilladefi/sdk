@@ -81,22 +81,7 @@ export const getBasicWalletDetails = async (
       const ethereumProvider =
         options?.ethereumProvider ||
         providers.getDefaultProvider(getNetwork('homestead'))
-      const ethereumNetwork = await ethereumProvider.getNetwork()
-      if (ethereumNetwork.chainId !== 1) {
-        throw Error('Given Ethereum provider is not connected to Ethereum!')
-      }
 
-      const polygonNetwork: Network | false = options?.polygonProvider
-        ? await options?.polygonProvider.getNetwork()
-        : networks.mainnet
-
-      if (
-        polygonNetwork &&
-        polygonNetwork.chainId !== 137 &&
-        polygonNetwork.chainId !== 80001
-      ) {
-        throw Error('Given Polygon provider is not connected to Polygon!')
-      }
       const polygonProvider =
         options?.polygonProvider ||
         providers.getDefaultProvider(networks.mainnet)
