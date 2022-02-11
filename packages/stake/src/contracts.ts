@@ -11,8 +11,8 @@ import {
 import { providers } from 'ethers'
 import { formatUnits } from 'ethers/lib/utils'
 import { Options } from './types/general'
-import { ERC20 } from './types/juicenet/ERC20'
-import { ERC20__factory } from './types/juicenet/factories/ERC20__factory'
+import { ERC20Upgradeable } from './types/juicenet/ERC20Upgradeable'
+import { ERC20Upgradeable__factory } from './types/juicenet/factories/ERC20Upgradeable__factory'
 import { IJuiceStaking__factory } from './types/juicenet/factories/IJuiceStaking__factory'
 import { IJuiceStaking } from './types/juicenet/IJuiceStaking'
 
@@ -89,11 +89,11 @@ export const getBasicWalletDetails = async (
       const polygonProvider =
         options?.provider || providers.getDefaultProvider(networks.mainnet)
 
-      const vnl: ERC20 = ERC20__factory.connect(
+      const vnl: ERC20Upgradeable = ERC20Upgradeable__factory.connect(
         contractAddresses.vanilla[VanillaVersion.V2].vnl || '',
         ethereumProvider,
       )
-      const juice: ERC20 = ERC20__factory.connect(
+      const juice: ERC20Upgradeable = ERC20Upgradeable__factory.connect(
         options?.optionalAddress ||
           contractAddresses.vanilla[VanillaVersion.V2].router,
         polygonProvider,

@@ -1,5 +1,5 @@
 import { VanillaVersion } from '@vanilladefi/core-sdk'
-import { BigNumberish, providers, Signer } from 'ethers'
+import { BigNumber, BigNumberish, providers, Signer } from 'ethers'
 
 export enum availableNetworks {
   'matic',
@@ -9,6 +9,13 @@ export enum availableNetworks {
 export interface Stake {
   token: string
   amount: BigNumberish
+  sentiment: boolean
+}
+
+export interface StakeInfo {
+  juiceStake: BigNumber
+  juiceValue: BigNumber
+  currentPrice: BigNumber
   sentiment: boolean
 }
 
