@@ -1,7 +1,8 @@
 import { Token } from '@vanilladefi/core-sdk'
-import { ContractTransaction } from 'ethers'
+import { BigNumber, ContractTransaction, ethers } from 'ethers'
 import { getJuiceStakingContract } from './contracts'
 import { Options, Stake, StakeInfo } from './types/general'
+import { TypedEvent } from './types/juicenet/common'
 
 export const getCurrentStake = async (
   userAddress: string,
@@ -35,4 +36,71 @@ export const modifyStakes = async (
 
 export const modifyStake = async (stake: Stake, options: Options) => {
   return modifyStakes([stake], options)
+}
+
+export const getUserJuiceDelta = async (
+  userAddress: string,
+  from?: string | number,
+  to?: string | number,
+  options?: Options,
+): Promise<BigNumber> => {
+  const contract = getJuiceStakingContract(options)
+  const deltaByToken: { [token: string]: BigNumber } = {}
+  const latestUnstakeByToken: { [token: string]: number } = {}
+  let delta = BigNumber.from(0)
+
+  const stakeFilter: ethers.EventFilter =
+    contract.filters.StakeAdded(userAddress)
+  const unStakeFilter: ethers.EventFilter =
+    contract.filters.StakeRemoved(userAddress)
+
+  const unStakes: ethers.Event[] | TypedEvent<any[]>[] =
+    await contract.queryFilter(unStakeFilter, from, to)
+
+  // First, filter every realized JUICE profit
+  unStakes.forEach((event) => {
+    if (event?.args && event?.blockNumber) {
+      const { args, blockNumber } = event
+      const { unstakedDiff, token } = args
+
+      if (deltaByToken[token]) {
+        deltaByToken[token] = deltaByToken[token].add(unstakedDiff)
+      } else {
+        deltaByToken[token] = unstakedDiff
+      }
+
+      if (
+        !latestUnstakeByToken[token] ||
+        latestUnstakeByToken[token] < blockNumber
+      ) {
+        latestUnstakeByToken[token] = blockNumber
+      }
+    }
+  })
+
+  // Then, remove the original stakes from the delta
+  if (Object.keys(deltaByToken).length > 0) {
+    const stakes: ethers.Event[] | TypedEvent<any[]>[] =
+      await contract.queryFilter(stakeFilter, from, to)
+
+    stakes.forEach((event) => {
+      if (event?.args && event?.blockNumber) {
+        const { args, blockNumber } = event
+        const { unstakedDiff, token } = args
+        // Don't include restakes after last unstake in delta
+        if (
+          Object.keys(deltaByToken).includes(token) &&
+          latestUnstakeByToken[token] > blockNumber
+        ) {
+          deltaByToken[token] = deltaByToken[token].add(unstakedDiff)
+        }
+      }
+    })
+
+    delta = Object.values(deltaByToken).reduce((_previous, _current) =>
+      _previous.add(_current),
+    )
+  }
+
+  return delta
 }
