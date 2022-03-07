@@ -1,9 +1,9 @@
 import { Token } from '@vanilladefi/core-sdk'
 import { BigNumber, ContractTransaction, ethers } from 'ethers'
-import { getUsers } from 'users'
 import { getJuiceStakingContract } from './contracts'
 import { Options, Stake, StakeInfo } from './types/general'
 import { TypedEvent } from './types/juicenet/common'
+import { getUsers } from './users'
 
 export const getCurrentStake = async (
   userAddress: string,
