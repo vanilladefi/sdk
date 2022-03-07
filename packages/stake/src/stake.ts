@@ -79,6 +79,8 @@ export const getUserJuiceDelta = async (
     }
   })
 
+  // TODO: Currently the function might result in an edge case where it might be unfair for users that have staked right after 'from' block height against users that haven't. How to tackle this?
+
   // Then, remove the original stakes from the delta
   if (Object.keys(deltaByToken).length > 0) {
     const stakes: ethers.Event[] | TypedEvent<any[]>[] =
