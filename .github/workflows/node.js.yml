@@ -30,4 +30,4 @@ jobs:
         env:
           RPC_URL: ${{ secrets.RPC_URL }}
           POLYGON_RPC_URL: ${{ secrets.POLYGON_RPC_URL }}
-          JUICENET_ADDRESS: ${{ secrets.JUICENET_ADDRESS }}
+          JUICE_ADDRESS: ${{ secrets.JUICE_ADDRESS }}
