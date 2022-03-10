@@ -26,3 +26,5 @@ export interface Options {
   optionalAddress?: string
   vanillaVersion?: VanillaVersion
 }
+
+export type LeaderBoard = Array<[string, BigNumber]>

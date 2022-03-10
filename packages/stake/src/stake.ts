@@ -1,7 +1,7 @@
 import { Token } from '@vanilladefi/core-sdk'
 import { BigNumber, ContractTransaction, ethers } from 'ethers'
 import { getJuiceStakingContract } from './contracts'
-import { Options, Stake, StakeInfo } from './types/general'
+import { LeaderBoard, Options, Stake, StakeInfo } from './types/general'
 import { TypedEvent } from './types/juicenet/common'
 import { getUsers } from './users'
 
@@ -46,7 +46,7 @@ export const getUserJuiceDelta = async (
   options?: Options,
 ): Promise<BigNumber> => {
   const contract = getJuiceStakingContract(options)
-  const deltaByToken: { [token: string]: BigNumber } = {}
+  const deltaByToken: Record<string, BigNumber> = {}
   const latestUnstakeByToken: { [token: string]: number } = {}
   let delta = BigNumber.from(0)
 
@@ -113,9 +113,9 @@ export const getLeaderboard = async (
   to?: string | number,
   limit = 10,
   options?: Options,
-): Promise<[string, BigNumber][]> => {
+): Promise<LeaderBoard> => {
   const users = await getUsers(from, to, options)
-  let juiceDeltas: [string, BigNumber][] = await Promise.all(
+  let juiceDeltas: LeaderBoard = await Promise.all(
     Array.from(users).map(async (user) => [
       user,
       await getUserJuiceDelta(user, from, to, options),
