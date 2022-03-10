@@ -47,7 +47,8 @@ export const getUserJuiceDelta = async (
 ): Promise<BigNumber> => {
   const contract = getJuiceStakingContract(options)
   const deltaByToken: Record<string, BigNumber> = {}
-  const latestUnstakeByToken: { [token: string]: number } = {}
+  const latestUnstakeByToken: Record<string, number> = {}
+  const firstUnstakeByToken: Record<string, number> = {}
   let delta = BigNumber.from(0)
 
   const stakeFilter: ethers.EventFilter =
@@ -71,6 +72,13 @@ export const getUserJuiceDelta = async (
       }
 
       if (
+        !firstUnstakeByToken[token] ||
+        firstUnstakeByToken[token] > blockNumber
+      ) {
+        firstUnstakeByToken[token] = blockNumber
+      }
+
+      if (
         !latestUnstakeByToken[token] ||
         latestUnstakeByToken[token] < blockNumber
       ) {
@@ -78,8 +86,6 @@ export const getUserJuiceDelta = async (
       }
     }
   })
-
-  // TODO: Currently the function might result in an edge case where it might be unfair for users that have staked right after 'from' block height against users that haven't. How to tackle this?
 
   // Then, remove the original stakes from the delta
   if (Object.keys(deltaByToken).length > 0) {
@@ -90,9 +96,10 @@ export const getUserJuiceDelta = async (
       if (event?.args && event?.blockNumber) {
         const { args, blockNumber } = event
         const { unstakedDiff, token } = args
-        // Don't include restakes after last unstake in delta
+        // Don't include stakes before the first unstake or restakes after last unstake in delta
         if (
           Object.keys(deltaByToken).includes(token) &&
+          firstUnstakeByToken[token] < blockNumber &&
           latestUnstakeByToken[token] > blockNumber
         ) {
           deltaByToken[token] = deltaByToken[token].add(unstakedDiff)
