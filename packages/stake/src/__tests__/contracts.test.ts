@@ -10,5 +10,5 @@ test('Get JUICE, MATIC, ETH and VNL balances', async () => {
       optionalAddress: process.env.JUICE_ADDRESS,
     },
   )
-  expect(Number(juiceBalance)).toBeGreaterThan(0)
+  expect(juiceBalance).toBeGtBN(0)
 })

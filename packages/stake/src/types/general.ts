@@ -27,4 +27,6 @@ export interface Options {
   vanillaVersion?: VanillaVersion
 }
 
-export type LeaderBoard = Array<[string, BigNumber]>
+export type StakePerformance = { user: string; delta: BigNumber }
+
+export type LeaderBoard = Array<StakePerformance>

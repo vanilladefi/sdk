@@ -123,15 +123,15 @@ export const getLeaderboard = async (
 ): Promise<LeaderBoard> => {
   const users = await getUsers(from, to, options)
   let juiceDeltas: LeaderBoard = await Promise.all(
-    Array.from(users).map(async (user) => [
-      user,
-      await getUserJuiceDelta(user, from, to, options),
-    ]),
+    Array.from(users).map(async (user) => ({
+      user: user,
+      delta: await getUserJuiceDelta(user, from, to, options),
+    })),
   )
   juiceDeltas = juiceDeltas.sort((a, b) => {
-    if (a[1].gt(b[1])) {
+    if (a.delta.gt(b.delta)) {
       return -1
-    } else if (a[1].eq(b[1])) {
+    } else if (a.delta.eq(b.delta)) {
       return 0
     } else {
       return 1
