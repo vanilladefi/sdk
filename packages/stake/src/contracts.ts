@@ -1,4 +1,4 @@
-import { getNetwork, Network } from '@ethersproject/networks'
+import { getNetwork } from '@ethersproject/networks'
 import {
   contractAddresses,
   getBalance,

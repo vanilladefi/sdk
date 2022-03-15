@@ -10,7 +10,7 @@ test('Price fetching from Chainlink', async () => {
       address: string
     }) => {
       const price = await getTokenPrice(token.address, testPolygonProvider)
-      expect(price.answer.toNumber()).toBeGreaterThan(0)
+      expect(price.answer).toBeGtBN(0)
     }
     await Promise.all(v2Tokens.map(priceGetter))
   } catch (_e) {

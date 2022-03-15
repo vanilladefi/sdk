@@ -21,18 +21,27 @@ import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 interface IPriceOracleInterface extends ethers.utils.Interface {
   functions: {
     "decimals()": FunctionFragment;
-    "latestAnswer()": FunctionFragment;
+    "getRoundData(uint80)": FunctionFragment;
+    "latestRoundData()": FunctionFragment;
   };
 
   encodeFunctionData(functionFragment: "decimals", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "latestAnswer",
+    functionFragment: "getRoundData",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "latestRoundData",
     values?: undefined
   ): string;
 
   decodeFunctionResult(functionFragment: "decimals", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "latestAnswer",
+    functionFragment: "getRoundData",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "latestRoundData",
     data: BytesLike
   ): Result;
 
@@ -85,17 +94,86 @@ export class IPriceOracle extends BaseContract {
   functions: {
     decimals(overrides?: CallOverrides): Promise<[number]>;
 
-    latestAnswer(overrides?: CallOverrides): Promise<[BigNumber]>;
+    getRoundData(
+      _roundId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber] & {
+        roundId: BigNumber;
+        answer: BigNumber;
+        startedAt: BigNumber;
+        updatedAt: BigNumber;
+        answeredInRound: BigNumber;
+      }
+    >;
+
+    latestRoundData(
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber] & {
+        roundId: BigNumber;
+        answer: BigNumber;
+        startedAt: BigNumber;
+        updatedAt: BigNumber;
+        answeredInRound: BigNumber;
+      }
+    >;
   };
 
   decimals(overrides?: CallOverrides): Promise<number>;
 
-  latestAnswer(overrides?: CallOverrides): Promise<BigNumber>;
+  getRoundData(
+    _roundId: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<
+    [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber] & {
+      roundId: BigNumber;
+      answer: BigNumber;
+      startedAt: BigNumber;
+      updatedAt: BigNumber;
+      answeredInRound: BigNumber;
+    }
+  >;
+
+  latestRoundData(
+    overrides?: CallOverrides
+  ): Promise<
+    [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber] & {
+      roundId: BigNumber;
+      answer: BigNumber;
+      startedAt: BigNumber;
+      updatedAt: BigNumber;
+      answeredInRound: BigNumber;
+    }
+  >;
 
   callStatic: {
     decimals(overrides?: CallOverrides): Promise<number>;
 
-    latestAnswer(overrides?: CallOverrides): Promise<BigNumber>;
+    getRoundData(
+      _roundId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber] & {
+        roundId: BigNumber;
+        answer: BigNumber;
+        startedAt: BigNumber;
+        updatedAt: BigNumber;
+        answeredInRound: BigNumber;
+      }
+    >;
+
+    latestRoundData(
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber, BigNumber, BigNumber, BigNumber, BigNumber] & {
+        roundId: BigNumber;
+        answer: BigNumber;
+        startedAt: BigNumber;
+        updatedAt: BigNumber;
+        answeredInRound: BigNumber;
+      }
+    >;
   };
 
   filters: {};
@@ -103,12 +181,22 @@ export class IPriceOracle extends BaseContract {
   estimateGas: {
     decimals(overrides?: CallOverrides): Promise<BigNumber>;
 
-    latestAnswer(overrides?: CallOverrides): Promise<BigNumber>;
+    getRoundData(
+      _roundId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    latestRoundData(overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
     decimals(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    latestAnswer(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    getRoundData(
+      _roundId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    latestRoundData(overrides?: CallOverrides): Promise<PopulatedTransaction>;
   };
 }

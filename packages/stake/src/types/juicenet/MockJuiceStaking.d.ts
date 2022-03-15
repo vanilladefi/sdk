@@ -36,6 +36,7 @@ interface MockJuiceStakingInterface extends ethers.utils.Interface {
     "domainSeparatorV4()": FunctionFragment;
     "emergencyPause(bool)": FunctionFragment;
     "getPriceOracle(address)": FunctionFragment;
+    "getRegisteredTokensAndOracles()": FunctionFragment;
     "hasRegisteredToken(address)": FunctionFragment;
     "hashDeposit(uint256,(address,uint256,uint256))": FunctionFragment;
     "hashModifyStakes(tuple[],(address,uint256,uint256))": FunctionFragment;
@@ -129,6 +130,10 @@ interface MockJuiceStakingInterface extends ethers.utils.Interface {
   encodeFunctionData(
     functionFragment: "getPriceOracle",
     values: [string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getRegisteredTokensAndOracles",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "hasRegisteredToken",
@@ -260,6 +265,10 @@ interface MockJuiceStakingInterface extends ethers.utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "getPriceOracle",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getRegisteredTokensAndOracles",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -546,6 +555,10 @@ export class MockJuiceStaking extends BaseContract {
 
     getPriceOracle(addr: string, overrides?: CallOverrides): Promise<[string]>;
 
+    getRegisteredTokensAndOracles(
+      overrides?: CallOverrides
+    ): Promise<[([string, string] & { token: string; oracle: string })[]]>;
+
     hasRegisteredToken(
       addr: string,
       overrides?: CallOverrides
@@ -766,6 +779,10 @@ export class MockJuiceStaking extends BaseContract {
 
   getPriceOracle(addr: string, overrides?: CallOverrides): Promise<string>;
 
+  getRegisteredTokensAndOracles(
+    overrides?: CallOverrides
+  ): Promise<([string, string] & { token: string; oracle: string })[]>;
+
   hasRegisteredToken(addr: string, overrides?: CallOverrides): Promise<boolean>;
 
   hashDeposit(
@@ -965,6 +982,10 @@ export class MockJuiceStaking extends BaseContract {
     ): Promise<void>;
 
     getPriceOracle(addr: string, overrides?: CallOverrides): Promise<string>;
+
+    getRegisteredTokensAndOracles(
+      overrides?: CallOverrides
+    ): Promise<([string, string] & { token: string; oracle: string })[]>;
 
     hasRegisteredToken(
       addr: string,
@@ -1369,6 +1390,10 @@ export class MockJuiceStaking extends BaseContract {
 
     getPriceOracle(addr: string, overrides?: CallOverrides): Promise<BigNumber>;
 
+    getRegisteredTokensAndOracles(
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     hasRegisteredToken(
       addr: string,
       overrides?: CallOverrides
@@ -1575,6 +1600,10 @@ export class MockJuiceStaking extends BaseContract {
 
     getPriceOracle(
       addr: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getRegisteredTokensAndOracles(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 

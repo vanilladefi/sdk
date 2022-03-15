@@ -26,3 +26,7 @@ export interface Options {
   optionalAddress?: string
   vanillaVersion?: VanillaVersion
 }
+
+export type StakePerformance = { user: string; delta: BigNumber }
+
+export type LeaderBoard = Array<StakePerformance>
