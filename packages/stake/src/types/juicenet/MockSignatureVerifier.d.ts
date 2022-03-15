@@ -19,52 +19,34 @@ import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
-interface MockPriceOracleInterface extends ethers.utils.Interface {
+interface MockSignatureVerifierInterface extends ethers.utils.Interface {
   functions: {
-    "decimals()": FunctionFragment;
-    "getRoundData(uint80)": FunctionFragment;
-    "latestPrice()": FunctionFragment;
-    "latestRoundData()": FunctionFragment;
-    "setPrice(int256)": FunctionFragment;
+    "isValidSignature(bytes32,bytes)": FunctionFragment;
+    "setIsValidSignature(bool)": FunctionFragment;
   };
 
-  encodeFunctionData(functionFragment: "decimals", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "getRoundData",
-    values: [BigNumberish]
+    functionFragment: "isValidSignature",
+    values: [BytesLike, BytesLike]
   ): string;
   encodeFunctionData(
-    functionFragment: "latestPrice",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "latestRoundData",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "setPrice",
-    values: [BigNumberish]
+    functionFragment: "setIsValidSignature",
+    values: [boolean]
   ): string;
 
-  decodeFunctionResult(functionFragment: "decimals", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "getRoundData",
+    functionFragment: "isValidSignature",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "latestPrice",
+    functionFragment: "setIsValidSignature",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "latestRoundData",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "setPrice", data: BytesLike): Result;
 
   events: {};
 }
 
-export class MockPriceOracle extends BaseContract {
+export class MockSignatureVerifier extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
@@ -105,97 +87,69 @@ export class MockPriceOracle extends BaseContract {
     toBlock?: string | number | undefined
   ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
 
-  interface: MockPriceOracleInterface;
+  interface: MockSignatureVerifierInterface;
 
   functions: {
-    decimals(overrides?: CallOverrides): Promise<[number]>;
-
-    getRoundData(
-      roundId: BigNumberish,
+    isValidSignature(
+      hash: BytesLike,
+      signature: BytesLike,
       overrides?: CallOverrides
-    ): Promise<[BigNumber, BigNumber, BigNumber, BigNumber, BigNumber]>;
+    ): Promise<[string] & { magicValue: string }>;
 
-    latestPrice(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    latestRoundData(
-      overrides?: CallOverrides
-    ): Promise<[BigNumber, BigNumber, BigNumber, BigNumber, BigNumber]>;
-
-    setPrice(
-      newPrice: BigNumberish,
+    setIsValidSignature(
+      mockIsValidSign: boolean,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
   };
 
-  decimals(overrides?: CallOverrides): Promise<number>;
-
-  getRoundData(
-    roundId: BigNumberish,
+  isValidSignature(
+    hash: BytesLike,
+    signature: BytesLike,
     overrides?: CallOverrides
-  ): Promise<[BigNumber, BigNumber, BigNumber, BigNumber, BigNumber]>;
+  ): Promise<string>;
 
-  latestPrice(overrides?: CallOverrides): Promise<BigNumber>;
-
-  latestRoundData(
-    overrides?: CallOverrides
-  ): Promise<[BigNumber, BigNumber, BigNumber, BigNumber, BigNumber]>;
-
-  setPrice(
-    newPrice: BigNumberish,
+  setIsValidSignature(
+    mockIsValidSign: boolean,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   callStatic: {
-    decimals(overrides?: CallOverrides): Promise<number>;
-
-    getRoundData(
-      roundId: BigNumberish,
+    isValidSignature(
+      hash: BytesLike,
+      signature: BytesLike,
       overrides?: CallOverrides
-    ): Promise<[BigNumber, BigNumber, BigNumber, BigNumber, BigNumber]>;
+    ): Promise<string>;
 
-    latestPrice(overrides?: CallOverrides): Promise<BigNumber>;
-
-    latestRoundData(
+    setIsValidSignature(
+      mockIsValidSign: boolean,
       overrides?: CallOverrides
-    ): Promise<[BigNumber, BigNumber, BigNumber, BigNumber, BigNumber]>;
-
-    setPrice(newPrice: BigNumberish, overrides?: CallOverrides): Promise<void>;
+    ): Promise<void>;
   };
 
   filters: {};
 
   estimateGas: {
-    decimals(overrides?: CallOverrides): Promise<BigNumber>;
-
-    getRoundData(
-      roundId: BigNumberish,
+    isValidSignature(
+      hash: BytesLike,
+      signature: BytesLike,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    latestPrice(overrides?: CallOverrides): Promise<BigNumber>;
-
-    latestRoundData(overrides?: CallOverrides): Promise<BigNumber>;
-
-    setPrice(
-      newPrice: BigNumberish,
+    setIsValidSignature(
+      mockIsValidSign: boolean,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    decimals(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    getRoundData(
-      roundId: BigNumberish,
+    isValidSignature(
+      hash: BytesLike,
+      signature: BytesLike,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    latestPrice(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    latestRoundData(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    setPrice(
-      newPrice: BigNumberish,
+    setIsValidSignature(
+      mockIsValidSign: boolean,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
   };
