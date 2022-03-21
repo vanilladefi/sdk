@@ -1,7 +1,15 @@
-import { Token } from '@vanilladefi/core-sdk'
-import { BigNumber, ContractTransaction, ethers } from 'ethers'
-import { getJuiceStakingContract } from './contracts'
-import { LeaderBoard, Options, Stake, StakeInfo } from './types/general'
+import { contractAddresses, Token, VanillaVersion } from '@vanilladefi/core-sdk'
+import { BigNumber, ContractTransaction, ethers, providers } from 'ethers'
+import { formatUnits } from 'ethers/lib/utils'
+import { getJuiceStakingContract, networks } from './contracts'
+import {
+  LeaderBoard,
+  Options,
+  Stake,
+  StakeInfo,
+  StakePerformance,
+} from './types/general'
+import { ERC20Upgradeable, ERC20Upgradeable__factory } from './types/juicenet'
 import { TypedEvent } from './types/juicenet/common'
 import { getUsers } from './users'
 
@@ -44,12 +52,20 @@ export const getUserJuiceDelta = async (
   from?: string | number,
   to?: string | number,
   options?: Options,
-): Promise<BigNumber> => {
+): Promise<StakePerformance> => {
   const contract = getJuiceStakingContract(options)
+  const juice: ERC20Upgradeable = ERC20Upgradeable__factory.connect(
+    options?.optionalAddress ||
+      contractAddresses.vanilla[VanillaVersion.V2].router,
+    options?.polygonProvider || providers.getDefaultProvider(networks.mainnet),
+  )
+
   const deltaByToken: Record<string, BigNumber> = {}
   const latestUnstakeByToken: Record<string, number> = {}
   const firstUnstakeByToken: Record<string, number> = {}
+
   let delta = BigNumber.from(0)
+  let relativeDelta = 0.0
 
   const stakeFilter: ethers.EventFilter =
     contract.filters.StakeAdded(userAddress)
@@ -110,9 +126,32 @@ export const getUserJuiceDelta = async (
     delta = Object.values(deltaByToken).reduce((_previous, _current) =>
       _previous.add(_current),
     )
+
+    const firstUnstake = Math.min(...Object.values(firstUnstakeByToken))
+    const unstakedBalance = await contract.unstakedBalanceOf(userAddress, {
+      blockTag: firstUnstake - 1,
+    })
+    const userBalance = await juice.balanceOf(userAddress, {
+      blockTag: firstUnstake - 1,
+    })
+    const startingBalance = unstakedBalance.add(userBalance)
+
+    relativeDelta =
+      !delta.isZero() && !startingBalance.isZero()
+        ? Number(formatUnits(delta.mul(1000).div(startingBalance), 3))
+        : 0
+
+    console.log(
+      'startingBalance: ',
+      startingBalance.toString(),
+      ' delta: ',
+      delta.toString(),
+      ' relativeDelta: ',
+      relativeDelta,
+    )
   }
 
-  return delta
+  return { user: userAddress, delta, relativeDelta }
 }
 
 export const getLeaderboard = async (
@@ -123,10 +162,9 @@ export const getLeaderboard = async (
 ): Promise<LeaderBoard> => {
   const users = await getUsers(from, to, options)
   let juiceDeltas: LeaderBoard = await Promise.all(
-    Array.from(users).map(async (user) => ({
-      user: user,
-      delta: await getUserJuiceDelta(user, from, to, options),
-    })),
+    Array.from(users).map(
+      async (user) => await getUserJuiceDelta(user, from, to, options),
+    ),
   )
   juiceDeltas = juiceDeltas.sort((a, b) => {
     if (a.delta.gt(b.delta)) {
