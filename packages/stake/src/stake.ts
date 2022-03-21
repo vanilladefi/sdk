@@ -1,9 +1,10 @@
-import { Token } from '@vanilladefi/core-sdk'
+import { epoch, Token } from '@vanilladefi/core-sdk'
 import { BigNumber, ContractTransaction, ethers } from 'ethers'
 import { getJuiceStakingContract } from './contracts'
 import { LeaderBoard, Options, Stake, StakeInfo } from './types/general'
 import { TypedEvent } from './types/juicenet/common'
 import { getUsers } from './users'
+import { parseBlockTagToBlockNumber } from './utils'
 
 export const getCurrentStake = async (
   userAddress: string,
@@ -45,6 +46,10 @@ export const getUserJuiceDelta = async (
   to?: string | number,
   options?: Options,
 ): Promise<BigNumber> => {
+  const parsedFrom = await parseBlockTagToBlockNumber(from || epoch, options)
+  const parsedTo = await parseBlockTagToBlockNumber(to || 'latest', options)
+  const blockThreshold = 2000
+
   const contract = getJuiceStakingContract(options)
   const deltaByToken: Record<string, BigNumber> = {}
   const latestUnstakeByToken: Record<string, number> = {}
@@ -56,8 +61,32 @@ export const getUserJuiceDelta = async (
   const unStakeFilter: ethers.EventFilter =
     contract.filters.StakeRemoved(userAddress)
 
-  const unStakes: ethers.Event[] | TypedEvent<any[]>[] =
-    await contract.queryFilter(unStakeFilter, from, to)
+  // Split requests to ranges because of RPCs having block depth limits (Alchemy 2000)
+  const ranges: Array<{ startBlock: number; endBlock: number }> = []
+  let startBlock = parsedFrom
+  let endBlock =
+    parsedTo > startBlock + blockThreshold
+      ? startBlock + blockThreshold
+      : parsedTo
+  let oldEndBlock = endBlock
+  while (endBlock < parsedTo - blockThreshold) {
+    ranges.push({ startBlock, endBlock })
+    oldEndBlock = endBlock
+    endBlock =
+      endBlock + blockThreshold > parsedTo
+        ? parsedTo
+        : endBlock + blockThreshold
+    startBlock = oldEndBlock + 1
+  }
+  ranges.push({ startBlock, endBlock })
+
+  const unStakes: ethers.Event[] | TypedEvent<any[]>[] = (
+    await Promise.all(
+      ranges.map((range) =>
+        contract.queryFilter(unStakeFilter, range.startBlock, range.endBlock),
+      ),
+    )
+  ).flat()
 
   // First, filter every realized JUICE profit
   unStakes.forEach((event) => {
@@ -89,8 +118,13 @@ export const getUserJuiceDelta = async (
 
   // Then, remove the original stakes from the delta
   if (Object.keys(deltaByToken).length > 0) {
-    const stakes: ethers.Event[] | TypedEvent<any[]>[] =
-      await contract.queryFilter(stakeFilter, from, to)
+    const stakes: ethers.Event[] | TypedEvent<any[]>[] = (
+      await Promise.all(
+        ranges.map((range) =>
+          contract.queryFilter(stakeFilter, range.startBlock, range.endBlock),
+        ),
+      )
+    ).flat()
 
     stakes.forEach((event) => {
       if (event?.args && event?.blockNumber) {
