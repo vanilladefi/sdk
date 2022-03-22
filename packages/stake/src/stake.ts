@@ -40,6 +40,15 @@ export const modifyStake = async (stake: Stake, options: Options) => {
   return modifyStakes([stake], options)
 }
 
+/**
+ * Fetches an individual user's JUICE delta in given block interval.
+ *
+ * @param userAddress
+ * @param from
+ * @param to
+ * @param options
+ * @returns User's JUICE delta as a BigNumber.
+ */
 export const getUserJuiceDelta = async (
   userAddress: string,
   from?: string | number,
@@ -48,7 +57,7 @@ export const getUserJuiceDelta = async (
 ): Promise<BigNumber> => {
   const parsedFrom = await parseBlockTagToBlockNumber(from || epoch, options)
   const parsedTo = await parseBlockTagToBlockNumber(to || 'latest', options)
-  const blockThreshold = 2000
+  const blockThreshold = options?.blockThreshold || 1000
 
   const contract = getJuiceStakingContract(options)
   const deltaByToken: Record<string, BigNumber> = {}
@@ -61,7 +70,7 @@ export const getUserJuiceDelta = async (
   const unStakeFilter: ethers.EventFilter =
     contract.filters.StakeRemoved(userAddress)
 
-  // Split requests to ranges because of RPCs having block depth limits (Alchemy 2000)
+  // Split requests to ranges because of RPCs having block depth limits
   const ranges: Array<{ startBlock: number; endBlock: number }> = []
   let startBlock = parsedFrom
   let endBlock =
