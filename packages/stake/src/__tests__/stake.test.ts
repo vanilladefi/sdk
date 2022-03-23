@@ -3,7 +3,7 @@ import { getLeaderboard, getUserJuiceDelta } from '../stake'
 import { testPolygonProvider } from '../__utils__/utils'
 
 const hardhatTestAccount = '0x35434a35C19cabC4bD508Edf538cC1Cf33BDA688'
-const testEpoch = 24925931
+const testEpoch = 25346977
 const contestEnd = 25454917
 const testOptions = {
   polygonProvider: testPolygonProvider,
@@ -13,11 +13,22 @@ const testOptions = {
 test('Get user JUICE delta', async () => {
   const delta = await getUserJuiceDelta(
     hardhatTestAccount,
-    contestEnd - 5000,
+    testEpoch,
     contestEnd,
+    true,
     testOptions,
   )
   expect(formatUnits(delta, 8)).not.toBe(0)
+
+  const delta2 = await getUserJuiceDelta(
+    hardhatTestAccount,
+    testEpoch,
+    contestEnd,
+    false,
+    testOptions,
+  )
+  console.log(delta.toString(), delta2.toString())
+  expect(delta).toBeGtBN(delta2)
 })
 
 test('Get leaderboard', async () => {
@@ -28,6 +39,7 @@ test('Get leaderboard', async () => {
     contestEnd - 50000,
     contestEnd,
     limit,
+    true,
     testOptions,
   )
   expect(leaderboard.length).toBe(limit)

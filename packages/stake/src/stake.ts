@@ -53,6 +53,7 @@ export const getUserJuiceDelta = async (
   userAddress: string,
   from?: string | number,
   to?: string | number,
+  trimPreviousStake = true,
   options?: Options,
 ): Promise<BigNumber> => {
   const parsedFrom = await parseBlockTagToBlockNumber(from || epoch, options)
@@ -125,7 +126,6 @@ export const getUserJuiceDelta = async (
     }
   })
 
-  // Then, remove the original stakes from the delta
   if (Object.keys(deltaByToken).length > 0) {
     const stakes: ethers.Event[] | TypedEvent<any[]>[] = (
       await Promise.all(
@@ -135,17 +135,21 @@ export const getUserJuiceDelta = async (
       )
     ).flat()
 
+    // Remove stakes from delta
     stakes.forEach((event) => {
       if (event?.args && event?.blockNumber) {
         const { args, blockNumber } = event
         const { unstakedDiff, token } = args
-        // Don't include stakes before the first unstake or restakes after last unstake in delta
         if (
           Object.keys(deltaByToken).includes(token) &&
-          firstUnstakeByToken[token] < blockNumber &&
           latestUnstakeByToken[token] > blockNumber
         ) {
-          deltaByToken[token] = deltaByToken[token].add(unstakedDiff)
+          // Remove the stakes previous to first unstake from the delta if trimPreviousStake === true
+          if (
+            !(trimPreviousStake && firstUnstakeByToken[token] < blockNumber)
+          ) {
+            deltaByToken[token] = deltaByToken[token].add(unstakedDiff)
+          }
         }
       }
     })
@@ -162,13 +166,20 @@ export const getLeaderboard = async (
   from?: string | number,
   to?: string | number,
   limit = 10,
+  trimPreviousStake = true,
   options?: Options,
 ): Promise<LeaderBoard> => {
   const users = await getUsers(from, to, options)
   let juiceDeltas: LeaderBoard = await Promise.all(
     Array.from(users).map(async (user) => ({
       user: user,
-      delta: await getUserJuiceDelta(user, from, to, options),
+      delta: await getUserJuiceDelta(
+        user,
+        from,
+        to,
+        trimPreviousStake,
+        options,
+      ),
     })),
   )
   juiceDeltas = juiceDeltas.sort((a, b) => {
