@@ -53,6 +53,7 @@ export const getUserJuiceDelta = async (
   userAddress: string,
   from?: string | number,
   to?: string | number,
+  startFromUnstake = true,
   options?: Options,
 ): Promise<BigNumber> => {
   const parsedFrom = await parseBlockTagToBlockNumber(from || epoch, options)
@@ -125,7 +126,6 @@ export const getUserJuiceDelta = async (
     }
   })
 
-  // Then, remove the original stakes from the delta
   if (Object.keys(deltaByToken).length > 0) {
     const stakes: ethers.Event[] | TypedEvent<any[]>[] = (
       await Promise.all(
@@ -135,13 +135,14 @@ export const getUserJuiceDelta = async (
       )
     ).flat()
 
+    // Then, remove the original stakes from the delta, if startFromUnstake === true
     stakes.forEach((event) => {
       if (event?.args && event?.blockNumber) {
         const { args, blockNumber } = event
         const { unstakedDiff, token } = args
-        // Don't include stakes before the first unstake or restakes after last unstake in delta
         if (
           Object.keys(deltaByToken).includes(token) &&
+          startFromUnstake &&
           firstUnstakeByToken[token] < blockNumber &&
           latestUnstakeByToken[token] > blockNumber
         ) {
@@ -162,13 +163,14 @@ export const getLeaderboard = async (
   from?: string | number,
   to?: string | number,
   limit = 10,
+  startFromUnstake = true,
   options?: Options,
 ): Promise<LeaderBoard> => {
   const users = await getUsers(from, to, options)
   let juiceDeltas: LeaderBoard = await Promise.all(
     Array.from(users).map(async (user) => ({
       user: user,
-      delta: await getUserJuiceDelta(user, from, to, options),
+      delta: await getUserJuiceDelta(user, from, to, startFromUnstake, options),
     })),
   )
   juiceDeltas = juiceDeltas.sort((a, b) => {
