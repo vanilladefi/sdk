@@ -27,7 +27,8 @@ test('Get user JUICE delta', async () => {
     false,
     testOptions,
   )
-  expect(delta).toBeLtBN(delta2)
+  console.log(delta.toString(), delta2.toString())
+  expect(delta).toBeGtBN(delta2)
 })
 
 test('Get leaderboard', async () => {
