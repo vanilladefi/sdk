@@ -53,6 +53,7 @@ export const getUserJuiceDelta = async (
   userAddress: string,
   from?: string | number,
   to?: string | number,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   trimPreviousStake = true,
   options?: Options,
 ): Promise<BigNumber> => {
@@ -62,10 +63,9 @@ export const getUserJuiceDelta = async (
 
   const contract = getJuiceStakingContract(options)
   const deltaByToken: Record<string, BigNumber> = {}
-  const latestUnstakeByToken: Record<string, number> = {}
-  const firstUnstakeByToken: Record<string, number> = {}
   let delta = BigNumber.from(0)
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const stakeFilter: ethers.EventFilter =
     contract.filters.StakeAdded(userAddress)
   const unStakeFilter: ethers.EventFilter =
@@ -101,7 +101,7 @@ export const getUserJuiceDelta = async (
   // First, filter every realized JUICE profit
   unStakes.forEach((event) => {
     if (event?.args && event?.blockNumber) {
-      const { args, blockNumber } = event
+      const { args } = event
       const { unstakedDiff, token } = args
 
       if (deltaByToken[token]) {
@@ -109,51 +109,10 @@ export const getUserJuiceDelta = async (
       } else {
         deltaByToken[token] = unstakedDiff
       }
-
-      if (
-        !firstUnstakeByToken[token] ||
-        firstUnstakeByToken[token] > blockNumber
-      ) {
-        firstUnstakeByToken[token] = blockNumber
-      }
-
-      if (
-        !latestUnstakeByToken[token] ||
-        latestUnstakeByToken[token] < blockNumber
-      ) {
-        latestUnstakeByToken[token] = blockNumber
-      }
     }
   })
 
   if (Object.keys(deltaByToken).length > 0) {
-    const stakes: ethers.Event[] | TypedEvent<any[]>[] = (
-      await Promise.all(
-        ranges.map((range) =>
-          contract.queryFilter(stakeFilter, range.startBlock, range.endBlock),
-        ),
-      )
-    ).flat()
-
-    // Remove stakes from delta
-    stakes.forEach((event) => {
-      if (event?.args && event?.blockNumber) {
-        const { args, blockNumber } = event
-        const { unstakedDiff, token } = args
-        if (
-          Object.keys(deltaByToken).includes(token) &&
-          latestUnstakeByToken[token] > blockNumber
-        ) {
-          // Remove the stakes previous to first unstake from the delta if trimPreviousStake === true
-          if (
-            !(trimPreviousStake && firstUnstakeByToken[token] < blockNumber)
-          ) {
-            deltaByToken[token] = deltaByToken[token].add(unstakedDiff)
-          }
-        }
-      }
-    })
-
     delta = Object.values(deltaByToken).reduce((_previous, _current) =>
       _previous.add(_current),
     )
